@@ -5,27 +5,80 @@
   </div>
 </template>
 <style lang="scss" rel="stylesheet/scss">
-  html {
+
+  html, body {
+    position: relative;
     height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    /*-webkit-transform: translate3d(0,0,0);*/
   }
 
   body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+    font-family: Roboto, Noto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #212121;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    background: #fff;
+    /*overflow: hidden;*/
   }
 
-  #app {
-    color: #2c3e50;
-    margin-top: -100px;
-    max-width: 600px;
-    font-family: Source Sans Pro, Helvetica, sans-serif;
-    text-align: center;
-    a {
-      color: #42b983;
-      text-decoration: none;
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+  }
+
+  a,
+  input,
+  textarea,
+  button,
+  select {
+    resize: none;
+    outline: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: #2196f3;
+  }
+
+  p {
+    margin: 1em 0;
+  }
+  .clear:after {
+    height: 0;
+    clear: both;
+    content: ".";
+    display: block;
+    visibility: hidden;
+  }
+
+  body {
+    #app {
+      height: 100%;
+      #scroll-top {
+        height: 1px;
+        top: 0px;
+        position: absolute;
+      }
+    }
+    .mint-msgbox {
+      border-radius: 7px ;
+      .mint-msgbox-btn {
+        font-size: 16px;
+      }
+      .mint-msgbox-confirm {
+        color: #fff;
+        background-color: #45aa9c;
+      }
+      .mint-msgbox-cancel{
+        color: #45aa9c ;
+      }
     }
   }
-
 </style>
+
