@@ -15,6 +15,6 @@ const routes = [
 });
 
 // 404 页
-routes.push({path: '*', component: NotFound, name: 'notfound'});
+routes.push({path: '*', component: NotFound, name: 'NotFound'});
 
 export default routes;
