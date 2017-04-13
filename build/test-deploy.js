@@ -1,6 +1,6 @@
 /**
  * node /data/node-server/h5/build/test-deploy.js -b 分支 -p 后端地址
- * 100机器前端部署命令， 分支和后端地址是可选的，不变的话可以不传。
+ * 测试环境前端部署命令， 分支和后端地址是可选的，不变的话可以不传。
  */
 
 require('shelljs/global');
