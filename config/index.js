@@ -16,7 +16,7 @@ for (var key in networkInterfaces) {
 module.exports = {
   build: {
     env: require('./prod.env'),
-    port: 8084,
+    port: 9084,
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
@@ -31,7 +31,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8083,
+    port: 9083,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
