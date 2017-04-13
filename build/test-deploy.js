@@ -7,8 +7,9 @@ require('shelljs/global');
 var optimist = require('optimist');
 var argv = optimist.argv;
 var p = argv.p || '10.10.242.252:9007';
+var project = 'car';
 
-cd(`/data/node-server/car`);
+cd(`/data/node-server/${project}`);
 if (argv.b) {
   exec(`git fetch`);
   exec(`git checkout ${argv.b}`);
@@ -16,5 +17,5 @@ if (argv.b) {
 exec(`git pull`);
 exec(`cnpm install`);
 exec(`npm run build`);
-exec(`pm2 delete h5`);
-exec(`pm2 start /data/node-server/h5/build/build-server.js -n h5 -- --proxy=${p}`);
+exec(`pm2 delete ${project}`);
+exec(`pm2 start /data/node-server/${project}/build/build-server.js -n ${project} -- --proxy=${p}`);
