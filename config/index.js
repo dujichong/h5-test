@@ -1,5 +1,4 @@
-// see http://vuejs-templa
-// tes.github.io/webpack for documentation.
+// see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path');
 var os = require('os');
 var networkInterfaces = os.networkInterfaces();
