@@ -5,7 +5,7 @@
 const NotFound = r => require(['views/notfound'], r);
 
 // 根目录
-const rootPath = '';
+const rootPath = window.$spaRootPath || '';
 
 // 页面路由
 const routes = [
