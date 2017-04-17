@@ -40,3 +40,4 @@ webpack(webpackConfig, function (err, stats) {
     }) + '\n')
 });
 
+console.log('aaa');
