@@ -3,12 +3,14 @@
  * Created by hanan on 16/10/15.
  */
 const NotFound = r => require(['views/notfound'], r);
+const AppProdcutDetail = r => require(['views/app/product/detail'], r);
 
 // 根目录
 const rootPath = window.$spaRootPath || '';
 
 // 页面路由
 const routes = [
+  {path: '/app/product/detail', component: NotFound, name: 'NotFound'}
 ].map(route => {
   route.path = rootPath + route.path;
   return route;
