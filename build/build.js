@@ -39,5 +39,3 @@ webpack(webpackConfig, function (err, stats) {
       chunkModules: false
     }) + '\n')
 });
-
-console.log('aaa');
