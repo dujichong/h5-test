@@ -10,7 +10,7 @@ const rootPath = window.$spaRootPath || '';
 
 // 页面路由
 const routes = [
-  {path: '/app/product/detail', component: NotFound, name: 'NotFound'}
+  {path: '/app/product/detail', component: AppProdcutDetail, name: 'AppProdcutDetail'}
 ].map(route => {
   route.path = rootPath + route.path;
   return route;
