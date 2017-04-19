@@ -10,7 +10,7 @@ const List = r => require(['views/app/help/list'], r);
 const Details = r => require(['views/app/help/details'], r);
 
 
-// 页面路由
+// 页面路由list
 const routes = [
   {path: '/app/help/list', component: List, name: 'List'},
   {path: '/app/help/details', component: Details, name: 'Details'},
