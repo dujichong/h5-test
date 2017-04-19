@@ -100,8 +100,14 @@
       },
 
       getIndex:function(num){
-        //console.log(this.click);
-        location.replace(`http://172.16.80.19:8082/spa/app/help/details?num=`+num);
+        this.$router.push({
+          path: 'app/help/details',
+          name: 'AppHelpDetails',
+          query: { num: num },
+        });
+
+        //this.$route.push({ path: 'app/help/details', name: 'AppHelpList', query: { num: num }});
+        //console.log(this.$route.name);
       },
     },
     //titie

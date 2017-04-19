@@ -215,11 +215,9 @@
         this.click=index;
         if(this.currentIndex==this.click){
           this.currentIndex = -1;
-          console.log(this.click);
         }
         else {
           this.currentIndex=this.click;
-          console.log(this.click);
         }
       },
     },
@@ -227,7 +225,6 @@
     //初始化调用事件
     created(){
       let num = this.$route.query.num;
-      console.log(num);
       this.tab = num;
     },
 
