@@ -48,12 +48,12 @@
         <p>社保公积金</p>
       </div>
 
-      <div class="photos" @click="getIndex(7)">
+      <div class="car" @click="getIndex(7)">
         <img src="../../../assets/app/help/car.png">
         <p>车辆评估</p>
       </div>
 
-      <div class="feedback" @click="getIndex(8)">
+      <div class="photos" @click="getIndex(8)">
         <img src="../../../assets/app/help/photos.png">
         <p>拍照资料</p>
       </div>
