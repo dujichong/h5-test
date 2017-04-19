@@ -1,6 +1,5 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="help-detail">
-    <c-title :text="title" :hide="true"></c-title>
     <div class="model">
       <ul>
         <li v-for="(item, index) in currentList">
@@ -17,8 +16,6 @@
 </template>
 
 <script>
-  import cTitle from 'components/title';
-
   export default {
     data () {
       return {
@@ -227,8 +224,6 @@
       let num = this.$route.query.num;
       this.tab = num;
     },
-
-    components: {cTitle}
   }
 
 </script>
