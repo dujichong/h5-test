@@ -1,6 +1,7 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="help-list">
     <div class="layer" v-bind:class="{ active: isActive }"></div>
+    <c-title :text="title" :hide="true"></c-title>
     <div class="nav">
       <div class="manager">
         <div>
@@ -74,9 +75,12 @@
 </template>
 
 <script>
+  import cTitle from 'components/title';
+
   export default {
     data () {
       return {
+        title: '使用帮助',
         isActive:false,
         titInfo:false,
       }
@@ -103,6 +107,8 @@
         });
       },
     },
+    //titie
+    components: {cTitle}
   }
 </script>
 

@@ -1,5 +1,6 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="help-detail">
+    <c-title :text="title" :hide="true"></c-title>
     <div class="model">
       <ul>
         <li v-for="(item, index) in currentList">
@@ -16,10 +17,13 @@
 </template>
 
 <script>
+  import cTitle from 'components/title';
+
   export default {
     data () {
       return {
         currentIndex: -1,
+        title: '',
         click: 'a',
         tab: 1,
         list: {
@@ -223,7 +227,39 @@
     created(){
       let num = this.$route.query.num;
       this.tab = num;
+      switch (num)
+      {
+        case 1:
+          this.title = '产品选择';
+          break;
+        case 2:
+          this.title = '信息安全';
+          break;
+        case 3:
+          this.title = '账户管理';
+          break;
+        case 4:
+          this.title = '征信报告';
+          break;
+        case 5:
+          this.title = '手机运营商';
+          break;
+        case 6:
+          this.title = '社保公积金';
+          break;
+        case 7:
+          this.title = '车辆评估';
+          break;
+        case 8:
+          this.title = '拍照资料';
+          break;
+        case 9:
+          this.title = '其他';
+          break;
+      }
     },
+
+    components: {cTitle}
   }
 
 </script>
