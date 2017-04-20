@@ -1,13 +1,19 @@
 <template>
-  <div class="title" @click="backwards">
-    <img src="../assets/app/title-angle.png" />
+  <div v-if="!hide" class="title" >
+    <img src="../assets/app/title-angle.png" @click="backwards"/>
     <h1>{{ text }}</h1>
-    <!--v-if="!hide"-->
   </div>
 </template>
 
 <script>
   export default {
+
+    data () {
+      return {
+        index: 1,
+        href: '',
+      }
+    },
 
     props: ['text', 'hide'],
 
@@ -33,10 +39,29 @@
           document.body.appendChild(iframe);
         }
       },
+
+
       backwards(){
         //router.go(-1);
-        this.$router.go(-1);
+        //console.log(history.length);
+//        if(location.href == this.href){
+//          alert('12');
+//        }
+          this.$router.go(-1);
+        //window.nativeCloseWebview();
+//        if(window.history.length > 1){
+//          window.history.go( -1 );
+//        }
+//        else{
+//          window.opener=null;
+//          window.close();
+//        }
       },
+    },
+
+    //初始化调用事件
+    created(){
+      //this.href = location.href;
     },
 
     mounted: function () {
