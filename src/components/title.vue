@@ -59,11 +59,11 @@
       text-align: center;
       height: 100%;
       float: right;
-      margin: 0 auto;
+      margin: 0 .49rem 0 0;
       font-weight: normal;
       font-size: .36rem;
       line-height: .88rem;
-      padding-right: 3.05rem;
+      width: 6.52rem;
     }
   }
 </style>
