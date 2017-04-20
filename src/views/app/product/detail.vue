@@ -24,16 +24,48 @@
       </div>
       <div class="synopsis">{{currentDetail.synopsis}}</div>
     </div>
-
+  
     <div class="particular">
       <div class="item">
         <h2>产品介绍</h2>
-         <div class="text">
+        <div class="text">
           <p>{{currentDetail.introduce}}</p>
-         </div>
+        </div>
+      </div>
+  
+      <div class="item">
+        <h2>额度限制</h2>
+        <div class="text">
+          <p>{{currentDetail.quota}}</p>
+        </div>
+      </div>
+  
+      <div class="item">
+        <h2>适用地区</h2>
+        <div class="text">
+          <p>{{currentDetail.area}}</p>
+        </div>
+      </div>
+  
+      <div class="item">
+        <h2>申请资格</h2>
+        <div class="text">
+          <p v-for="(item, index) of currentDetail.competency">{{index + 1}}. {{item}}</p>
+        </div>
+      </div>
+  
+      <div class="item">
+        <h2>所需材料</h2>
+        <div class="text">
+          <p >{{currentDetail.material}}</p>
+        </div>
       </div>
     </div>
   
+    <footer>
+      <div class="btn-test" @click="test"><i></i>试试我能贷多少</div>
+      <div class="btn-apply" @click="apply">立即申请</div>
+    </footer>
   </div>
 </template>
 
@@ -56,7 +88,12 @@ export default {
           introduce: '介绍',
           quota: '额度期限',
           area: '地区',
-          competency: ['资格1', '资格2', '资格3', '资格4',],
+          competency: [
+            '资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1',
+            '资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2',
+            '资格3资格3',
+            '资格4',
+          ],
           material: '材料'
         },
         {
@@ -114,7 +151,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
-$mg: 30rem;
+$mg: .30rem;
 $btn-color: #666;
 $text-color: #5f788d;
 $bg-color: #f1f1f1;
@@ -126,6 +163,7 @@ $red: #ff5a00;
   .info {
     background: #fff;
     margin-bottom: .2rem;
+    padding-bottom: .4rem;
     .sub {
       display: flex;
       div {
@@ -181,23 +219,62 @@ $red: #ff5a00;
       color: $blue;
       width: 80%;
       line-height: 200%;
-      margin: .4rem auto;
+      margin: .4rem auto 0;
       text-align: center;
     }
   }
   .particular {
+    background: #fff;
+    padding: $mg;
     .item {
+      border-bottom: 1px solid $bg-color;
+      &:last-child {
+        border-bottom: none
+      }
       h2 {
+        line-height: 100%;
         color: #333333;
         font-size: .32rem;
         border-left: 2px solid $blue;
         text-indent: 10px;
       }
       .text {
+        color: $text-color;
+        font-size: .28rem;
         p {
-          margin-bottom: .3rem;
+          margin: 0 0 .2rem 0;
         }
       }
+    }
+  }
+  footer {
+    background: #fff;
+    padding: $mg;
+    text-align: center;
+    font-size: .36rem;
+    .btn-test {
+      color: $blue;
+      margin-bottom: $mg;
+      font-size: .30rem;
+      i {
+        display: inline-block;
+        width: .32rem;
+        height: .32rem;
+        background-image: url(../../../assets/app/product/icon-test.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin-right: 5px;
+        position: relative;
+        top: .045rem;
+      }
+    }
+    .btn-apply {
+      color: #fff;
+      background: $blue;
+      border-radius: 40px;
+      width: 100%;
+      height: .98rem;
+      line-height: .98rem;
     }
   }
 }
