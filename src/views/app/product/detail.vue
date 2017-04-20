@@ -85,28 +85,31 @@ export default {
           months: '12-36',
           money: '30w',
           synopsis: '简介',
-          introduce: '介绍',
-          quota: '额度期限',
-          area: '地区',
+          introduce: '适用于本人名下拥有符合条件的车产，收入流水稳定，有长期资金周转需求的上班族或企业经营者。',
+          quota: '车辆融资的申请额度在4-30万元人民币。<br>申请期限为12、24、36个自然月。',
+          area: '本车辆融资业务目前暂时适用于兰州、贵州、九江、赤峰、济南这5个城市，其余城市待开放中，敬请期待。',
           competency: [
-            '资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1资格1',
-            '资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2资格2',
-            '资格3资格3',
-            '资格4',
+            '中国（不含港澳台）公民。',
+            '申请人本人名下拥有当地车管所登记的非运营性质机动车。',
+            '连续六个月以上稳定的收入流水。',
           ],
           material: '材料'
         },
         {
           name: '短期模式',
           rate: '1.28',
-          months: '12-36',
+          months: '3',
           money: '30w',
           synopsis: '简介',
-          introduce: '介绍',
-          quota: '额度期限',
-          area: '地区',
-          competency: ['资格1', '资格2', '资格3', '资格4',],
-          material: '材料'
+          introduce: '适用于本人名下拥有符合条件的车产，收入流水稳定，有短期资金周转需求的上班族或企业经营者。',
+          quota: '车辆融资的申请额度在4-30万元人民币。<br>申请期限为3个自然月。',
+          area: '本车辆融资业务目前暂时适用于兰州、贵州、九江、赤峰、济南这5个城市，其余城市待开放中，敬请期待。',
+          competency: [
+            '中国（不含港澳台）公民。', 
+            '申请人本人名下拥有当地车管所登记的非运营性质机动车。', 
+            '连续六个月以上稳定的银行流水。', 
+            ],
+          material: '二代身份证、机动车登记证、机动车行驶证、借款人驾驶证、征信报告、经营证明、收入证明等。'
         }
       ]
     }
@@ -225,7 +228,7 @@ $red: #ff5a00;
   }
   .particular {
     background: #fff;
-    padding: $mg;
+    padding: $mg $mg 2.5rem $mg;
     .item {
       border-bottom: 1px solid $bg-color;
       &:last-child {
@@ -248,6 +251,11 @@ $red: #ff5a00;
     }
   }
   footer {
+    box-sizing: border-box;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
     background: #fff;
     padding: $mg;
     text-align: center;
@@ -270,11 +278,11 @@ $red: #ff5a00;
     }
     .btn-apply {
       color: #fff;
-      background: $blue;
       border-radius: 40px;
       width: 100%;
       height: .98rem;
       line-height: .98rem;
+      background: linear-gradient(to right, #45bbff, #3399ff);
     }
   }
 }

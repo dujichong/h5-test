@@ -31,7 +31,7 @@ $item-mg: .30rem;
   height: $h;
   display: flex;
   width: 100%;
-  font-size: .36rem;
+  font-size: .30rem;
   div {
     height: $h;
     line-height: $h;
@@ -55,6 +55,7 @@ $item-mg: .30rem;
   }
   .active {
     color: $blue; 
+    font-size: .36rem;
   }
 }
 </style>
