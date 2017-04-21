@@ -36,7 +36,7 @@
       <div class="item">
         <h2>额度限制</h2>
         <div class="text">
-          <p>{{currentDetail.quota}}</p>
+          <p v-html="currentDetail.quota"></p>
         </div>
       </div>
   

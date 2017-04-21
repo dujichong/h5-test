@@ -11,11 +11,16 @@ var project = 'car';
 
 cd(`/data/node-server/${project}`);
 if (argv.b) {
+  console.log(`切换至分支： ${arg.b}`);
   exec(`git fetch`);
   exec(`git checkout ${argv.b}`);
+}
+else {
+  console.log('分支未变更，开始拉取代码');
 }
 exec(`git pull`);
 exec(`cnpm install`);
 exec(`npm run build`);
+console.log(`构建完成，开始启动 web server， 后端联调环境为：${p}`);
 exec(`pm2 delete ${project}`);
 exec(`pm2 start /data/node-server/${project}/build/build-server.js -n ${project} -- --proxy=${p}`);
