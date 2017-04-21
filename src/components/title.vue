@@ -1,9 +1,9 @@
 <template>
-  <div class="title" >
+  <div v-if="!hide" class="title" >
     <img src="../assets/app/title-angle.png" @click="backwards"/>
     <h1>{{ text }}</h1>
   </div>
-  <!--v-if="!hide"-->
+  <!---->
 </template>
 
 <script>
@@ -41,7 +41,7 @@
         }
       },
 
-
+      //回退按钮
       backwards(){
         if(history.state.__page==1){
           window.nativeCloseWebview();
