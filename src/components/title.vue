@@ -9,13 +9,6 @@
 <script>
   export default {
 
-    data () {
-      return {
-        index: 1,
-        href: '',
-      }
-    },
-
     props: ['text', 'hide'],
 
     watch: {
@@ -36,7 +29,7 @@
               iframe.onload = null;
               document.body.removeChild(iframe);
             }, 0);
-          }
+          };
           document.body.appendChild(iframe);
         }
       },
