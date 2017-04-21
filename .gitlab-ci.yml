@@ -5,4 +5,4 @@ stages:
 deploy_test:
   stage: deploy_test
   script:
-    - curl http://jenkins.puhuitech.cn/job/car-h5-test/buildWithParameters?token=lend_car_h5_test
+    - curl -s -u hanan:Andypuhui1. -X POST http://jenkins.puhuitech.cn/job/car-h5-test/buildWithParameters?token=lend_car_h5_test
