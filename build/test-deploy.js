@@ -11,7 +11,7 @@ var project = 'car';
 
 cd(`/data/node-server/${project}`);
 if (argv.b) {
-  console.log(`切换至分支： ${arg.b}`);
+  console.log(`切换至分支： ${argv.b}`);
   exec(`git fetch`);
   exec(`git checkout ${argv.b}`);
 }
