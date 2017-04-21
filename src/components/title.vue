@@ -3,6 +3,7 @@
     <img src="../assets/app/title-angle.png" @click="backwards"/>
     <h1>{{ text }}</h1>
   </div>
+  <!---->
 </template>
 
 <script>
@@ -40,28 +41,23 @@
         }
       },
 
-
+      //回退按钮
       backwards(){
-        //router.go(-1);
-        //console.log(history.length);
-//        if(location.href == this.href){
-//          alert('12');
-//        }
+        if(history.state.__page==1){
+          window.nativeCloseWebview();
+        }
+        else {
           this.$router.go(-1);
-        //window.nativeCloseWebview();
-//        if(window.history.length > 1){
-//          window.history.go( -1 );
-//        }
-//        else{
-//          window.opener=null;
-//          window.close();
-//        }
+        }
       },
     },
 
     //初始化调用事件
     created(){
-      //this.href = location.href;
+      if(!history.state || !history.state.__page){
+        Object.assign(history.state,{__page: history.length});
+        history.replaceState(history.state, null ,'');
+      }
     },
 
     mounted: function () {
@@ -84,11 +80,11 @@
       text-align: center;
       height: 100%;
       float: right;
-      margin: 0 .49rem 0 0;
+      margin: 0 .86rem 0 0;
       font-weight: normal;
       font-size: .36rem;
       line-height: .88rem;
-      width: 6.52rem;
+      width: 5.88rem;
     }
   }
 </style>
