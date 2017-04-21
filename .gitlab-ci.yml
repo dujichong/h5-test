@@ -1,0 +1,8 @@
+stages:
+  - deploy_test
+
+# 部署测试服务器
+deploy_test:
+  stage: deploy_test
+  script:
+    - "curl -s -u hanan:Andypuhui1. -X POST http://jenkins.puhuitech.cn/job/car-h5-test/buildWithParameters?token=lend_car_h5_test"
