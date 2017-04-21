@@ -10,7 +10,7 @@ var p = argv.p || '10.10.242.252:9007';
 var project = 'car';
 
 cd(`/data/node-server/${project}`);
-if (argv.b) {
+if (argv.b != 0) {
   console.log(`切换至分支： ${argv.b}`);
   exec(`git fetch`);
   exec(`git checkout ${argv.b}`);
