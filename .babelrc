@@ -3,3 +3,4 @@
   "plugins": ["transform-async-to-generator", "add-module-exports", "transform-runtime"],
   "comments": false
 }
+

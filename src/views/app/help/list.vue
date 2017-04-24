@@ -94,11 +94,13 @@
         this.titInfo = true;
       },
 
+      //取消呼叫
       cancel(){
         this.titInfo = false;
         this.isActive = false;
       },
 
+      //点击每个帮助项的时候，跳到该帮助项对应的帮助详情页面，跳转的时候在链接后面跟一个num参数
       getIndex:function(num){
         this.$router.push({
           path: 'app/help/details',
