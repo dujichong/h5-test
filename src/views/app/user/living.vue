@@ -8,15 +8,15 @@
         <ul>
           <li @click="sheetVisible = true" v-bind:class="{ unique: isUnique }">
             <label>居住情况</label>
-            <input v-model="livingType" maxlength="11" placeholder="请选择您的居住情况">
+            <span v-bind:class="{ blackColor: isLivingTypeColor}">{{livingType}}</span>
           </li>
           <li v-if="show">
             <label>其他情况</label>
             <input class="noBackground" v-model="others" maxlength="11" placeholder="请输入其他居住情况">
           </li>
-          <li class="wid" @click="getCity">
+          <li @click="getCity">
             <label>现居住地</label>
-            <input v-model="livingPlace" maxlength="11" placeholder="请选择您的现居住地">
+            <span v-bind:class="{ blackColor: isLivingPlaceColor}">{{livingPlace}}</span>
           </li>
           <li>
             <label>详细地址</label>
@@ -48,14 +48,16 @@
     data () {
       return {
         title: '居住信息',
-        livingType: '',
+        livingType: '请选择您的居住情况',
         others: '',
-        livingPlace: '',
+        livingPlace: '请选择您的现居住地',
         address: '',
         years: '',
         show: false,
         sheetVisible: false,
         isUnique: false,
+        isLivingTypeColor: false,
+        isLivingPlaceColor: false,
         //sheetVisible: true,
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
@@ -72,10 +74,10 @@
     computed: {
       ok () {
         if(this.show == true){
-          return this.livingType&&this.livingPlace&&this.address&&this.years&&this.others;
+          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')&&this.address&&this.years&&this.others;
         }
         else {
-          return this.livingType&&this.livingPlace&&this.address&&this.years;
+          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')&&this.address&&this.years;
         }
       },
     },
@@ -88,6 +90,7 @@
       getLivingStyle(action){
         //console.log(action.name);
         this.livingType = action.name;
+        this.isLivingTypeColor = true;
         if(action.name == '其他'){
           this.show = true;
           this.isUnique = true;
@@ -95,7 +98,6 @@
         else {
           this.show = false;
           this.isUnique = false;
-
         }
       },
     },
@@ -156,7 +158,7 @@
               font-size: .3rem;
               color: #333333;
             }
-            input{
+            input,span {
               display: block;
               float: right;
               //padding-top:0.2rem;
@@ -164,11 +166,16 @@
               border: none;
               background: none;
               width: 4.55rem;
-              color: #333333;
               height: 0.98rem;
               line-height: 0.98rem;
               background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
               background-size: .14rem .26rem;
+            }
+            input{
+              color: #333;
+            }
+            span{
+              color: #b2b2b2;
             }
             input::-webkit-input-placeholder{
               color: #b2b2b2;
@@ -177,6 +184,9 @@
             input.noBackground{
               background: none;
             }
+            span.blackColor{
+              color: #333;
+            }
           }
           li.unique{
             clear: both;
@@ -184,10 +194,10 @@
             line-height: .98rem;
             list-style: none;
             border: none;
-            input{
+            input,span {
               border-bottom:1px solid #e6e6e6;
             }
-            input.noBackground{
+            input.noBackground, span.noBackground{
               background: none;
             }
           }
