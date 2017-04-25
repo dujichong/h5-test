@@ -48,7 +48,7 @@
     //初始化调用事件
     created(){
       if(!history.state || !history.state.__page){
-        Object.assign(history.state,{__page: history.length});
+        Object.assign(history.state || {}, {__page: history.length});
         history.replaceState(history.state, null ,'');
       }
     },
@@ -63,6 +63,7 @@
   div.title{
     width: 100%;
     height: .88rem;
+    background-color: #fff;
     img{
       width: .19rem;
       height: .36rem;

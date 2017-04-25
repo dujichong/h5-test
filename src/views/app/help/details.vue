@@ -18,7 +18,6 @@
 
 <script>
   import cTitle from 'components/title';
-  import { Toast } from 'mint-ui';
 
   export default {
     data () {
@@ -214,7 +213,6 @@
     methods : {
       getIndex:function(index){
         this.click=index;
-        Toast('提示信息');
         if(this.currentIndex==this.click){
           this.currentIndex = -1;
         }
