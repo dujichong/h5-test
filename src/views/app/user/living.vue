@@ -12,7 +12,7 @@
           </li>
           <li v-if="show">
             <label>其他情况</label>
-            <input class="noBackground" v-model="others" maxlength="11" placeholder="请输入其他居住情况">
+            <input v-model="others" placeholder="请输入其他居住情况">
           </li>
           <li @click="getCity">
             <label>现居住地</label>
@@ -20,11 +20,11 @@
           </li>
           <li>
             <label>详细地址</label>
-            <input class="noBackground" v-model="address" maxlength="11" placeholder="地址具体到门牌号码">
+            <input v-model="address" placeholder="地址具体到门牌号码">
           </li>
           <li class="noBorder">
             <label>生活年限(年)</label>
-            <input class="noBackground" v-model="years" maxlength="11" placeholder="请填写您的居住年限">
+            <input v-model="years" placeholder="请填写您的居住年限">
           </li>
         </ul>
       </form>
@@ -58,7 +58,6 @@
         isUnique: false,
         isLivingTypeColor: false,
         isLivingPlaceColor: false,
-        //sheetVisible: true,
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
           {name: '自有房产', method: this.getLivingStyle},
@@ -157,6 +156,7 @@
               float: left;
               font-size: .3rem;
               color: #333333;
+              //background-color: aqua;
             }
             input,span {
               display: block;
@@ -164,25 +164,24 @@
               //padding-top:0.2rem;
               font-size: .3rem;
               border: none;
-              background: none;
               width: 4.55rem;
               height: 0.98rem;
               line-height: 0.98rem;
-              background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
-              background-size: .14rem .26rem;
             }
             input{
               color: #333;
+              padding: 0;
+              //background-color: red;
             }
             span{
               color: #b2b2b2;
+              background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
+              background-size: .14rem .26rem;
+              //background-color: blue;
             }
             input::-webkit-input-placeholder{
               color: #b2b2b2;
               font-size: .3rem;
-            }
-            input.noBackground{
-              background: none;
             }
             span.blackColor{
               color: #333;
@@ -194,11 +193,8 @@
             line-height: .98rem;
             list-style: none;
             border: none;
-            input,span {
+            span {
               border-bottom:1px solid #e6e6e6;
-            }
-            input.noBackground, span.noBackground{
-              background: none;
             }
           }
           li.noBorder{
