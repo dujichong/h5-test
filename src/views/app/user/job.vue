@@ -10,7 +10,7 @@
           <ul>
             <li>
               <label>工作时间</label>
-              <span @click="popupShow" v-bind:class="{ blackColor: isWorkTimeColor}">{{workTime}}</span>
+              <span @click="workTimePopupShow" v-bind:class="{ blackColor: isWorkTimeColor}">{{workTime}}</span>
             </li>
           </ul>
         </form>
@@ -160,8 +160,8 @@
         <p class="cancel" @click="cancel">取消</p>
         <p class="confirm" v-bind:class="{ show: workTimeConfirmShow }" @click="workTimeConfirm">工作时间确认</p>
       </div>
-      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onValuesChange">
-        {{Toolbar}}
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onWorkTimeValuesChange">
+        {{workTimeToolbar}}
       </Picker>
     </Popup>
     <Popup v-model="entryTimePopupVisible" position="bottom" :modal="false" >
@@ -169,16 +169,17 @@
         <p class="cancel" @click="cancel">取消</p>
         <p class="confirm" v-bind:class="{ show: entryTimeConfirmShow }" @click="entryTimeConfirm">入职时间确认</p>
       </div>
-      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onValuesChange">
-        {{Toolbar}}
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onEntryTimeValuesChange">
+        {{entryTimeToolbar}}
       </Picker>
     </Popup>
-
+    <!--<addressPicker :opts="obj" v-model="city"></addressPicker>-->
   </div>
 </template>
 <script>
   import cTitle from 'components/title';
-  import { Actionsheet, Toast, onValuesChange, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
+  import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button,} from 'mint-ui';
+//  import { addressPicker } from 'vue-address-picker';
 
   export default {
 
@@ -187,7 +188,16 @@
         title: '职业信息',
         businessShow: false,//商类页面
         salaryShow: true,//薪类页面
-
+        city: '',
+        obj: {
+          label: {
+            province: '所在省', city: '所在市', district: ''
+          },
+          default: {
+            province: '河南', city: '平顶山', district: '湛河区'
+          },
+          noLabel: true
+        },
         //商类
         workTime: '请选择您的工作时间',//商类工作时间
         workPlace: '请选择现单位所在地区',//现单位地区
@@ -197,6 +207,8 @@
         telephoneNumber: '',//电话号码
         extensionNumber: '',//分机号
         Toolbar: '',//组件picker中的toolbar
+        workTimeToolbar: '',
+        entryTimeToolbar: '',
         sheetVisible: false,
         pickerVisible: true,
         isWorkTimeColor: false,
@@ -272,58 +284,56 @@
     },
 
     methods : {
-      //组件Picker当被选中的值发生变化时触发 change 事件， change 事件会执行onValuesChange函数
-      onValuesChange(picker) {
-        this.Toolbar = picker.getValues()[0].concat(picker.getValues()[1]);
+      //组件Picker当被选中的值发生变化时触发 change 事件， change 事件会执行onWorkTimeValuesChange函数和onEntryTimeValuesChange函数
+      //取得当前值并存在Toolbar上
+      onWorkTimeValuesChange(picker){
+        this.workTimeToolbar = picker.getValues()[0].concat(picker.getValues()[1]);
       },
-
+      onEntryTimeValuesChange(picker){
+        this.entryTimeToolbar = picker.getValues()[0].concat(picker.getValues()[1]);
+      },
       //提交表单
       commit(){
 
       },
 
-      //商类点击工作时间的时候popup组件显示，自己定的朦层显示（此处没有使用组件自带的朦层，因为当界面中有多个组件的时候）
-      popupShow(){
-        this.workTimePopupVisible = true;
-        this.isActive = true;
-      },
+      //用到了两个picker因为有两个时间选择选项
+
+      //商类点击工作时间的时候popup组件显示，自己定的朦层显示（此处没有使用组件自带的朦层，因为当界面中有多个组件的时候有问题）
       workTimePopupShow(){
         this.workTimePopupVisible = true;
         this.isActive = true;
         this.workTimeConfirmShow = true;
-        this.entryTimeConfirmShow = false;
-        this.slots[0].defaultIndex = 30;
-        this.slots[1].defaultIndex = 2;
       },
       entryTimePopupShow(){
         this.entryTimePopupVisible = true;
         this.isActive = true;
         this.entryTimeConfirmShow = true;
-        this.workTimeConfirmShow = false;
-        this.slots[0].defaultIndex = 30;
-        this.slots[1].defaultIndex = 2;
       },
+      //取消按钮
       cancel(){
         this.workTimePopupVisible = false;
         this.entryTimePopupVisible = false;
         this.isActive = false;
       },
 
+      //工作时间的确认按钮
       workTimeConfirm(){
         this.workTimePopupVisible = false;
         this.isActive = false;
-        this.workTime = this.Toolbar;
+        this.workTime = this.workTimeToolbar;
         this.isWorkTimeColor = true;
       },
+      //入职时间的确认按钮
       entryTimeConfirm(){
         this.entryTimePopupVisible = false;
         this.isActive = false;
-        this.entryTime = this.Toolbar;
+        this.entryTime = this.entryTimeToolbar;
         this.isEntryTimeColor = true;
       },
 
+      //获取公司职位
       getUnitPosition(action){
-        //console.log(action.name);
         this.unitPosition = action.name;
         this.isUnitPosition = true;
         if(action.name == '其他'){
@@ -336,6 +346,7 @@
         }
       },
 
+      //获取公司性质
       getUnitNature(action){
         this.unitNature = action.name;
         this.isUnitNature = true;
@@ -352,6 +363,8 @@
 
     mounted(){
     },
+
+    //数据更新的时候改变选中项的css样式
     updated(){
       let element2 = this.$el.getElementsByClassName('picker-item');
       let element1 = this.$el.getElementsByClassName('picker-selected');
@@ -367,7 +380,7 @@
       element3[0].style.borderTop = '1px solid #cdcdcd';
       element3[0].style.borderBottom = '1px solid #cdcdcd';
     },
-    //初始化调用事件设置每个帮助项的标题
+    //初始化调用设置年份数据
     created(){
       var minYear = this.currentYear-this.before;
       for (let i = 0; i <= this.before + this.after; i++) {
