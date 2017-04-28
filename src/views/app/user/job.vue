@@ -1,6 +1,6 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="job-information">
-    <div @click="popupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
+    <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
     <c-title :text="title" :hide="false"></c-title>
 
     <div class="job-business" v-bind:class="{ show: businessShow }">
@@ -23,7 +23,6 @@
               <label>经营主体</label>
               <input v-model="businessSubject" maxlength="11" placeholder="请填写经营主体名称">
             </li>
-            <!--<li @click="getCity">-->
             <li>
               <label>现单位地区</label>
               <span v-bind:class="{ blackColor: isWorkPlaceColor}">{{workPlace}}</span>
@@ -44,11 +43,13 @@
           </ul>
         </form>
       </div>
-      <div class="submit"  v-if="ok" @click="commit">
-        <p style="color: #fff;">确认并提交</p>
-      </div>
-      <div  class="submit"  v-else>
-        <p style="color: #9cd2ff;">确认并提交</p>
+      <div class="wrapper">
+        <div class="submit" v-if="ok" @click="commit">
+          <p style="color: #fff;">确认并提交</p>
+        </div>
+        <div class="submit" v-else>
+          <p style="color: #9cd2ff;">确认并提交</p>
+        </div>
       </div>
     </div>
 
@@ -70,11 +71,11 @@
             <li class="noBorder">
               <label class="item">是否缴纳社保/公积金</label>
               <div class="box">
-                <input class="circle checked" type="radio" id="yes" value="yes" checked v-model="picked"><span></span>
+                <input class="circle" type="radio" id="yes" :checked="true" value="是" v-model="picked"><span class="opacity"></span>
               </div>
               <label class="yes" for="yes">是</label>
               <div class="box">
-                <input class="circle" type="radio" id="no" value="no" v-model="picked"><span></span>
+                <input class="circle" type="radio" id="no" :checked="false" value="否" v-model="picked"><span></span>
               </div>
               <label class="no" for="no">否</label>
             </li>
@@ -154,16 +155,25 @@
 
     <Actionsheet :actions="unitPositionActions" v-model="unitPositionSheetVisible"></Actionsheet>
     <Actionsheet :actions="unitNatureActions" v-model="unitNatureSheetVisible"></Actionsheet>
-    <Popup v-model="popupVisible" position="bottom" :modal="false" >
+    <Popup v-model="workTimePopupVisible" position="bottom" :modal="false" >
       <div class="button">
         <p class="cancel" @click="cancel">取消</p>
         <p class="confirm" v-bind:class="{ show: workTimeConfirmShow }" @click="workTimeConfirm">工作时间确认</p>
-        <p class="confirm" v-bind:class="{ show: entryTimeConfirmShow }" @click="entryTimeConfirm">入职时间确认</p>
       </div>
-      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onValuesChange" @click="getCity">
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onValuesChange">
         {{Toolbar}}
       </Picker>
     </Popup>
+    <Popup v-model="entryTimePopupVisible" position="bottom" :modal="false" >
+      <div class="button">
+        <p class="cancel" @click="cancel">取消</p>
+        <p class="confirm" v-bind:class="{ show: entryTimeConfirmShow }" @click="entryTimeConfirm">入职时间确认</p>
+      </div>
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onValuesChange">
+        {{Toolbar}}
+      </Picker>
+    </Popup>
+
   </div>
 </template>
 <script>
@@ -175,20 +185,24 @@
     data () {
       return {
         title: '职业信息',
-        workTime: '请选择您的工作时间',
+        businessShow: false,//商类页面
+        salaryShow: true,//薪类页面
+
+        //商类
+        workTime: '请选择您的工作时间',//商类工作时间
         workPlace: '请选择现单位所在地区',//现单位地区
-        businessSubject: '',
-        livingPlace: '',
+        businessSubject: '',//经营主体
         address: '',//详细地址
         areaCode: '',//区号
         telephoneNumber: '',//电话号码
         extensionNumber: '',//分机号
-        Toolbar: '',
+        Toolbar: '',//组件picker中的toolbar
         sheetVisible: false,
         pickerVisible: true,
         isWorkTimeColor: false,
         isWorkPlaceColor: false,
-        popupVisible: false,
+        workTimePopupVisible: false,
+        entryTimePopupVisible: false,
         isActive: false,
         currentYear: 2017,
         before: 30,
@@ -199,9 +213,8 @@
         isUnitNatureUnique: false,
         temporaryWorkTime: '',
         temporaryEntryTime: '',
-        workTimeConfirmShow: false,
+        workTimeConfirmShow: true,
         entryTimeConfirmShow: false,
-//        picked: true;
 
         companyName: '',//现单位名称
         department: '',//现单位部门
@@ -211,8 +224,6 @@
         isUnitPosition: false,
         isUnitNature: false,
         isEntryTimeColor: false,
-        businessShow: false,
-        salaryShow: true,
         picked: '',
         unitPositionOthersShow: '',
         unitNatureOthersShow: '',
@@ -254,29 +265,30 @@
     },
     // 计算属性将被混入到 Vue 实例中。
     computed: {
+      //按钮颜色改变
       ok () {
           return (this.workTime!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.businessSubject&&this.address&&this.areaCode&&this.telephoneNumber&&this.extensionNumber;
       },
     },
 
     methods : {
+      //组件Picker当被选中的值发生变化时触发 change 事件， change 事件会执行onValuesChange函数
       onValuesChange(picker) {
         this.Toolbar = picker.getValues()[0].concat(picker.getValues()[1]);
       },
 
+      //提交表单
       commit(){
 
       },
 
-      getCity(){
-      },
-
+      //商类点击工作时间的时候popup组件显示，自己定的朦层显示（此处没有使用组件自带的朦层，因为当界面中有多个组件的时候）
       popupShow(){
-        this.popupVisible = true;
+        this.workTimePopupVisible = true;
         this.isActive = true;
       },
       workTimePopupShow(){
-        this.popupVisible = true;
+        this.workTimePopupVisible = true;
         this.isActive = true;
         this.workTimeConfirmShow = true;
         this.entryTimeConfirmShow = false;
@@ -284,7 +296,7 @@
         this.slots[1].defaultIndex = 2;
       },
       entryTimePopupShow(){
-        this.popupVisible = true;
+        this.entryTimePopupVisible = true;
         this.isActive = true;
         this.entryTimeConfirmShow = true;
         this.workTimeConfirmShow = false;
@@ -292,18 +304,19 @@
         this.slots[1].defaultIndex = 2;
       },
       cancel(){
-        this.popupVisible = false;
+        this.workTimePopupVisible = false;
+        this.entryTimePopupVisible = false;
         this.isActive = false;
       },
 
       workTimeConfirm(){
-        this.popupVisible = false;
+        this.workTimePopupVisible = false;
         this.isActive = false;
         this.workTime = this.Toolbar;
         this.isWorkTimeColor = true;
       },
       entryTimeConfirm(){
-        this.popupVisible = false;
+        this.entryTimePopupVisible = false;
         this.isActive = false;
         this.entryTime = this.Toolbar;
         this.isEntryTimeColor = true;
@@ -450,6 +463,9 @@
                   opacity: 0;
                 }
                 input[type="radio"]:checked + span {
+                  opacity: 1;
+                }
+                span.opacity{
                   opacity: 1;
                 }
               }
