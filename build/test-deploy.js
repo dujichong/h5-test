@@ -11,7 +11,7 @@ var project = 'h5';
 var business = 'car';
 
 cd(`/data/node-server/${business}/${project}`);
-if (argv.b) {
+if (argv.b && typeof argv.b !== 'boolean') {
   exec(`git fetch`);
   exec(`git checkout ${argv.b}`);
 }
