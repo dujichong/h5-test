@@ -24,7 +24,7 @@ window.__app__ = new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App
+  render: h => h(
 });
 
 // 输入框在虚拟键盘弹出时，自动滚动到可见位置
