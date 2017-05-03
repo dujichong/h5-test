@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 
+import vue33 from 'vue33';vue33();
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
@@ -24,7 +25,7 @@ window.__app__ = new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(
+  render: h => h(App)
 });
 
 // 输入框在虚拟键盘弹出时，自动滚动到可见位置
