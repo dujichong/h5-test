@@ -25,10 +25,6 @@ cp('-R', 'static/*', assetsPath)
 
 webpack(webpackConfig, function (err, stats) {
 
-  var jspDocType = '<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>';
-  var jspContent = jspDocType + fs.readFileSync(config.build.index);
-  fs.writeFileSync(path.resolve(config.build.assetsRoot, 'index.jsp'), jspContent);
-
   spinner.stop()
   if (err) throw err
   process.stdout.write(stats.toString({
