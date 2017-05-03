@@ -20,3 +20,4 @@ exec(`cnpm install`);
 exec(`npm run build`);
 exec(`pm2 delete ${business}-${project}`);
 exec(`pm2 start /data/node-server/${business}/${project}/build/build-server.js -n ${business}-${project} -- --proxy=${p}`);
+;;
