@@ -2,7 +2,7 @@
  * Created by puhui on 2017/5/3.
  */
 
-var rootPath = require('../../../config').rootPath;
+var rootPath = require('../../config').rootPath;
 
 module.exports = {
   api: rootPath + 'dictionary/region/:code',
