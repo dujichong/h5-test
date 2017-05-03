@@ -13,6 +13,7 @@ for (var key in networkInterfaces) {
 }
 
 module.exports = {
+  rootPath: '/puhui-car-app-server',
   build: {
     env: require('./prod.env'),
     port: 9082,

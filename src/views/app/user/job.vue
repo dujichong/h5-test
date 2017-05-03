@@ -23,15 +23,17 @@
               <label>经营主体</label>
               <input v-model="businessSubject" maxlength="11" placeholder="请填写经营主体名称">
             </li>
+
             <li>
               <label>现单位地区</label>
-              <span v-bind:class="{ blackColor: isWorkPlaceColor}">{{workPlace}}</span>
+              <span @click="getCity" v-bind:class="{ blackColor: isWorkPlaceColor}">{{workPlace}}</span>
             </li>
 
             <li>
               <label>详细地址</label>
               <input v-model="address" placeholder="地址详细到门牌号码">
             </li>
+
             <li class="noBorder">
               <label>单位电话</label>
               <input class="width105" v-model="areaCode" placeholder="区号">
@@ -173,34 +175,81 @@
         {{entryTimeToolbar}}
       </Picker>
     </Popup>
-    <!--<addressPicker :opts="obj" v-model="city"></addressPicker>-->
+
+    <div id="cityoptions" v-if="provinceList">
+      <div class="box">
+        <ul class="provinces">
+          <li v-for="(province , index) of provinces">
+            <div :class="'op ' + (province.name == okProvince ? 'op2' : '')" @click="showCity(province)">
+              <label>{{province.name}}</label>
+              <span :class="'pull ' + (province.name == okProvince ? 'pull_down' : 'pull_up')"></span>
+            </div>
+
+            <ul v-if="province.name == okProvince">
+              <li @click="chooseCity(city.cityName,city.cityCode,city.id)" v-for="city of province.city" class="op">
+                <div :class="'op ' + (city.cityName == okDist ? 'op2' : '')" @click="showDist(city)"><!---->
+                  <label>{{city.cityName}}</label>
+                  <span :class="'pull ' + (city.cityName == okDist ? 'pull_down' : 'pull_up')"></span><!---->
+                </div><!---->
+
+                <ul v-if="city.cityName == okDist">
+                  <li @click="chooseDist(district.distName,district.distCode)" v-for="district of city.district" class="op">
+                    <label>{{district.distName}}</label>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div class="qx" @click="colseCity">取消</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
   import cTitle from 'components/title';
-  import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button,} from 'mint-ui';
-//  import { addressPicker } from 'vue-address-picker';
+  import axios from 'utils/axios';
+  import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
+
+  const ROOTPATH = window.$rootPath;
+  const API_CITY= `${ROOTPATH}/user/requestController/getCityMethod`;
 
   export default {
 
     data () {
       return {
         title: '职业信息',
-        businessShow: false,//商类页面
-        salaryShow: true,//薪类页面
+        businessShow: true,//商类页面
+        salaryShow: false,//薪类页面
+
+        token: '',
+        requestId: '',
+
+        provinceList:false,
+        okProvince: '',
+        okDist: '',
         city: '',
-        obj: {
-          label: {
-            province: '所在省', city: '所在市', district: ''
-          },
-          default: {
-            province: '河南', city: '平顶山', district: '湛河区'
-          },
-          noLabel: true
-        },
+        cityCode: '',
+        dist:'',
+        name:'',
+        msg:'',
+        provinces: [],
+
+        salesId: this.$route.query.salesId,
+        shareGuidance: this.$route.query.shareGuidance,
+        source: this.$route.query.source,
+        uid: this.$route.query.uid,
+        openTime:'',
+        submitTime:'',
+        isSubmit:'',
+        firstTime:this.$route.query.Time,
+        customerOrUser:'',
+        shareId:'',
+
         //商类
         workTime: '请选择您的工作时间',//商类工作时间
         workPlace: '请选择现单位所在地区',//现单位地区
+        currentWorkPlace: '',
         businessSubject: '',//经营主体
         address: '',//详细地址
         areaCode: '',//区号
@@ -284,6 +333,67 @@
     },
 
     methods : {
+      //定时关闭弹框
+      timeout(){
+        window.setTimeout(() => {
+          this.msg = false;
+        },2000);
+      },
+
+      //获取地区
+      getCity(){
+        this.msg='加载中...';
+        axios.post(API_CITY,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'provinces', json.body.items);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
+      },
+
+      //点击省份折叠对应的市
+      showCity(province){
+        //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
+        this.okProvince = this.okProvince === province.name ? '' : province.name;
+        this.currentWorkPlace = this.okProvince;
+      },
+
+      //点击市折叠对应的区
+      showDist(city){
+        this.okDist = this.okDist === city.cityName ? '' : city.cityName;
+      },
+
+      //选中城市
+      chooseCity(Name,Code,Id){
+        this.city = Name;
+        this.cityCode = Code;
+        this.id = Id;
+        this.currentWorkPlace = this.currentWorkPlace+Name;
+      },
+
+      //选中县区
+      chooseDist(Name,Code){
+        this.dist = Name;
+        this.distCode = Code;
+        this.provinceList = false;
+        this.workPlace = this.okProvince+this.okDist+Name;
+        this.isWorkPlaceColor = true;
+      },
+
+      //取消选择城市
+      colseCity(){
+        this.provinceList=false;
+      },
+
       //组件Picker当被选中的值发生变化时触发 change 事件， change 事件会执行onWorkTimeValuesChange函数和onEntryTimeValuesChange函数
       //取得当前值并存在Toolbar上
       onWorkTimeValuesChange(picker){
@@ -397,6 +507,105 @@
 
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
+  $bfb: 100%;
+  $zero: 0px;
+  $color: #4d4d4d;
+  #cityoptions{
+    z-index: 1;
+    position: fixed;
+    left: $zero;
+    bottom: $zero;
+    width: $bfb;
+    height: $bfb;
+    overflow: auto;
+    -webkit-user-select: none;
+    background: rgba(0, 0, 0, 0.2);
+    .box{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: $bfb;
+      height: $bfb;
+      ul.provinces{
+        width: $bfb;
+        margin: $zero;
+        background-color: #fff;
+        padding: $zero;
+        flex:1;
+        position:fixed;
+        top:$zero;
+        bottom:1rem;
+        overflow:scroll;
+        li{
+          list-style: none;
+          label{
+            padding-left: 16px;
+          }
+          ul{
+            position: initial;
+            padding: $zero;
+            label{
+              padding-left: 45px;
+            }
+            div{}
+            ul{
+              li{
+                label{
+                  padding-left: 74px;
+                }
+              }
+            }
+          }
+          .op {
+            width: $bfb;
+            //height: 43px;
+            line-height: 43px;
+            background: #fff;
+            border-bottom: 1px #ececec solid;
+            cursor: pointer;
+            font-size: 15px;
+            color: #192e54;
+            position: relative;
+            .pull_up {
+              background: url("../../../assets/app/user/icon_sj1.png") 10px center no-repeat;
+              background-size: 45% auto;
+            }
+            .pull_down {
+              background: url("../../../assets/app/user/icon_sj2.png") 10px center no-repeat;
+              background-size: 45% auto;
+            }
+            .pull {
+              width: 30px;
+              height: 25px;
+              right: 8px;
+              background-size: 45% auto;
+              top: 10px;
+              cursor: pointer;
+              position: absolute;
+            }
+          }
+          .op2 {
+            background: #DDEDF1;
+          }
+        }
+      }
+      .qx{
+        position: fixed;
+        width: $bfb;
+        height: 1rem;
+        line-height: 1rem;
+        background: #fff;
+        border-top: 1px #45aa9c solid;
+        cursor: pointer;
+        bottom: $zero;
+        left: $zero;
+        font-size: 16px;
+        color: #45aa9c;
+        text-align: center;
+      }
+    }
+  }
+
   div.job-information{
     width: 100%;
     height: 100%;
@@ -502,6 +711,37 @@
               }
               label.no{
                 margin-left: .06rem;
+              }
+
+              span.cityVal{
+                width:3.2rem;
+                display: block;
+                float: left;
+                font-size: 15px;
+                border: none;
+                white-space:nowrap;
+                overflow:hidden;
+                text-overflow:ellipsis;
+                color: #b3b3b3;
+              }
+              label.gs-wid{
+                width: 2.5rem;
+              }
+              span.storeval{
+                width: 2.69rem;
+              }
+              span.hint{
+                display: block;
+                float: left;
+                margin-top:0.25rem;
+                width: 0.8rem;
+                height: 0.47rem;
+                background-image: url("../../../assets/app/user/apply-sj1.png");
+                background-size: $bfb $bfb;
+                border-left: 1px solid #CDCDCD;
+              }
+              span.color-2{
+                color: $color;
               }
 
               input,span {
@@ -622,5 +862,6 @@
         //background: red;
       }
     }
+
   }
 </style>

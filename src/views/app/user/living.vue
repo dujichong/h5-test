@@ -1,6 +1,13 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="living-information">
     <div class="layer" v-bind:class="{ active: isActive }"></div>
+    <div class="loading" v-if="msg">
+      <div>
+        <img v-if="msg=='登录成功'" src="../../../assets/app/user/suc.png"/>
+        <img v-if="msg=='提交数据失败，请稍后重试！'||msg =='系统异常,请稍后重试'" src="../../../assets/app/user/fail.png" />
+      </div>
+      <p>{{msg}}</p>
+    </div>
     <c-title :text="title" :hide="false"></c-title>
     <div class="border"></div>
     <div class="ui-form">
@@ -37,14 +44,26 @@
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
   </div>
+
+
 </template>
 
 <script>
   import cTitle from 'components/title';
+  import cLoading from 'components/loading';
+  import axios from 'utils/axios';
+  import routes from 'routes/index';
+
   import { Actionsheet, Toast, MessageBox } from 'mint-ui';
 
-  export default {
+  const ROOTPATH = window.$rootPath;
+  //添加或更新居住信息
+  const API_UESR_LIVING_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
+  //获取居住信息
+  const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
 
+
+  export default {
     data () {
       return {
         title: '居住信息',
@@ -58,6 +77,26 @@
         isUnique: false,
         isLivingTypeColor: false,
         isLivingPlaceColor: false,
+        loading: true,
+        id: '',
+        isActive: false,
+
+
+        msg: false,
+        appRequestId: '',
+        appLoginId: '',
+        livingTypeOther: '',
+        addressId: '',
+        lifeYears: '',
+        status: '',
+        createTime: '',
+        updateTime: '',
+        provinceCode: '',
+        cityCode: '',
+        distCode: '',
+        housenumber: '',
+        completeaddress: '',
+
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
           {name: '自有房产', method: this.getLivingStyle},
@@ -68,26 +107,152 @@
         ],
       };
     },
-
     // 计算属性将被混入到 Vue 实例中。
     computed: {
       ok () {
         if(this.show == true){
-          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')&&this.address&&this.years&&this.others;
+          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
+            &&this.address&&this.years&&this.others;
         }
         else {
-          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')&&this.address&&this.years;
+          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
+            &&this.address&&this.years;
         }
       },
     },
 
     methods : {
+      // 初始化
+      init () {
+        //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中
+        axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
+          //从url中取到token和requestId给后台
+          token:this.$route.query.token,
+          requestId:this.$route.query.requestId,
+        },{timeout:90000}).then(res => {
+          let json = res.data;
+          //操作成功
+          if (json.code == 1) {
+            //返回id 有id为更新操作 没有为新增操作
+            //拿到后台的id
+            this.id=json.body.id;
+            //判断id值
+            if(this.id==1){
+              //更新操作之前需要回显数据
+              this.showHistory();
+            }
+            //没有id，新增操作
+            else {
+              //doNothing
+            }
+          }
+          //后台返回不正常
+          else{
+            this.isActive=true;
+            this.msg = json.msg;
+            let timer=window.setTimeout(() => {
+              this.msg=false;
+              this.isActive=false;
+            },2000);
+          }
+        },error =>{
+          this.isActive=true;
+          this.msg ='提交数据失败，请稍后重试！';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+            this.isActive=false;
+          },2000);
+        })
+      },
+
+      //数据回显
+      showHistory(){
+        //在API_UESR_LIVING_INFO接口中
+        axios.post(API_UESR_LIVING_INFO,{
+        },{timeout:90000}).then(res => {
+          let json = res.data;
+          //操作成功后台
+          if (json.code == 1) {
+            //获取后台数据
+            this.livingType = json.body.livingType;
+            this.livingTypeOther = json.body.livingTypeOther;
+            this.lifeYears = json.body.lifeYears;
+            this.provinceCode = json.body.provinceCode;
+            this.cityCode = json.body.cityCode;
+            this.distCode = json.body.distCode;
+            this.housenumber = json.body.housenumber;
+            this.completeaddress = json.body.completeaddress;
+          }
+          //后台返回不正常
+          else{
+            this.isActive=true;
+            this.msg = json.msg;
+            let timer=window.setTimeout(() => {
+              this.msg=false;
+              this.isActive=false;
+            },2000);
+          }
+        },error =>{
+          this.isActive=true;
+          this.msg ='提交数据失败，请稍后重试！';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+            this.isActive=false;
+          },2000);
+        })
+      },
+
+      //点击提交按钮提交
+      commit(){
+        //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
+        axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
+          //提交数据
+          livingType:this.livingType,
+          livingTypeOther:this.livingTypeOther,
+          lifeYears:this.lifeYears,
+          provinceCode:this.provinceCode,
+          cityCode:this.cityCode,
+          distCode:this.distCode,
+          housenumber:this.housenumber,
+          completeaddress:this.completeaddress,
+      },{timeout:90000}).then(res => {
+          let json = res.data;
+          //验证通过
+          if (json.code == 1) {
+            this.msg = '登录成功';
+            this.isActive=true;
+            let timer=window.setTimeout(() => {
+              this.msg = false;
+              this.isActive=false;
+              let time=window.setTimeout(()=>{
+                this.close();
+              },200);
+            },2000);
+          }
+          //后台验证不通过
+          else{
+            this.msg = json.msg;
+            this.isActive=true;
+            let timer=window.setTimeout(() => {
+              this.msg=false;
+              this.isActive=false;
+            },2000);
+          }
+        },error =>{
+          this.isActive=true;
+          this.msg ='提交数据失败，请稍后重试！';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+            this.isActive=false;
+          },2000);
+        })
+
+      },
       getCity(){
         console.log('这里需要添加省市县区');
       },
 
       getLivingStyle(action){
-        //console.log(action.name);
         this.livingType = action.name;
         this.isLivingTypeColor = true;
         if(action.name == '其他'){
@@ -101,8 +266,9 @@
       },
     },
 
-    //初始化调用事件设置每个帮助项的标题
+    //初始化调用事件
     created(){
+      this.init();
     },
 
     components: {cTitle, Actionsheet}
@@ -126,6 +292,31 @@
       width:100%;
       height: 100%;
       display: none;
+    }
+    div.loading{
+      position: absolute;
+      top:3.87rem;
+      left: 0.59rem;
+      z-index: 999;
+      width: 6.3rem;
+      height: 3.58rem;
+      background-color: #fff;
+      border-radius: 11px;
+      div{
+        margin: 0.9rem auto 0;
+        width: 0.6rem;
+        height: 0.6rem;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      p{
+        width: 4.4rem;
+        margin: 0.2rem auto;
+        text-align: center;
+        font-size: .36rem;
+      }
     }
     div.active{
       display: block;
