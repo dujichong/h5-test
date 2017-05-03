@@ -13,25 +13,25 @@
     <div class="ui-form">
       <form>
         <ul>
-          <li @click="sheetVisible = true" v-bind:class="{ unique: isUnique }">
+          <li @click="sheetVisible = true" v-bind:class="{ unique: livingType=='其他' }">
             <label>居住情况</label>
-            <span v-bind:class="{ blackColor: isLivingTypeColor}">{{livingType}}</span>
+            <span v-bind:class="{ blackColor: livingType!='请选择您的居住情况'}">{{livingType}}</span>
           </li>
-          <li v-if="show">
+          <li v-if="livingType=='其他'">
             <label>其他情况</label>
-            <input v-model="others" placeholder="请输入其他居住情况">
+            <input v-model="livingTypeOther" placeholder="请输入其他居住情况">
           </li>
           <li @click="getCity">
             <label>现居住地</label>
-            <span v-bind:class="{ blackColor: isLivingPlaceColor}">{{livingPlace}}</span>
+            <span v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
           </li>
           <li>
             <label>详细地址</label>
-            <input v-model="address" placeholder="地址具体到门牌号码">
+            <input v-model="housenumber" placeholder="地址具体到门牌号码">
           </li>
           <li class="noBorder">
             <label>生活年限(年)</label>
-            <input v-model="years" placeholder="请填写您的居住年限">
+            <input v-model="lifeYears" placeholder="请填写您的居住年限">
           </li>
         </ul>
       </form>
@@ -43,6 +43,36 @@
       <p style="color: #9cd2ff;">确认并提交</p>
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
+
+    <div id="cityoptions" v-if="provinceList">
+      <div class="box">
+        <ul class="provinces">
+          <li v-for="(province , index) of provinces">
+            <div :class="'op ' + (province.text == okProvince ? 'op2' : '')" @click="showCity(province)">
+              <label>{{province.text}}</label>
+              <span :class="'pull ' + (province.text == okProvince ? 'pull_down' : 'pull_up')"></span>
+            </div>
+
+            <ul v-if="province.text == okProvince">
+              <!--@click="chooseCity(city.text,city.value)"-->
+              <li v-for="(city,index) of cities" class="op">
+                <div :class="'op ' + (city.text == okCity ? 'op2' : '')" @click="showDist(city)"><!---->
+                  <label>{{city.text}}</label>
+                  <span :class="'pull ' + (city.text == okCity ? 'pull_down' : 'pull_up')"></span><!---->
+                </div><!---->
+
+                <ul v-if="city.text == okCity">
+                  <li @click="chooseDist(dist.value,dist.text)" v-for="(dist,index) of dists" class="op">
+                    <label>{{dist.text}}</label>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div class="qx" @click="colseCity">取消</div>
+      </div>
+    </div>
   </div>
 
 
@@ -54,6 +84,8 @@
   import axios from 'utils/axios';
   import routes from 'routes/index';
 
+
+
   import { Actionsheet, Toast, MessageBox } from 'mint-ui';
 
   const ROOTPATH = window.$rootPath;
@@ -61,6 +93,8 @@
   const API_UESR_LIVING_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
   //获取居住信息
   const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
+  //获取省市区信息
+  const API_CITY= `${ROOTPATH}/dictionary/region/`;
 
 
   export default {
@@ -68,19 +102,26 @@
       return {
         title: '居住信息',
         livingType: '请选择您的居住情况',
-        others: '',
         livingPlace: '请选择您的现居住地',
-        address: '',
-        years: '',
-        show: false,
+
         sheetVisible: false,
-        isUnique: false,
-        isLivingTypeColor: false,
-        isLivingPlaceColor: false,
         loading: true,
         id: '',
         isActive: false,
 
+        token: '',
+        requestId: '',
+        num: '-1',
+        provinceList:false,
+        okProvince: '',
+        okCity: '',
+        okDist: '',
+        city: '',
+        dist:'',
+        name:'',
+        provinces: [],
+        cities: [],
+        dists: [],
 
         msg: false,
         appRequestId: '',
@@ -110,13 +151,13 @@
     // 计算属性将被混入到 Vue 实例中。
     computed: {
       ok () {
-        if(this.show == true){
+        if(this.livingType=='其他'){
           return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
-            &&this.address&&this.years&&this.others;
+            &&this.housenumber&&this.lifeYears&&this.livingTypeOther;
         }
         else {
           return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
-            &&this.address&&this.years;
+            &&this.housenumber&&this.lifeYears;
         }
       },
     },
@@ -248,21 +289,91 @@
         })
 
       },
+
+      //获取地区
       getCity(){
-        console.log('这里需要添加省市县区');
+        this.msg='加载中...';
+        axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'provinces', json.body);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
+      },
+
+      //点击省份折叠对应的市
+      showCity(province){
+        //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
+        this.provinceCode = province.value;
+        this.okProvince = this.okProvince === province.text ? '' : province.text;
+        console.log(this.provinceCode);
+        this.msg='加载中...';
+        axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'cities', json.body);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
+      },
+
+      //点击市折叠对应的区
+      showDist(city){
+        this.cityCode = city.value;
+        this.okCity = this.okCity === city.text ? '' : city.text;
+        console.log(this.cityCode);
+        this.msg='加载中...';
+        axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'dists', json.body);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
+
+      },
+
+      //选中县区
+      chooseDist(value,text){
+        this.dist = text;
+        this.distCode = value;
+        this.provinceList = false;
+        this.livingPlace = this.okProvince+this.okCity+this.dist;
+        console.log(this.distCode);
+      },
+
+      //取消选择城市
+      colseCity(){
+        this.provinceList=false;
       },
 
       getLivingStyle(action){
         this.livingType = action.name;
-        this.isLivingTypeColor = true;
-        if(action.name == '其他'){
-          this.show = true;
-          this.isUnique = true;
-        }
-        else {
-          this.show = false;
-          this.isUnique = false;
-        }
       },
     },
 
@@ -282,6 +393,104 @@
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     background-color: #f1f1f1;
+    $bfb: 100%;
+    $zero: 0px;
+    $color: #4d4d4d;
+    #cityoptions{
+      z-index: 1;
+      position: fixed;
+      left: $zero;
+      bottom: $zero;
+      width: $bfb;
+      height: $bfb;
+      overflow: auto;
+      -webkit-user-select: none;
+      background: rgba(0, 0, 0, 0.2);
+      .box{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: $bfb;
+        height: $bfb;
+        ul.provinces{
+          width: $bfb;
+          margin: $zero;
+          background-color: #fff;
+          padding: $zero;
+          flex:1;
+          position:fixed;
+          top:$zero;
+          bottom:1rem;
+          overflow:scroll;
+          li{
+            list-style: none;
+            label{
+              padding-left: 16px;
+            }
+            ul{
+              position: initial;
+              padding: $zero;
+              label{
+                padding-left: 45px;
+              }
+              div{}
+              ul{
+                li{
+                  label{
+                    padding-left: 74px;
+                  }
+                }
+              }
+            }
+            .op {
+              width: $bfb;
+              //height: 43px;
+              line-height: 43px;
+              background: #fff;
+              border-bottom: 1px #ececec solid;
+              cursor: pointer;
+              font-size: 15px;
+              color: #192e54;
+              position: relative;
+              .pull_up {
+                background: url("../../../assets/app/user/icon_sj1.png") 10px center no-repeat;
+                background-size: 45% auto;
+              }
+              .pull_down {
+                background: url("../../../assets/app/user/icon_sj2.png") 10px center no-repeat;
+                background-size: 45% auto;
+              }
+              .pull {
+                width: 30px;
+                height: 25px;
+                right: 8px;
+                background-size: 45% auto;
+                top: 10px;
+                cursor: pointer;
+                position: absolute;
+              }
+            }
+            .op2 {
+              background: #DDEDF1;
+            }
+          }
+        }
+        .qx{
+          position: fixed;
+          width: $bfb;
+          height: 1rem;
+          line-height: 1rem;
+          background: #fff;
+          border-top: 1px #45aa9c solid;
+          cursor: pointer;
+          bottom: $zero;
+          left: $zero;
+          font-size: 16px;
+          color: #45aa9c;
+          text-align: center;
+        }
+      }
+    }
     div.layer{
       position: absolute;
       top:0;

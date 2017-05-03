@@ -180,21 +180,22 @@
       <div class="box">
         <ul class="provinces">
           <li v-for="(province , index) of provinces">
-            <div :class="'op ' + (province.name == okProvince ? 'op2' : '')" @click="showCity(province)">
-              <label>{{province.name}}</label>
-              <span :class="'pull ' + (province.name == okProvince ? 'pull_down' : 'pull_up')"></span>
+            <div :class="'op ' + (province.text == okProvince ? 'op2' : '')" @click="showCity(province)">
+              <label>{{province.text}}</label>
+              <span :class="'pull ' + (province.text == okProvince ? 'pull_down' : 'pull_up')"></span>
             </div>
 
-            <ul v-if="province.name == okProvince">
-              <li @click="chooseCity(city.cityName,city.cityCode,city.id)" v-for="city of province.city" class="op">
-                <div :class="'op ' + (city.cityName == okDist ? 'op2' : '')" @click="showDist(city)"><!---->
-                  <label>{{city.cityName}}</label>
-                  <span :class="'pull ' + (city.cityName == okDist ? 'pull_down' : 'pull_up')"></span><!---->
+            <ul v-if="province.text == okProvince">
+              <!--@click="chooseCity(city.text,city.value)"-->
+              <li v-for="(city,index) of cities" class="op">
+                <div :class="'op ' + (city.text == okCity ? 'op2' : '')" @click="showDist(city)"><!---->
+                  <label>{{city.text}}</label>
+                  <span :class="'pull ' + (city.text == okCity ? 'pull_down' : 'pull_up')"></span><!---->
                 </div><!---->
 
-                <ul v-if="city.cityName == okDist">
-                  <li @click="chooseDist(district.distName,district.distCode)" v-for="district of city.district" class="op">
-                    <label>{{district.distName}}</label>
+                <ul v-if="city.text == okCity">
+                  <li @click="chooseDist(dist.value,dist.text)" v-for="(dist,index) of dists" class="op">
+                    <label>{{dist.text}}</label>
                   </li>
                 </ul>
               </li>
@@ -212,8 +213,7 @@
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
 
   const ROOTPATH = window.$rootPath;
-  const API_CITY= `${ROOTPATH}/user/requestController/getCityMethod`;
-
+  const API_CITY= `${ROOTPATH}/dictionary/region/`;
   export default {
 
     data () {
@@ -222,34 +222,27 @@
         businessShow: true,//商类页面
         salaryShow: false,//薪类页面
 
+        provinceCode: '',   //省code
+        cityCode: '',         //市code
+        distCode: '',         //县code
         token: '',
         requestId: '',
-
+        num: '-1',
         provinceList:false,
         okProvince: '',
+        okCity: '',
         okDist: '',
         city: '',
-        cityCode: '',
         dist:'',
         name:'',
         msg:'',
         provinces: [],
-
-        salesId: this.$route.query.salesId,
-        shareGuidance: this.$route.query.shareGuidance,
-        source: this.$route.query.source,
-        uid: this.$route.query.uid,
-        openTime:'',
-        submitTime:'',
-        isSubmit:'',
-        firstTime:this.$route.query.Time,
-        customerOrUser:'',
-        shareId:'',
+        cities: [],
+        dists: [],
 
         //商类
         workTime: '请选择您的工作时间',//商类工作时间
         workPlace: '请选择现单位所在地区',//现单位地区
-        currentWorkPlace: '',
         businessSubject: '',//经营主体
         address: '',//详细地址
         areaCode: '',//区号
@@ -343,12 +336,12 @@
       //获取地区
       getCity(){
         this.msg='加载中...';
-        axios.post(API_CITY,{},{timeout:90000}).then(res => {
+        axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
           let json = res.data;
           //打断点，查看debugger;
           if (json.code == 1) {
             this.msg=false;
-            this.$set(this, 'provinces', json.body.items);//给this赋值
+            this.$set(this, 'provinces', json.body);//给this赋值
             this.provinceList=true;
           }else{
             this.msg = json.msg;
@@ -363,30 +356,59 @@
       //点击省份折叠对应的市
       showCity(province){
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
-        this.okProvince = this.okProvince === province.name ? '' : province.name;
-        this.currentWorkPlace = this.okProvince;
+        this.provinceCode = province.value;
+        this.okProvince = this.okProvince === province.text ? '' : province.text;
+        console.log(this.provinceCode);
+        this.msg='加载中...';
+        axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'cities', json.body);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
       },
 
       //点击市折叠对应的区
       showDist(city){
-        this.okDist = this.okDist === city.cityName ? '' : city.cityName;
-      },
+        this.cityCode = city.value;
+        this.okCity = this.okCity === city.text ? '' : city.text;
+        console.log(this.cityCode);
+        this.msg='加载中...';
+        axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
+          let json = res.data;
+          //打断点，查看debugger;
+          if (json.code == 1) {
+            this.msg=false;
+            this.$set(this, 'dists', json.body);//给this赋值
+            this.provinceList=true;
+          }else{
+            this.msg = json.msg;
+            this.timeout();
+          }
+        }).catch(error =>{
+          this.msg ='提交数据失败，请稍后重试！';
+          this.timeout();
+        });
 
-      //选中城市
-      chooseCity(Name,Code,Id){
-        this.city = Name;
-        this.cityCode = Code;
-        this.id = Id;
-        this.currentWorkPlace = this.currentWorkPlace+Name;
       },
 
       //选中县区
-      chooseDist(Name,Code){
-        this.dist = Name;
-        this.distCode = Code;
+      chooseDist(value,text){
+        this.dist = text;
+        this.distCode = value;
         this.provinceList = false;
-        this.workPlace = this.okProvince+this.okDist+Name;
+        this.workPlace = this.okProvince+this.okCity+this.dist;
         this.isWorkPlaceColor = true;
+        console.log(this.distCode);
       },
 
       //取消选择城市

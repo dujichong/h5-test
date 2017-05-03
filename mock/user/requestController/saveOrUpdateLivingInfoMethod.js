@@ -5,15 +5,15 @@ module.exports = {
   api: rootPath + '/user/requestController/saveOrUpdateLivingInfoMethod',
   response: function (req, res) {
     res.json({
-      "code": "00000",
+      "code": "1",
       "msg": "操作成功",
       "status": "904",
       "token": null,
       "body": {
-        "id": 1,
+        "id": -1,
         "appRequestId": 123,
         "appLoginId": 1,
-        "livingType": "RENT_HOUSE",
+        "livingType": "其他",
         "livingTypeOther": "111xxx信息",
         "addressId": 2,
         "lifeYears": "6",
