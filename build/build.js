@@ -9,6 +9,8 @@ var ora = require('ora')
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.prod.conf')
 
+fdsfdsfd();
+
 console.log(
   '  Tip:\n' +
   '  Built files are meant to be served over an HTTP server.\n' +
@@ -24,10 +26,6 @@ mkdir('-p', assetsPath)
 cp('-R', 'static/*', assetsPath)
 
 webpack(webpackConfig, function (err, stats) {
-
-  var jspDocType = '<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>';
-  var jspContent = jspDocType + fs.readFileSync(config.build.index);
-  fs.writeFileSync(path.resolve(config.build.assetsRoot, 'index.jsp'), jspContent);
 
   spinner.stop()
   if (err) throw err
