@@ -10,7 +10,7 @@
           <ul>
             <li>
               <label>工作时间</label>
-              <span @click="workTimePopupShow" v-bind:class="{ blackColor: isWorkTimeColor}">{{workTime}}</span>
+              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间'}">{{officialJobDate}}</span>
             </li>
           </ul>
         </form>
@@ -21,17 +21,17 @@
           <ul>
             <li>
               <label>经营主体</label>
-              <input v-model="businessSubject" maxlength="11" placeholder="请填写经营主体名称">
+              <input v-model="companyName" maxlength="11" placeholder="请填写经营主体名称">
             </li>
 
             <li>
               <label>现单位地区</label>
-              <span @click="getCity" v-bind:class="{ blackColor: isWorkPlaceColor}">{{workPlace}}</span>
+              <span @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li>
               <label>详细地址</label>
-              <input v-model="address" placeholder="地址详细到门牌号码">
+              <input v-model="housenumber" placeholder="地址详细到门牌号码">
             </li>
 
             <li class="noBorder">
@@ -40,7 +40,7 @@
               <div class="border-right"></div>
               <input class="width218" v-model="telephoneNumber" placeholder="电话号码">
               <div class="border-right"></div>
-              <input class="width131" v-model="extensionNumber" placeholder="分机号">
+              <input class="width131" v-model="branchNumber" placeholder="分机号">
             </li>
           </ul>
         </form>
@@ -62,7 +62,7 @@
           <ul>
             <li>
               <label>工作时间</label>
-              <span @click="workTimePopupShow" v-bind:class="{ blackColor: isWorkTimeColor}">{{workTime}}</span>
+              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间'}">{{officialJobDate}}</span>
             </li>
 
             <li>
@@ -88,14 +88,15 @@
       <div class="ui-form">
         <form>
           <ul>
+
             <li>
               <label>现单位地区</label>
-              <span v-bind:class="{ blackColor: isWorkPlaceColor}">{{workPlace}}</span>
+              <span @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li class="noBorder">
               <label>详细地址</label>
-              <input v-model="address" placeholder="地址详细到门牌号码">
+              <input v-model="housenumber" placeholder="地址详细到门牌号码">
             </li>
           </ul>
         </form>
@@ -110,7 +111,7 @@
               <div class="border-right"></div>
               <input class="width218" v-model="telephoneNumber" placeholder="电话号码">
               <div class="border-right"></div>
-              <input class="width131" v-model="extensionNumber" placeholder="分机号">
+              <input class="width131" v-model="branchNumber" placeholder="分机号">
             </li>
 
             <li>
@@ -118,29 +119,29 @@
               <input v-model="department" placeholder="请填写您的部门">
             </li>
 
-            <li @click="unitPositionSheetVisible = true"  v-bind:class="{ unique: isUnitPositionUnique }">
+            <li @click="unitPositionSheetVisible = true"  v-bind:class="{ unique: jobTitleType=='其他' }">
               <label>现单位职位</label>
-              <span v-bind:class="{ blackColor: isUnitPosition}">{{unitPosition}}</span>
+              <span v-bind:class="{ blackColor: jobTitleType!='请选择您的职位'}">{{jobTitleType}}</span>
             </li>
 
-            <li v-if="unitPositionOthersShow">
+            <li v-if="jobTitleType=='其他'">
               <label>职位说明</label>
-              <input v-model="unitPositionOthers" placeholder="请输入其他单位职位情况">
+              <input v-model="messageOfJobTitleType" placeholder="请输入其他单位职位情况">
             </li>
 
-            <li @click="unitNatureSheetVisible = true" v-bind:class="{ unique: isUnitNatureUnique }">
+            <li @click="unitNatureSheetVisible = true" v-bind:class="{ unique: companyType=='其他' }">
               <label>单位性质</label>
-              <span v-bind:class="{ blackColor: isUnitNature}">{{unitNature}}</span>
+              <span v-bind:class="{ blackColor: companyType!='请选择您的单位性质'}">{{companyType}}</span>
             </li>
 
-            <li v-if="unitNatureOthersShow">
+            <li v-if="companyType=='其他'">
               <label>单位说明</label>
-              <input v-model="unitNatureOthers" placeholder="请输入其他单位性质情况">
+              <input v-model="messageOfCompanyType" placeholder="请输入其他单位性质情况">
             </li>
 
             <li class="noBorder">
               <label>入职时间</label>
-              <span @click="entryTimePopupShow" v-bind:class="{ blackColor: isEntryTimeColor}">{{entryTime}}</span>
+              <span @click="entryTimePopupShow" v-bind:class="{ blackColor: enterCompanyDate!='请选择您的入职时间'}">{{enterCompanyDate}}</span>
             </li>
           </ul>
         </form>
@@ -209,13 +210,13 @@
 </template>
 <script>
   import cTitle from 'components/title';
-  import axios from 'utils/axios';
+  import cLoading from 'components/loading';
+  import axios from 'axios';
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
-
   const ROOTPATH = window.$rootPath;
-  //添加或更新居住信息
+  //添加或更新职业信息
   const API_UESR_OCCOPATION_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateOccupationInfoMethod`;
-  //获取居住信息
+  //获取职业信息
   const API_UESR_OCCOPATION_INFO= `${ROOTPATH}/user/requestController/getOccupationInfoMethod`;
   //获取省市区信息
   const API_CITY= `${ROOTPATH}/dictionary/region/`;
@@ -224,8 +225,9 @@
     data () {
       return {
         title: '职业信息',
-        businessShow: true,//商类页面
+        businessShow: false,//商类页面
         salaryShow: false,//薪类页面
+        salaryFrom: '',//1位薪类，2位商类
 
         provinceCode: '',   //省code
         cityCode: '',         //市code
@@ -246,20 +248,36 @@
         dists: [],
 
         //商类
-        workTime: '请选择您的工作时间',//商类工作时间
+        officialJobDate: '请选择您的工作时间',//商类工作时间
+        officialJobDateYear:'',
+        officialJobDateMonth: '',
+        year: '',
+        mounth: '',
+
+        pid: '',
+        companyName: '',//现单位名称或者经营主体
+        isPayOfSocialSecurityFund: '',
         workPlace: '请选择现单位所在地区',//现单位地区
-        businessSubject: '',//经营主体
-        address: '',//详细地址
+        housenumber: '',//详细地址
+        completePhone: '',
         areaCode: '',//区号
         telephoneNumber: '',//电话号码
-        extensionNumber: '',//分机号
+        branchNumber: '',//分机号
+        department: '',//现单位部门
+        jobTitleType: '请选择您的职位',//
+        messageOfJobTitleType: '',
+        companyType: '请选择您的单位性质',//
+        messageOfCompanyType: '',
+        jobTitleTypeValue: '',
+        companyTypeValue: '',
+        enterCompanyDate: '请选择您的入职时间',
+        enterCompanyDateYear: '',
+        enterCompanyDateMonth: '',
         Toolbar: '',//组件picker中的toolbar
         workTimeToolbar: '',
         entryTimeToolbar: '',
         sheetVisible: false,
         pickerVisible: true,
-        isWorkTimeColor: false,
-        isWorkPlaceColor: false,
         workTimePopupVisible: false,
         entryTimePopupVisible: false,
         isActive: false,
@@ -268,24 +286,13 @@
         after: 10,
         unitPositionSheetVisible: false,
         unitNatureSheetVisible: false,
-        isUnitPositionUnique: false,
-        isUnitNatureUnique: false,
         temporaryWorkTime: '',
         temporaryEntryTime: '',
         workTimeConfirmShow: true,
         entryTimeConfirmShow: false,
-
-        companyName: '',//现单位名称
-        department: '',//现单位部门
-        unitPosition: '请选择您的职位',//
-        unitNature: '请选择您的单位性质',//
-        entryTime: '请选择您的入职时间',
-        isUnitPosition: false,
-        isUnitNature: false,
-        isEntryTimeColor: false,
+        workSeniority: '',
+        workYears: '',
         picked: '',
-        unitPositionOthersShow: '',
-        unitNatureOthersShow: '',
         slots: [
           {
             flex: 1,
@@ -302,23 +309,86 @@
         visibleItemCount: 5,
         unitPositionActions: [
           //负责人、高级管理人员、中级管理人员、一般管理人员、一般正式员工、派遣员工、非正式员工、其他。
-          {name: '负责人', method: this.getUnitPosition},
-          {name: '高级管理人员', method: this.getUnitPosition},
-          {name: '中级管理人员', method: this.getUnitPosition},
-          {name: '一般管理人员', method: this.getUnitPosition},
-          {name: '一般正式员工', method: this.getUnitPosition},
-          {name: '派遣员工', method: this.getUnitPosition},
-          {name: '其他', method: this.getUnitPosition},
+          {name: '负责人', method: this.getJobTitleType, "value": "HEAD"},
+          {name: '高级管理人员', method: this.getJobTitleType, "value": "SENIOR_MANAGEMENT"},
+          {name: '中级管理人员', method: this.getJobTitleType, "value": "INTERMEDIATE_MANAGEMENT"},
+          {name: '一般管理人员', method: this.getJobTitleType, "value": "GENERAL_MANAGEMENT"},
+          {name: '一般正式员工', method: this.getJobTitleType, "value": "GENERAL_STAFF"},
+          {name: '派遣员工', method: this.getJobTitleType, "value": "DISPATCH_STAFF"},
+          {name: '非正式员工', method: this.getJobTitleType, "value": "INFORMAL_STAFF"},
+          {name: '退休人员', method: this.getJobTitleType, "value": "RETIREE"},
+          {name: '其他', method: this.getJobTitleType, "value": "OTHER"},
         ],
+        unitPositionResponse : [
+          {
+            "text": "负责人",
+            "value": "HEAD"
+          }, {
+            "text": "高级管理人员",
+            "value": "SENIOR_MANAGEMENT"
+          }, {
+            "text": "中级管理人员",
+            "value": "INTERMEDIATE_MANAGEMENT"
+          }, {
+            "text": "一般管理人员",
+            "value": "GENERAL_MANAGEMENT"
+          }, {
+            "text": "一般正式员工",
+            "value": "GENERAL_STAFF"
+          }, {
+            "text": "派遣员工",
+            "value": "DISPATCH_STAFF"
+          }, {
+            "text": "非正式员工",
+            "value": "INFORMAL_STAFF"
+          }, {
+            "text": "退休人员",
+            "value": "RETIREE"
+          }, {
+            "text": "其他",
+            "value": "OTHER"
+          }
+        ],
+
         unitNatureActions: [
           //机关事业、国企/上市公司、外资、合资、民营、个体、其他。
-          {name: '机关事业', method: this.getUnitNature},
-          {name: '国企/上市公司', method: this.getUnitNature},
-          {name: '外资', method: this.getUnitNature},
-          {name: '合资', method: this.getUnitNature},
-          {name: '民营', method: this.getUnitNature},
-          {name: '个体', method: this.getUnitNature},
-          {name: '其他', method: this.getUnitNature},
+          {name: '机关事业单位', method: this.getCompanyType, "value": "ENTERPRISE_COMPANY"},
+          {name: '国企/上市公司', method: this.getCompanyType, "value": "LIST_COMPANY"},
+          {name: '外资', method: this.getCompanyType, "value": "OUT_COMPANY"},
+          {name: '合资', method: this.getCompanyType, "value": "JOINT_VENTURE"},
+          {name: '民营企业', method: this.getCompanyType, "value": "OPERATE_COMPANY"},
+          {name: '个体', method: this.getCompanyType, "value": "PRIVATE_COMPANY"},
+          {name: '其他', method: this.getCompanyType, "value": "OTHER_COMPANY"},
+        ],
+        unitNatureResponse : [
+          {
+            "text": "机关事业单位",
+            "value": "ENTERPRISE_COMPANY"
+          },
+          {
+            "text": "国企/上市公司",
+            "value": "LIST_COMPANY"
+          },
+          {
+            "text": "外资",
+            "value": "OUT_COMPANY"
+          },
+          {
+            "text": "合资",
+            "value": "JOINT_VENTURE"
+          },
+          {
+            "text": "民营企业",
+            "value": "OPERATE_COMPANY"
+          },
+          {
+            "text": "个体",
+            "value": "PRIVATE_COMPANY"
+          },
+          {
+            "text": "其它",
+            "value": "OTHER_COMPANY"
+          }
         ],
       };
     },
@@ -326,43 +396,77 @@
     computed: {
       //按钮颜色改变
       ok () {
-          return (this.workTime!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.businessSubject&&this.address&&this.areaCode&&this.telephoneNumber&&this.extensionNumber;
+          return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName&&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.branchNumber;
       },
     },
 
     methods : {
       // 初始化
       init () {
-        //在API_UESR_OCCOPATION_INFO接口中
+        //在API_UESR_LIVING_INFO接口中
         axios.post(API_UESR_OCCOPATION_INFO,{
           //从url中取到token和requestId给后台
+          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
           token:this.$route.query.token,
-          requestId:this.$route.query.requestId,
+          body:{
+            requestId:this.$route.query.requestId,
+          },
         },{timeout:90000}).then(res => {
           let json = res.data;
           //操作成功
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
-            this.id=json.data.id;
+            this.pid=json.data.pid;
+            this.salaryFrom = json.data.salaryFrom;
+            if(this.salaryFrom==1){
+              this.salaryShow = true;
+              this.businessShow = false;
+            }
+            if(this.salaryFrom==2){
+              this.businessShow = true;
+              this.salaryShow = false;
+            }
             //判断id值
-            if(this.id==1){
+            if(this.pid){
               //更新操作之前需要回显数据
-              for(let i=0;i<this.response.length;i++){
-                if(this.response[i].value == json.data.livingType){
-                  this.livingType = this.response[i].text;
+              for(let i=0;i<this.unitPositionActions.length;i++){
+                if(this.unitPositionActions[i].value == json.data.livingType){
+                  this.jobTitleType = this.unitPositionActions[i].name;
                 }
               }
+
+              for(let i=0;i<this.unitNatureActions.length;i++){
+                if(this.unitNatureActions[i].value == json.data.livingType){
+                  this.companyType = this.unitNatureActions[i].name;
+                }
+              }
+
               this.addressId = json.data.addressId;
-              this.livingTypeOther = json.data.livingTypeOther;
-              this.lifeYears = json.data.lifeYears;
               this.provinceCode = json.data.provinceCode;
               this.cityCode = json.data.cityCode;
               this.distCode = json.data.distCode;
               this.housenumber = json.data.housenumber;
               this.completeaddress = json.data.completeaddress;
               this.fullAddress = this.completeaddress.split(" ");
-              this.livingPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
+              this.workPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
+              this.appCustomerId = json.data.appCustomerId;
+              this.officialJobDate = json.data.officialJobDate;
+              this.enterCompanyDate = json.data.enterCompanyDate;
+              this.companyName = json.data.companyName;
+              this.pid = json.data.pid;
+              this.completePhone =  json.data.completePhone;
+              this.areaCode = json.data.completePhone.split('-')[0];
+              this.telephoneNumber = json.data.completePhone.split('-')[1];
+              this.branchNumber =  json.data.branchNumber;
+              this.department =  json.data.department;
+              this.jobTitleType =  json.data.jobTitleType;
+              this.messageOfJobTitleType =  json.data.messageOfJobTitleType;
+              this.companyType =  json.data.companyType;
+              this.messageOfCompanyType =  json.data.messageOfCompanyType;
+              this.payOfSocialSecurityFund =  json.data.payOfSocialSecurityFund;
+              this.workYears = json.data.workYears;
+              this.workSeniority = json.data.workSeniority;
             }
             //没有id，新增操作
             else {
@@ -390,27 +494,49 @@
 
       //点击提交按钮提交
       commit(){
+        //console.log(this.officialJobDate);
+        this.officialJobDateYear = this.officialJobDate.split('月')[0].split('年')[0];
+        this.officialJobDateMonth = this.officialJobDate.split('月')[0].split('年')[1].length==2 ? this.officialJobDate.split('月')[0].split('年')[1] : 0+this.officialJobDate.split('月')[0].split('年')[1];
+        this.enterCompanyDateYear = this.enterCompanyDate.split('月')[0].split('年')[0];
+        this.enterCompanyDateMonth = this.enterCompanyDate.split('月')[0].split('年')[1].length==2 ? this.enterCompanyDate.split('月')[0].split('年')[1] : 0+this.enterCompanyDate.split('月')[0].split('年')[1];
+        console.log(this.year+'-'+this.mounth+'-01');
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
         axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
           //从url中取到token和requestId给后台
+          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
           token:this.$route.query.token,
-          requestId:this.$route.query.requestId,
-
           //提交数据
-          addressId:this.addressId,
-          id:this.id,
-          livingType:this.livingTypeValue,
-          livingTypeOther:this.livingTypeOther,
-          lifeYears:this.lifeYears,
-          provinceCode:this.provinceCode,
-          cityCode:this.cityCode,
-          distCode:this.distCode,
-          housenumber:this.housenumber,
-          completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+          body:{
+            requestId:this.$route.query.requestId,
+            //提交数据
+            appCustomerId: this.appCustomerId,
+            officialJobDate: this.officialJobDateYear+'-'+this.officialJobDateMonth+'-01',
+            enterCompanyDate: this.enterCompanyDateYear+'-'+this.enterCompanyDateMonth+'-01',
+            companyName: this.companyName,
+            addressId:this.addressId,
+            pid:this.pid,
+            completePhone: this.areaCode+'-'+this.telephoneNumber+'-'+this.branchNumber,
+            branchNumber: this.branchNumber,
+            department: this.department,
+            jobTitleType: this.jobTitleType,
+            messageOfJobTitleType: this.messageOfJobTitleType,
+            companyType: this.companyType,
+            messageOfCompanyType: this.messageOfCompanyType,
+            provinceCode:this.provinceCode,
+            cityCode:this.cityCode,
+            distCode:this.distCode,
+            housenumber:this.housenumber,
+            completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+            payOfSocialSecurityFund: this.payOfSocialSecurityFund,
+            salaryFrom: this.salaryFrom,
+            workSeniority: this.workSeniority,//司龄
+            workYears: this.workYears,//工龄
+          }
         },{timeout:90000}).then(res => {
           let json = res.data;
           //验证通过
           if (json.code == '00000') {
+            this.pid=json.data.pid;
             this.msg = '登录成功';
             this.isActive=true;
             let timer=window.setTimeout(() => {
@@ -438,7 +564,11 @@
             this.isActive=false;
           },2000);
         })
+      },
 
+      //提交成功，关闭当前窗口
+      close(){
+        //关闭界面
       },
 
       //定时关闭弹框
@@ -447,24 +577,28 @@
           this.msg = false;
         },2000);
       },
-
       //获取地区
-      getCity(){
+      getProvince(){
         this.msg='加载中...';
+        this.isActive = true;
         axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
           let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
+            this.isActive = false;
             this.msg=false;
-            this.$set(this, 'provinces', json.body);//给this赋值
+            this.$set(this, 'provinces', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
       },
 
@@ -473,22 +607,27 @@
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
         this.provinceCode = province.value;
         this.okProvince = this.okProvince === province.text ? '' : province.text;
-        console.log(this.provinceCode);
+        this.isActive = true;
         this.msg='加载中...';
         axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
           let json = res.data;
           //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
             this.msg=false;
-            this.$set(this, 'cities', json.body);//给this赋值
+            this.isActive = false;
+            this.$set(this, 'cities', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
       },
 
@@ -496,22 +635,27 @@
       showDist(city){
         this.cityCode = city.value;
         this.okCity = this.okCity === city.text ? '' : city.text;
-        console.log(this.cityCode);
+        this.isActive = true;
         this.msg='加载中...';
         axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
           let json = res.data;
           //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
+            this.isActive = false;
             this.msg=false;
-            this.$set(this, 'dists', json.body);//给this赋值
+            this.$set(this, 'dists', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
 
       },
@@ -522,8 +666,8 @@
         this.distCode = value;
         this.provinceList = false;
         this.workPlace = this.okProvince+this.okCity+this.dist;
-        this.isWorkPlaceColor = true;
-        console.log(this.distCode);
+        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
+        this.fullAddress = this.completeaddress.split(" ");
       },
 
       //取消选择城市
@@ -564,47 +708,46 @@
       workTimeConfirm(){
         this.workTimePopupVisible = false;
         this.isActive = false;
-        this.workTime = this.workTimeToolbar;
-        this.isWorkTimeColor = true;
+        this.officialJobDate = this.workTimeToolbar;
       },
       //入职时间的确认按钮
       entryTimeConfirm(){
         this.entryTimePopupVisible = false;
         this.isActive = false;
-        this.entryTime = this.entryTimeToolbar;
-        this.isEntryTimeColor = true;
+        this.enterCompanyDate = this.entryTimeToolbar;
       },
 
       //获取公司职位
-      getUnitPosition(action){
-        this.unitPosition = action.name;
-        this.isUnitPosition = true;
-        if(action.name == '其他'){
-          this.unitPositionOthersShow = true;
-          this.isUnitPositionUnique = true;
+      getJobTitleType(action){
+        this.jobTitleType = action.name;
+        for(let i=0;i<this.actions.length;i++){
+          if(this.actions[i].name == action.name){
+            this.jobTitleTypeValue = this.actions[i].value;
+            break;
+          }
         }
-        else {
-          this.unitPositionOthersShow = false;
-          this.isUnitPositionUnique = false;
+      },
+
+      getLivingStyle(action){
+        this.livingType = action.name;
+        for(let i=0;i<this.actions.length;i++){
+          if(this.actions[i].name == action.name){
+            this.livingTypeValue = this.actions[i].value;
+            break;
+          }
         }
       },
 
       //获取公司性质
-      getUnitNature(action){
-        this.unitNature = action.name;
-        this.isUnitNature = true;
-        if(action.name == '其他'){
-          this.unitNatureOthersShow = true;
-          this.isUnitNatureUnique = true;
-        }
-        else {
-          this.unitNatureOthersShow = false;
-          this.isUnitNatureUnique = false;
+      getCompanyType(action){
+        this.companyType = action.name;
+        for(let i=0;i<this.actions.length;i++){
+          if(this.actions[i].name == action.name){
+            this.companyTypeValue = this.actions[i].value;
+            break;
+          }
         }
       },
-    },
-
-    mounted(){
     },
 
     //数据更新的时候改变选中项的css样式

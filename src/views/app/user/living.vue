@@ -79,18 +79,14 @@
 <script>
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
-  import routes from 'routes/index';
   import axios from 'axios';
-
-
-
   import { Actionsheet, Toast, MessageBox } from 'mint-ui';
-
   const ROOTPATH = window.$rootPath;
   //添加或更新居住信息
   const API_UESR_LIVING_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
   //获取居住信息
   const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
+                    /*  puhui-car-app-server/user/requestController/getOccupationInfoMethod*/
   //获取省市区信息
   const API_CITY= `${ROOTPATH}/dictionary/region/`;
 
@@ -103,7 +99,7 @@
 
         sheetVisible: false,
         loading: true,
-        id: '',
+        pid: '',
         isActive: false,
 
         token: '',
@@ -139,11 +135,11 @@
 
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
-          {name: '自有房产', method: this.getLivingStyle},
-          {name: '租赁', method: this.getLivingStyle},
-          {name: '与亲属同住', method: this.getLivingStyle},
-          {name: '公司宿舍', method: this.getLivingStyle},
-          {name: '其他', method: this.getLivingStyle},
+          {name: '自有房产', method: this.getLivingStyle, "value": "SELF_HOUSE"},
+          {name: '租赁', method: this.getLivingStyle, "value": "RENT_HOUSE"},
+          {name: '与亲属同住', method: this.getLivingStyle,"value": "HOME_HOUSE"},
+          {name: '公司宿舍', method: this.getLivingStyle,"value": "COMPANY_HOUSE"},
+          {name: '其他', method: this.getLivingStyle,"value": "OTHER_HOUSE"},
         ],
 
         response : [
@@ -201,13 +197,13 @@
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
-            this.id=json.data.id;
+            this.pid=json.data.pid;
             //判断id值
-            if(this.id){
+            if(this.pid){
               //更新操作之前需要回显数据
-              for(let i=0;i<this.response.length;i++){
-                if(this.response[i].value == json.data.livingType){
-                  this.livingType = this.response[i].text;
+              for(let i=0;i<this.actions.length;i++){
+                if(this.actions[i].value == json.data.livingType){
+                  this.livingType = this.actions[i].name;
                 }
               }
               this.livingTypeValue = json.data.livingType;
@@ -257,7 +253,7 @@
           body:{
             appRequestId:this.$route.query.requestId,
             addressId:this.addressId,
-            id:this.id,
+            pid:this.pid,
             livingType:this.livingTypeValue,
             livingTypeOther:this.livingTypeOther,
             lifeYears:this.lifeYears,
@@ -271,7 +267,7 @@
           let json = res.data;
           //验证通过
           if (json.code == '00000') {
-            this.id=json.data.id;
+            this.pid=json.data.pid;
             this.msg = '登录成功';
             this.isActive=true;
             let timer=window.setTimeout(() => {
@@ -412,9 +408,9 @@
 
       getLivingStyle(action){
         this.livingType = action.name;
-        for(let i=0;i<this.response.length;i++){
-          if(this.response[i].text == action.name){
-            this.livingTypeValue = this.response[i].value;
+        for(let i=0;i<this.actions.length;i++){
+          if(this.actions[i].name == action.name){
+            this.livingTypeValue = this.actions[i].value;
             break;
           }
         }

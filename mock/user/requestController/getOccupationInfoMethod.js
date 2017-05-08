@@ -5,7 +5,7 @@
 var rootPath = require('../../../config').rootPath;
 
 module.exports = {
-  api: rootPath + '/user/requestController/getLivingInfoMethod',
+  api: rootPath + '/user/requestController/getOccupationInfoMethod',
   response: function (req, res) {
     res.json({
       "code": "00000",
