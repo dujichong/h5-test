@@ -21,7 +21,7 @@
             <label>其他情况</label>
             <input v-model="livingTypeOther" placeholder="请输入其他居住情况">
           </li>
-          <li @click="getCity">
+          <li @click="getProvince">
             <label>现居住地</label>
             <span v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
           </li>
@@ -74,15 +74,13 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script>
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
-  import axios from 'utils/axios';
   import routes from 'routes/index';
+  import axios from 'axios';
 
 
 
@@ -95,7 +93,6 @@
   const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
   //获取省市区信息
   const API_CITY= `${ROOTPATH}/dictionary/region/`;
-
 
   export default {
     data () {
@@ -122,7 +119,7 @@
         provinces: [],
         cities: [],
         dists: [],
-
+        data: {},
         msg: false,
         appRequestId: '',
         appLoginId: '',
@@ -137,6 +134,8 @@
         distCode: '',
         housenumber: '',
         completeaddress: '',
+        fullAddress: '',
+        livingTypeValue: '',
 
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
@@ -146,6 +145,29 @@
           {name: '公司宿舍', method: this.getLivingStyle},
           {name: '其他', method: this.getLivingStyle},
         ],
+
+        response : [
+          {
+            "text": "自有房产",
+            "value": "SELF_HOUSE"
+          },
+          {
+            "text": "租赁",
+            "value": "RENT_HOUSE"
+          },
+          {
+            "text": "与家属同住",
+            "value": "HOME_HOUSE"
+          },
+          {
+            "text": "公司宿舍",
+            "value": "COMPANY_HOUSE"
+          },
+          {
+            "text": "其他",
+            "value": "OTHER_HOUSE"
+          }
+          ]
       };
     },
     // 计算属性将被混入到 Vue 实例中。
@@ -165,22 +187,40 @@
     methods : {
       // 初始化
       init () {
-        //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中
-        axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
+        //在API_UESR_LIVING_INFO接口中
+        axios.post(API_UESR_LIVING_INFO,{
           //从url中取到token和requestId给后台
+          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
           token:this.$route.query.token,
-          requestId:this.$route.query.requestId,
+          body:{
+            requestId:this.$route.query.requestId,
+          },
         },{timeout:90000}).then(res => {
           let json = res.data;
           //操作成功
-          if (json.code == 1) {
+          if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
-            this.id=json.body.id;
+            this.id=json.data.id;
             //判断id值
-            if(this.id==1){
+            if(this.id){
               //更新操作之前需要回显数据
-              this.showHistory();
+              for(let i=0;i<this.response.length;i++){
+                if(this.response[i].value == json.data.livingType){
+                  this.livingType = this.response[i].text;
+                }
+              }
+              this.livingTypeValue = json.data.livingType;
+              this.addressId = json.data.addressId;
+              this.livingTypeOther = json.data.livingTypeOther;
+              this.lifeYears = json.data.lifeYears;
+              this.provinceCode = json.data.provinceCode;
+              this.cityCode = json.data.cityCode;
+              this.distCode = json.data.distCode;
+              this.housenumber = json.data.housenumber;
+              this.completeaddress = json.data.completeaddress;
+              this.fullAddress = this.completeaddress.split(" ");
+              this.livingPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
             }
             //没有id，新增操作
             else {
@@ -206,60 +246,32 @@
         })
       },
 
-      //数据回显
-      showHistory(){
-        //在API_UESR_LIVING_INFO接口中
-        axios.post(API_UESR_LIVING_INFO,{
-        },{timeout:90000}).then(res => {
-          let json = res.data;
-          //操作成功后台
-          if (json.code == 1) {
-            //获取后台数据
-            this.livingType = json.body.livingType;
-            this.livingTypeOther = json.body.livingTypeOther;
-            this.lifeYears = json.body.lifeYears;
-            this.provinceCode = json.body.provinceCode;
-            this.cityCode = json.body.cityCode;
-            this.distCode = json.body.distCode;
-            this.housenumber = json.body.housenumber;
-            this.completeaddress = json.body.completeaddress;
-          }
-          //后台返回不正常
-          else{
-            this.isActive=true;
-            this.msg = json.msg;
-            let timer=window.setTimeout(() => {
-              this.msg=false;
-              this.isActive=false;
-            },2000);
-          }
-        },error =>{
-          this.isActive=true;
-          this.msg ='提交数据失败，请稍后重试！';
-          let timer=window.setTimeout(() => {
-            this.msg = false;
-            this.isActive=false;
-          },2000);
-        })
-      },
-
       //点击提交按钮提交
       commit(){
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
         axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
+          //从url中取到token和requestId给后台
+          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
+          token:this.$route.query.token,
           //提交数据
-          livingType:this.livingType,
-          livingTypeOther:this.livingTypeOther,
-          lifeYears:this.lifeYears,
-          provinceCode:this.provinceCode,
-          cityCode:this.cityCode,
-          distCode:this.distCode,
-          housenumber:this.housenumber,
-          completeaddress:this.completeaddress,
+          body:{
+            appRequestId:this.$route.query.requestId,
+            addressId:this.addressId,
+            id:this.id,
+            livingType:this.livingTypeValue,
+            livingTypeOther:this.livingTypeOther,
+            lifeYears:this.lifeYears,
+            provinceCode:this.provinceCode,
+            cityCode:this.cityCode,
+            distCode:this.distCode,
+            housenumber:this.housenumber,
+            completeaddress:this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+        }
       },{timeout:90000}).then(res => {
           let json = res.data;
           //验证通过
-          if (json.code == 1) {
+          if (json.code == '00000') {
+            this.id=json.data.id;
             this.msg = '登录成功';
             this.isActive=true;
             let timer=window.setTimeout(() => {
@@ -287,26 +299,41 @@
             this.isActive=false;
           },2000);
         })
-
       },
 
+      //提交成功，关闭当前窗口
+      close(){
+        //关闭界面
+      },
+
+      //定时关闭弹框
+      timeout(){
+        window.setTimeout(() => {
+          this.msg = false;
+        },2000);
+      },
       //获取地区
-      getCity(){
+      getProvince(){
         this.msg='加载中...';
+        this.isActive = true;
         axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
           let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
+            this.isActive = false;
             this.msg=false;
-            this.$set(this, 'provinces', json.body);//给this赋值
+            this.$set(this, 'provinces', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
       },
 
@@ -315,22 +342,27 @@
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
         this.provinceCode = province.value;
         this.okProvince = this.okProvince === province.text ? '' : province.text;
-        console.log(this.provinceCode);
+        this.isActive = true;
         this.msg='加载中...';
         axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
           let json = res.data;
           //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
             this.msg=false;
-            this.$set(this, 'cities', json.body);//给this赋值
+            this.isActive = false;
+            this.$set(this, 'cities', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
       },
 
@@ -338,22 +370,27 @@
       showDist(city){
         this.cityCode = city.value;
         this.okCity = this.okCity === city.text ? '' : city.text;
-        console.log(this.cityCode);
+        this.isActive = true;
         this.msg='加载中...';
         axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
           let json = res.data;
           //打断点，查看debugger;
-          if (json.code == 1) {
+          if (json.code == '00000') {
+            this.isActive = false;
             this.msg=false;
-            this.$set(this, 'dists', json.body);//给this赋值
+            this.$set(this, 'dists', json.data);//给this赋值
             this.provinceList=true;
           }else{
+            this.isActive = true;
             this.msg = json.msg;
             this.timeout();
+            this.isActive = false;
           }
         }).catch(error =>{
+          this.isActive = true;
           this.msg ='提交数据失败，请稍后重试！';
           this.timeout();
+          this.isActive = false;
         });
 
       },
@@ -364,7 +401,8 @@
         this.distCode = value;
         this.provinceList = false;
         this.livingPlace = this.okProvince+this.okCity+this.dist;
-        console.log(this.distCode);
+        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
+        this.fullAddress = this.completeaddress.split(" ");
       },
 
       //取消选择城市
@@ -374,6 +412,12 @@
 
       getLivingStyle(action){
         this.livingType = action.name;
+        for(let i=0;i<this.response.length;i++){
+          if(this.response[i].text == action.name){
+            this.livingTypeValue = this.response[i].value;
+            break;
+          }
+        }
       },
     },
 

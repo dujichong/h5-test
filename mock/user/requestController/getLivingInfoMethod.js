@@ -5,16 +5,16 @@ module.exports = {
   api: rootPath + '/user/requestController/getLivingInfoMethod',
   response: function (req, res) {
     res.json({
-      "code": "1",
+      "code": "00000",
       "msg": "操作成功",
       "status": "904",
       "token": null,
-      "body": {
+      "data": {
         "id": 1,
         "appRequestId": 123,
         "appLoginId": 1,
-        "livingType": "公司宿舍",    //居住情况
-        "livingTypeOther": "居无定所",    //其他说明
+        "livingType": "OTHER_HOUSE",    //居住情况
+        "livingTypeOther": "111xxx",    //其他说明
         "addressId": 2,                      //地址id
         "lifeYears": "6",                      //居住年限
         "status": "AUDIT",                 //审核状态 审核中

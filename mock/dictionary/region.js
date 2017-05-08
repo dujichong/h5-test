@@ -11,11 +11,11 @@ module.exports = {
     if(code == 110000){
       res.json(
         {
-          "code": "1",
+          "code": "00000",
           "msg": "操作成功",
           "status": "904",
           "token": "token",
-          "body": [
+          "data": [
             {
               text: "市辖区",
               value: "110100"
@@ -31,11 +31,11 @@ module.exports = {
     if(code == 110100){
       res.json(
         {
-          "code": "1",
+          "code": "00000",
           "msg": "操作成功",
           "status": "904",
           "token": "token",
-          "body": [
+          "data": [
             {
               value: "110101",
               text: "东城区"
@@ -99,11 +99,11 @@ module.exports = {
     if(code == 610000){
       res.json(
         {
-          "code": "1",
+          "code": "00000",
           "msg": "操作成功",
           "status": "904",
           "token": "token",
-          "body": [
+          "data": [
             {
               text: "西安市",
               value: "610100"
@@ -149,11 +149,11 @@ module.exports = {
       )
     }
     res.json({
-      "code": "1",
+      "code": "00000",
       "msg": "操作成功",
       "status": "904",
       "token": "token",
-      "body": [
+      "data": [
         {
           value: "110000",
           text: "北京市"

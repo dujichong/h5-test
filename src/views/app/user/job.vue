@@ -213,6 +213,11 @@
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
 
   const ROOTPATH = window.$rootPath;
+  //添加或更新居住信息
+  const API_UESR_OCCOPATION_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateOccupationInfoMethod`;
+  //获取居住信息
+  const API_UESR_OCCOPATION_INFO= `${ROOTPATH}/user/requestController/getOccupationInfoMethod`;
+  //获取省市区信息
   const API_CITY= `${ROOTPATH}/dictionary/region/`;
   export default {
 
@@ -326,6 +331,116 @@
     },
 
     methods : {
+      // 初始化
+      init () {
+        //在API_UESR_OCCOPATION_INFO接口中
+        axios.post(API_UESR_OCCOPATION_INFO,{
+          //从url中取到token和requestId给后台
+          token:this.$route.query.token,
+          requestId:this.$route.query.requestId,
+        },{timeout:90000}).then(res => {
+          let json = res.data;
+          //操作成功
+          if (json.code == '00000') {
+            //返回id 有id为更新操作 没有为新增操作
+            //拿到后台的id
+            this.id=json.data.id;
+            //判断id值
+            if(this.id==1){
+              //更新操作之前需要回显数据
+              for(let i=0;i<this.response.length;i++){
+                if(this.response[i].value == json.data.livingType){
+                  this.livingType = this.response[i].text;
+                }
+              }
+              this.addressId = json.data.addressId;
+              this.livingTypeOther = json.data.livingTypeOther;
+              this.lifeYears = json.data.lifeYears;
+              this.provinceCode = json.data.provinceCode;
+              this.cityCode = json.data.cityCode;
+              this.distCode = json.data.distCode;
+              this.housenumber = json.data.housenumber;
+              this.completeaddress = json.data.completeaddress;
+              this.fullAddress = this.completeaddress.split(" ");
+              this.livingPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
+            }
+            //没有id，新增操作
+            else {
+              //doNothing
+            }
+          }
+          //后台返回不正常
+          else{
+            this.isActive=true;
+            this.msg = json.msg;
+            let timer=window.setTimeout(() => {
+              this.msg=false;
+              this.isActive=false;
+            },2000);
+          }
+        },error =>{
+          this.isActive=true;
+          this.msg ='提交数据失败，请稍后重试！';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+            this.isActive=false;
+          },2000);
+        })
+      },
+
+      //点击提交按钮提交
+      commit(){
+        //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
+        axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
+          //从url中取到token和requestId给后台
+          token:this.$route.query.token,
+          requestId:this.$route.query.requestId,
+
+          //提交数据
+          addressId:this.addressId,
+          id:this.id,
+          livingType:this.livingTypeValue,
+          livingTypeOther:this.livingTypeOther,
+          lifeYears:this.lifeYears,
+          provinceCode:this.provinceCode,
+          cityCode:this.cityCode,
+          distCode:this.distCode,
+          housenumber:this.housenumber,
+          completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+        },{timeout:90000}).then(res => {
+          let json = res.data;
+          //验证通过
+          if (json.code == '00000') {
+            this.msg = '登录成功';
+            this.isActive=true;
+            let timer=window.setTimeout(() => {
+              this.msg = false;
+              this.isActive=false;
+              let time=window.setTimeout(()=>{
+                this.close();
+              },200);
+            },2000);
+          }
+          //后台验证不通过
+          else{
+            this.msg = json.msg;
+            this.isActive=true;
+            let timer=window.setTimeout(() => {
+              this.msg=false;
+              this.isActive=false;
+            },2000);
+          }
+        },error =>{
+          this.isActive=true;
+          this.msg ='提交数据失败，请稍后重试！';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+            this.isActive=false;
+          },2000);
+        })
+
+      },
+
       //定时关闭弹框
       timeout(){
         window.setTimeout(() => {
@@ -424,13 +539,9 @@
       onEntryTimeValuesChange(picker){
         this.entryTimeToolbar = picker.getValues()[0].concat(picker.getValues()[1]);
       },
-      //提交表单
-      commit(){
 
-      },
 
       //用到了两个picker因为有两个时间选择选项
-
       //商类点击工作时间的时候popup组件显示，自己定的朦层显示（此处没有使用组件自带的朦层，因为当界面中有多个组件的时候有问题）
       workTimePopupShow(){
         this.workTimePopupVisible = true;
@@ -519,9 +630,7 @@
         this.slots[0].values[i] = minYear+'年';
         minYear++;
       }
-    },
-    beforeCreat(){
-
+      this.init();
     },
 
     components: {cTitle, Actionsheet, Picker, Popup, DatetimePicker}
