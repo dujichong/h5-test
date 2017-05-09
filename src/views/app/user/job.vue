@@ -1,7 +1,15 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="job-information">
     <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
+    <div class="layer" v-bind:class="{ active: isMyActive }"></div>
     <c-title :text="title" :hide="false"></c-title>
+    <div class="loading" v-if="msg">
+      <div>
+        <img v-if="msg=='登录成功'" src="../../../assets/app/user/suc.png"/>
+        <img v-if="msg=='提交数据失败，请稍后重试！'||msg =='系统异常,请稍后重试'" src="../../../assets/app/user/fail.png" />
+      </div>
+      <p>{{msg}}</p>
+    </div>
 
     <div class="job-business" v-bind:class="{ show: businessShow }">
       <div class="border"></div>
@@ -26,7 +34,7 @@
 
             <li>
               <label>现单位地区</label>
-              <span @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+              <span class="paddingRight" @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li>
@@ -73,11 +81,11 @@
             <li class="noBorder">
               <label class="item">是否缴纳社保/公积金</label>
               <div class="box">
-                <input class="circle" type="radio" id="yes" :checked="true" value="是" v-model="picked"><span class="opacity"></span>
+                <input class="circle" type="radio" id="yes" :checked="true" value="true" v-model="payOfSocialSecurityFund"><span class="opacity"></span>
               </div>
               <label class="yes" for="yes">是</label>
               <div class="box">
-                <input class="circle" type="radio" id="no" :checked="false" value="否" v-model="picked"><span></span>
+                <input class="circle" type="radio" id="no" :checked="false" value="false" v-model="payOfSocialSecurityFund"><span></span>
               </div>
               <label class="no" for="no">否</label>
             </li>
@@ -91,7 +99,7 @@
 
             <li>
               <label>现单位地区</label>
-              <span @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+              <span class="paddingRight" @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li class="noBorder">
@@ -107,9 +115,9 @@
           <ul>
             <li >
               <label>单位电话</label>
-              <input class="width105" v-model="areaCode" placeholder="区号">
+              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号">
               <div class="border-right"></div>
-              <input class="width218" v-model="telephoneNumber" placeholder="电话号码">
+              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码">
               <div class="border-right"></div>
               <input class="width131" v-model="branchNumber" placeholder="分机号">
             </li>
@@ -156,8 +164,8 @@
       </div>
     </div>
 
-    <Actionsheet :actions="unitPositionActions" v-model="unitPositionSheetVisible"></Actionsheet>
-    <Actionsheet :actions="unitNatureActions" v-model="unitNatureSheetVisible"></Actionsheet>
+    <Actionsheet :actions="jobTitleTypeActions" v-model="unitPositionSheetVisible"></Actionsheet>
+    <Actionsheet :actions="companyTypeActions" v-model="unitNatureSheetVisible"></Actionsheet>
     <Popup v-model="workTimePopupVisible" position="bottom" :modal="false" >
       <div class="button">
         <p class="cancel" @click="cancel">取消</p>
@@ -229,6 +237,9 @@
         salaryShow: false,//薪类页面
         salaryFrom: '',//1位薪类，2位商类
 
+        canClick: true,//多次点击
+
+        loading: true,
         provinceCode: '',   //省code
         cityCode: '',         //市code
         distCode: '',         //县code
@@ -246,6 +257,7 @@
         provinces: [],
         cities: [],
         dists: [],
+        localData: {},
 
         //商类
         officialJobDate: '请选择您的工作时间',//商类工作时间
@@ -256,7 +268,7 @@
 
         pid: '',
         companyName: '',//现单位名称或者经营主体
-        isPayOfSocialSecurityFund: '',
+        payOfSocialSecurityFund: true,
         workPlace: '请选择现单位所在地区',//现单位地区
         housenumber: '',//详细地址
         completePhone: '',
@@ -280,7 +292,8 @@
         pickerVisible: true,
         workTimePopupVisible: false,
         entryTimePopupVisible: false,
-        isActive: false,
+        isActive: false,//使用了两个朦层，mint-ui统一使用这个，因为这个朦层有一个功能，点击朦层本身的时候，朦层会消失
+        isMyActive: false,//其他的使用这个，包括ajax请求时的弹层使用这个
         currentYear: 2017,
         before: 30,
         after: 10,
@@ -292,7 +305,7 @@
         entryTimeConfirmShow: false,
         workSeniority: '',
         workYears: '',
-        picked: '',
+        picked: 'yes',
         slots: [
           {
             flex: 1,
@@ -307,7 +320,7 @@
           }
         ],
         visibleItemCount: 5,
-        unitPositionActions: [
+        jobTitleTypeActions: [
           //负责人、高级管理人员、中级管理人员、一般管理人员、一般正式员工、派遣员工、非正式员工、其他。
           {name: '负责人', method: this.getJobTitleType, "value": "HEAD"},
           {name: '高级管理人员', method: this.getJobTitleType, "value": "SENIOR_MANAGEMENT"},
@@ -350,7 +363,7 @@
           }
         ],
 
-        unitNatureActions: [
+        companyTypeActions: [
           //机关事业、国企/上市公司、外资、合资、民营、个体、其他。
           {name: '机关事业单位', method: this.getCompanyType, "value": "ENTERPRISE_COMPANY"},
           {name: '国企/上市公司', method: this.getCompanyType, "value": "LIST_COMPANY"},
@@ -430,18 +443,22 @@
             //判断id值
             if(this.pid){
               //更新操作之前需要回显数据
-              for(let i=0;i<this.unitPositionActions.length;i++){
-                if(this.unitPositionActions[i].value == json.data.livingType){
-                  this.jobTitleType = this.unitPositionActions[i].name;
+              for(let i=0;i<this.jobTitleTypeActions.length;i++){
+                if(this.jobTitleTypeActions[i].value == json.data.jobTitleType){
+                  this.jobTitleType = this.jobTitleTypeActions[i].name;
                 }
               }
 
-              for(let i=0;i<this.unitNatureActions.length;i++){
-                if(this.unitNatureActions[i].value == json.data.livingType){
-                  this.companyType = this.unitNatureActions[i].name;
+              for(let i=0;i<this.companyTypeActions.length;i++){
+                if(this.companyTypeActions[i].value == json.data.companyType){
+                  this.companyType = this.companyTypeActions[i].name;
                 }
               }
 
+              this.jobTitleTypeValue = json.data.jobTitleType;
+              this.companyTypeValue = json.data.companyType;
+              let officialJobTime = new Date( Number(json.data.officialJobDate) ).toLocaleString();
+              let enterCompanyTime = new Date( Number(json.data.enterCompanyDate) ).toLocaleString();
               this.addressId = json.data.addressId;
               this.provinceCode = json.data.provinceCode;
               this.cityCode = json.data.cityCode;
@@ -451,18 +468,15 @@
               this.fullAddress = this.completeaddress.split(" ");
               this.workPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
               this.appCustomerId = json.data.appCustomerId;
-              this.officialJobDate = json.data.officialJobDate;
-              this.enterCompanyDate = json.data.enterCompanyDate;
+              this.officialJobDate = officialJobTime.split('/')[0]+'年'+officialJobTime.split('/')[1]+'月';
+              this.enterCompanyDate = enterCompanyTime.split('/')[0]+'年'+enterCompanyTime.split('/')[1]+'月';
               this.companyName = json.data.companyName;
-              this.pid = json.data.pid;
               this.completePhone =  json.data.completePhone;
               this.areaCode = json.data.completePhone.split('-')[0];
               this.telephoneNumber = json.data.completePhone.split('-')[1];
               this.branchNumber =  json.data.branchNumber;
               this.department =  json.data.department;
-              this.jobTitleType =  json.data.jobTitleType;
               this.messageOfJobTitleType =  json.data.messageOfJobTitleType;
-              this.companyType =  json.data.companyType;
               this.messageOfCompanyType =  json.data.messageOfCompanyType;
               this.payOfSocialSecurityFund =  json.data.payOfSocialSecurityFund;
               this.workYears = json.data.workYears;
@@ -475,95 +489,128 @@
           }
           //后台返回不正常
           else{
-            this.isActive=true;
+            this.isMyActive=true;
             this.msg = json.msg;
             let timer=window.setTimeout(() => {
               this.msg=false;
-              this.isActive=false;
+              this.isMyActive=false;
             },2000);
           }
         },error =>{
-          this.isActive=true;
+          this.isMyActive=true;
           this.msg ='提交数据失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isActive=false;
+            this.isMyActive=false;
           },2000);
         })
       },
 
       //点击提交按钮提交
       commit(){
-        //console.log(this.officialJobDate);
+
+        if (!this.canClick) {
+          return;
+        }
+
+        if(this.enterCompanyDate == '请选择您的入职时间'){
+          this.enterCompanyDateYear = '0000';
+          this.enterCompanyDateMonth = '00';
+        }
+        else {
+          this.enterCompanyDateYear = this.enterCompanyDate.split('月')[0].split('年')[0];
+          this.enterCompanyDateMonth = this.enterCompanyDate.split('月')[0].split('年')[1].length==2 ? this.enterCompanyDate.split('月')[0].split('年')[1] : 0+this.enterCompanyDate.split('月')[0].split('年')[1];
+        }
         this.officialJobDateYear = this.officialJobDate.split('月')[0].split('年')[0];
         this.officialJobDateMonth = this.officialJobDate.split('月')[0].split('年')[1].length==2 ? this.officialJobDate.split('月')[0].split('年')[1] : 0+this.officialJobDate.split('月')[0].split('年')[1];
-        this.enterCompanyDateYear = this.enterCompanyDate.split('月')[0].split('年')[0];
-        this.enterCompanyDateMonth = this.enterCompanyDate.split('月')[0].split('年')[1].length==2 ? this.enterCompanyDate.split('月')[0].split('年')[1] : 0+this.enterCompanyDate.split('月')[0].split('年')[1];
-        console.log(this.year+'-'+this.mounth+'-01');
-        //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
-        axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
-          //从url中取到token和requestId给后台
-          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
-          token:this.$route.query.token,
-          //提交数据
-          body:{
-            requestId:this.$route.query.requestId,
-            //提交数据
-            appCustomerId: this.appCustomerId,
-            officialJobDate: this.officialJobDateYear+'-'+this.officialJobDateMonth+'-01',
-            enterCompanyDate: this.enterCompanyDateYear+'-'+this.enterCompanyDateMonth+'-01',
-            companyName: this.companyName,
-            addressId:this.addressId,
-            pid:this.pid,
-            completePhone: this.areaCode+'-'+this.telephoneNumber+'-'+this.branchNumber,
-            branchNumber: this.branchNumber,
-            department: this.department,
-            jobTitleType: this.jobTitleType,
-            messageOfJobTitleType: this.messageOfJobTitleType,
-            companyType: this.companyType,
-            messageOfCompanyType: this.messageOfCompanyType,
-            provinceCode:this.provinceCode,
-            cityCode:this.cityCode,
-            distCode:this.distCode,
-            housenumber:this.housenumber,
-            completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
-            payOfSocialSecurityFund: this.payOfSocialSecurityFund,
-            salaryFrom: this.salaryFrom,
-            workSeniority: this.workSeniority,//司龄
-            workYears: this.workYears,//工龄
-          }
-        },{timeout:90000}).then(res => {
-          let json = res.data;
-          //验证通过
-          if (json.code == '00000') {
-            this.pid=json.data.pid;
-            this.msg = '登录成功';
-            this.isActive=true;
-            let timer=window.setTimeout(() => {
-              this.msg = false;
-              this.isActive=false;
-              let time=window.setTimeout(()=>{
-                this.close();
-              },200);
-            },2000);
-          }
-          //后台验证不通过
-          else{
-            this.msg = json.msg;
-            this.isActive=true;
-            let timer=window.setTimeout(() => {
-              this.msg=false;
-              this.isActive=false;
-            },2000);
-          }
-        },error =>{
-          this.isActive=true;
-          this.msg ='提交数据失败，请稍后重试！';
+
+        //areaCode: '',//区号
+        //  telephoneNumber: '',//电话号码
+        //  branchNumber: '',//分机号
+
+        //验证电话是否正确
+        let areaCode = /^0\d{2,3}$/;
+        if(!areaCode.test(this.areaCode)){
+          this.isMyActive=true;
+          this.msg = '您输入的区号有误，请重新输入';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isActive=false;
+            this.isMyActive=false;
           },2000);
-        })
+        }
+        //手机号码通过验证
+        else{
+          this.canClick = false;
+          //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
+          axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
+            //从url中取到token和requestId给后台
+            comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
+            token:this.$route.query.token,
+            //提交数据
+            body:{
+              appRequestId:this.$route.query.requestId,
+              //提交数据
+              appCustomerId: this.appCustomerId,
+              officialJobDate: this.officialJobDateYear+'-'+this.officialJobDateMonth+'-01',
+              enterCompanyDate: this.enterCompanyDateYear+'-'+this.enterCompanyDateMonth+'-01',
+              companyName: this.companyName,
+              addressId:this.addressId,
+              pid:this.pid,
+              completePhone: this.areaCode+'-'+this.telephoneNumber+'-'+this.branchNumber,
+              branchNumber: this.branchNumber,
+              department: this.department,
+              jobTitleType: this.jobTitleTypeValue,
+              //jobTitleTypeValue: this.jobTitleTypeValue,
+              messageOfJobTitleType: this.messageOfJobTitleType,
+              companyType: this.companyTypeValue,
+              //companyTypeValue: this.companyTypeValue,
+              messageOfCompanyType: this.messageOfCompanyType,
+              provinceCode:this.provinceCode,
+              cityCode:this.cityCode,
+              distCode:this.distCode,
+              housenumber:this.housenumber,
+              completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+              payOfSocialSecurityFund: this.payOfSocialSecurityFund,
+              salaryFrom: this.salaryFrom,
+              workSeniority: this.workSeniority,//司龄
+              workYears: this.workYears,//工龄
+            }
+          },{timeout:90000}).then(res => {
+            let json = res.data;
+            //验证通过
+            if (json.code == '00000') {
+              this.pid=json.data.pid;
+              this.msg = '登录成功';
+              this.isMyActive=true;
+              let timer=window.setTimeout(() => {
+                this.msg = false;
+                this.isMyActive=false;
+                this.canClick = true;
+                let time=window.setTimeout(()=>{
+                  this.close();
+                },200);
+              },2000);
+            }
+            //后台验证不通过
+            else{
+              this.msg = json.msg;
+              this.isMyActive=true;
+              let timer=window.setTimeout(() => {
+                this.msg=false;
+                this.isMyActive=false;
+                this.canClick = true;
+              },2000);
+            }
+          },error =>{
+            this.isMyActive=true;
+            this.msg ='提交数据失败，请稍后重试！';
+            let timer=window.setTimeout(() => {
+              this.msg = false;
+              this.isMyActive=false;
+              this.canClick = true;
+            },2000);
+          })
+        }
       },
 
       //提交成功，关闭当前窗口
@@ -571,35 +618,36 @@
         //关闭界面
       },
 
-      //定时关闭弹框
-      timeout(){
-        window.setTimeout(() => {
-          this.msg = false;
-        },2000);
-      },
       //获取地区
       getProvince(){
         this.msg='加载中...';
-        this.isActive = true;
-        axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          if (json.code == '00000') {
-            this.isActive = false;
-            this.msg=false;
-            this.$set(this, 'provinces', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
+        this.isMyActive = true;
+        if(this.localData.hasOwnProperty(this.num)){
+          this.isMyActive = false;
+          this.msg=false;
+          this.$set(this, 'provinces', this.localData[this.num]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            if (json.code == '00000') {
+              this.isMyActive = false;
+              this.msg=false;
+              this.$set(this, 'provinces', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.num] = json.data;
+            }else{
+              this.isMyActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isMyActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
             this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
-          this.isActive = false;
-        });
+          });
+        }
       },
 
       //点击省份折叠对应的市
@@ -607,57 +655,80 @@
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
         this.provinceCode = province.value;
         this.okProvince = this.okProvince === province.text ? '' : province.text;
-        this.isActive = true;
+        this.isMyActive = true;
         this.msg='加载中...';
-        axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == '00000') {
-            this.msg=false;
-            this.isActive = false;
-            this.$set(this, 'cities', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
+
+        if(this.localData.hasOwnProperty(this.provinceCode)){
+          this.isMyActive = false;
+          this.msg=false;
+          this.$set(this, 'cities', this.localData[this.provinceCode]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            //打断点，查看debugger;
+            if (json.code == '00000') {
+              this.msg=false;
+              this.isMyActive = false;
+              this.$set(this, 'cities', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.provinceCode] = json.data;
+            }else{
+              this.isMyActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isMyActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
             this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
-          this.isActive = false;
-        });
+          });
+        }
       },
 
       //点击市折叠对应的区
       showDist(city){
         this.cityCode = city.value;
         this.okCity = this.okCity === city.text ? '' : city.text;
-        this.isActive = true;
+        this.isMyActive = true;
         this.msg='加载中...';
-        axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == '00000') {
-            this.isActive = false;
-            this.msg=false;
-            this.$set(this, 'dists', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
-            this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
-          this.isActive = false;
-        });
 
+        if(this.localData.hasOwnProperty(this.cityCode)){
+          this.isMyActive = false;
+          this.msg=false;
+          this.$set(this, 'dists', this.localData[this.cityCode]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            //打断点，查看debugger;
+            if (json.code == '00000') {
+              this.isMyActive = false;
+              this.msg=false;
+              this.$set(this, 'dists', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.cityCode] = json.data;
+            }else{
+              this.isMyActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isMyActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
+            this.timeout();
+          });
+        }
+      },
+
+      //定时关闭弹框
+      timeout(){
+        window.setTimeout(() => {
+          this.msg = false;
+          this.isMyActive = false;
+        },2000);
       },
 
       //选中县区
@@ -720,9 +791,9 @@
       //获取公司职位
       getJobTitleType(action){
         this.jobTitleType = action.name;
-        for(let i=0;i<this.actions.length;i++){
-          if(this.actions[i].name == action.name){
-            this.jobTitleTypeValue = this.actions[i].value;
+        for(let i=0;i<this.jobTitleTypeActions.length;i++){
+          if(this.jobTitleTypeActions[i].name == action.name){
+            this.jobTitleTypeValue = this.jobTitleTypeActions[i].value;
             break;
           }
         }
@@ -741,9 +812,9 @@
       //获取公司性质
       getCompanyType(action){
         this.companyType = action.name;
-        for(let i=0;i<this.actions.length;i++){
-          if(this.actions[i].name == action.name){
-            this.companyTypeValue = this.actions[i].value;
+        for(let i=0;i<this.companyTypeActions.length;i++){
+          if(this.companyTypeActions[i].name == action.name){
+            this.companyTypeValue = this.companyTypeActions[i].value;
             break;
           }
         }
@@ -885,6 +956,31 @@
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     background-color: #f1f1f1;
+    div.loading{
+      position: absolute;
+      top:3.87rem;
+      left: 0.59rem;
+      z-index: 999;
+      width: 6.3rem;
+      height: 3.58rem;
+      background-color: #fff;
+      border-radius: 11px;
+      div{
+        margin: 0.9rem auto 0;
+        width: 0.6rem;
+        height: 0.6rem;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      p{
+        width: 4.4rem;
+        margin: 0.2rem auto;
+        text-align: center;
+        font-size: .36rem;
+      }
+    }
     div.layer{
       position: absolute;
       top:0;
@@ -987,6 +1083,10 @@
                 margin-left: .06rem;
               }
 
+              span.paddingRight{
+                padding-right: .15rem;
+                width: 4.4rem;
+              }
               span.cityVal{
                 width:3.2rem;
                 display: block;

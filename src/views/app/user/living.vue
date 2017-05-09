@@ -23,7 +23,7 @@
           </li>
           <li @click="getProvince">
             <label>现居住地</label>
-            <span v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
+            <span class="paddingRight" v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
           </li>
           <li>
             <label>详细地址</label>
@@ -97,6 +97,8 @@
         livingType: '请选择您的居住情况',
         livingPlace: '请选择您的现居住地',
 
+        canClick: true,//多次点击
+
         sheetVisible: false,
         loading: true,
         pid: '',
@@ -115,7 +117,7 @@
         provinces: [],
         cities: [],
         dists: [],
-        data: {},
+        localData: {},
         msg: false,
         appRequestId: '',
         appLoginId: '',
@@ -244,6 +246,10 @@
 
       //点击提交按钮提交
       commit(){
+        if (!this.canClick) {
+          return;
+        }
+        this.canClick = false;
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
         axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
           //从url中取到token和requestId给后台
@@ -273,6 +279,7 @@
             let timer=window.setTimeout(() => {
               this.msg = false;
               this.isActive=false;
+              this.canClick = true;
               let time=window.setTimeout(()=>{
                 this.close();
               },200);
@@ -284,7 +291,7 @@
             this.isActive=true;
             let timer=window.setTimeout(() => {
               this.msg=false;
-              this.isActive=false;
+              this.canClick = true;
             },2000);
           }
         },error =>{
@@ -292,7 +299,7 @@
           this.msg ='提交数据失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isActive=false;
+            this.canClick = true;
           },2000);
         })
       },
@@ -302,35 +309,36 @@
         //关闭界面
       },
 
-      //定时关闭弹框
-      timeout(){
-        window.setTimeout(() => {
-          this.msg = false;
-        },2000);
-      },
       //获取地区
       getProvince(){
         this.msg='加载中...';
         this.isActive = true;
-        axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          if (json.code == '00000') {
-            this.isActive = false;
-            this.msg=false;
-            this.$set(this, 'provinces', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
-            this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
+        if(this.localData.hasOwnProperty(this.num)){
           this.isActive = false;
-        });
+          this.msg=false;
+          this.$set(this, 'provinces', this.localData[this.num]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            if (json.code == '00000') {
+              this.isActive = false;
+              this.msg=false;
+              this.$set(this, 'provinces', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.num] = json.data;
+            }else{
+              this.isActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
+            this.timeout();
+          });
+        }
       },
 
       //点击省份折叠对应的市
@@ -340,26 +348,34 @@
         this.okProvince = this.okProvince === province.text ? '' : province.text;
         this.isActive = true;
         this.msg='加载中...';
-        axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == '00000') {
-            this.msg=false;
-            this.isActive = false;
-            this.$set(this, 'cities', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
-            this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
+
+        if(this.localData.hasOwnProperty(this.provinceCode)){
           this.isActive = false;
-        });
+          this.msg=false;
+          this.$set(this, 'cities', this.localData[this.provinceCode]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            //打断点，查看debugger;
+            if (json.code == '00000') {
+              this.msg=false;
+              this.isActive = false;
+              this.$set(this, 'cities', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.provinceCode] = json.data;
+            }else{
+              this.isActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
+            this.timeout();
+          });
+        }
       },
 
       //点击市折叠对应的区
@@ -368,27 +384,34 @@
         this.okCity = this.okCity === city.text ? '' : city.text;
         this.isActive = true;
         this.msg='加载中...';
-        axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
-          let json = res.data;
-          //打断点，查看debugger;
-          if (json.code == '00000') {
-            this.isActive = false;
-            this.msg=false;
-            this.$set(this, 'dists', json.data);//给this赋值
-            this.provinceList=true;
-          }else{
-            this.isActive = true;
-            this.msg = json.msg;
-            this.timeout();
-            this.isActive = false;
-          }
-        }).catch(error =>{
-          this.isActive = true;
-          this.msg ='提交数据失败，请稍后重试！';
-          this.timeout();
-          this.isActive = false;
-        });
 
+        if(this.localData.hasOwnProperty(this.cityCode)){
+          this.isActive = false;
+          this.msg=false;
+          this.$set(this, 'dists', this.localData[this.cityCode]);//给this赋值
+          this.provinceList=true;
+        }
+        else {
+          axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
+            let json = res.data;
+            //打断点，查看debugger;
+            if (json.code == '00000') {
+              this.isActive = false;
+              this.msg=false;
+              this.$set(this, 'dists', json.data);//给this赋值
+              this.provinceList=true;
+              this.localData[this.cityCode] = json.data;
+            }else{
+              this.isActive = true;
+              this.msg = json.msg;
+              this.timeout();
+            }
+          }).catch(error =>{
+            this.isActive = true;
+            this.msg ='提交数据失败，请稍后重试！';
+            this.timeout();
+          });
+        }
       },
 
       //选中县区
@@ -399,6 +422,14 @@
         this.livingPlace = this.okProvince+this.okCity+this.dist;
         this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
         this.fullAddress = this.completeaddress.split(" ");
+      },
+
+      //定时关闭弹框
+      timeout(){
+        window.setTimeout(() => {
+          this.msg = false;
+          this.isActive = false;
+        },2000);
       },
 
       //取消选择城市
@@ -618,6 +649,10 @@
               background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
               background-size: .14rem .26rem;
               //background-color: blue;
+            }
+            span.paddingRight{
+              padding-right: .15rem;
+              width: 4.4rem;
             }
             input::-webkit-input-placeholder{
               color: #b2b2b2;
