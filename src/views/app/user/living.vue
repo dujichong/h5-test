@@ -1,14 +1,9 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="living-information">
-    <div class="layer" v-bind:class="{ active: isActive }"></div>
-    <div class="loading" v-if="msg">
-      <div>
-        <img v-if="msg=='登录成功'" src="../../../assets/app/user/suc.png"/>
-        <img v-if="msg=='提交数据失败，请稍后重试！'||msg =='系统异常,请稍后重试'" src="../../../assets/app/user/fail.png" />
-      </div>
-      <p>{{msg}}</p>
-    </div>
     <c-title :text="title" :hide="false"></c-title>
+
+    <c-loading :show="loading"></c-loading>
+    <c-msg :msg="msg"></c-msg>
     <div class="border"></div>
     <div class="ui-form">
       <form>
@@ -21,10 +16,12 @@
             <label>其他情况</label>
             <input v-model="livingTypeOther" placeholder="请输入其他居住情况">
           </li>
-          <li @click="getProvince">
+
+          <li @click="getChildProvince">
             <label>现居住地</label>
             <span class="paddingRight" v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
           </li>
+
           <li>
             <label>详细地址</label>
             <input v-model="housenumber" placeholder="地址具体到门牌号码">
@@ -44,49 +41,22 @@
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
 
-    <div id="cityoptions" v-if="provinceList">
-      <div class="box">
-        <ul class="provinces">
-          <li v-for="(province , index) of provinces">
-            <div :class="'op ' + (province.text == okProvince ? 'op2' : '')" @click="showCity(province)">
-              <label>{{province.text}}</label>
-              <span :class="'pull ' + (province.text == okProvince ? 'pull_down' : 'pull_up')"></span>
-            </div>
-
-            <ul v-if="province.text == okProvince">
-              <!--@click="chooseCity(city.text,city.value)"-->
-              <li v-for="(city,index) of cities" class="op">
-                <div :class="'op ' + (city.text == okCity ? 'op2' : '')" @click="showDist(city)"><!---->
-                  <label>{{city.text}}</label>
-                  <span :class="'pull ' + (city.text == okCity ? 'pull_down' : 'pull_up')"></span><!---->
-                </div><!---->
-
-                <ul v-if="city.text == okCity">
-                  <li @click="chooseDist(dist.value,dist.text)" v-for="(dist,index) of dists" class="op">
-                    <label>{{dist.text}}</label>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <div class="qx" @click="colseCity">取消</div>
-      </div>
-    </div>
+    <c-cityOptions :provinceList="cityOptionsVisible" :provinceCode="provinceCode" :cityCode="cityCode" :distCode="distCode" :okProvince="okProvince"  :okCity="okCity"  :dist="dist" ref="childMethod"></c-cityOptions>
   </div>
 </template>
 
 <script>
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
+  import cMsg from 'components/msg';
+  import cCityOptions from 'components/cityOptions';
   import axios from 'axios';
-  import { Actionsheet, Toast, MessageBox } from 'mint-ui';
+  import { Actionsheet} from 'mint-ui';
   const ROOTPATH = window.$rootPath;
   //添加或更新居住信息
   const API_UESR_LIVING_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
   //获取居住信息
   const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
-                    /*  puhui-car-app-server/user/requestController/getOccupationInfoMethod*/
   //获取省市区信息
   const API_CITY= `${ROOTPATH}/dictionary/region/`;
 
@@ -100,14 +70,12 @@
         canClick: true,//多次点击
 
         sheetVisible: false,
-        loading: true,
+        loading: false,
         pid: '',
-        isActive: false,
-
+        cityOptionsVisible: false,
         token: '',
         requestId: '',
         num: '-1',
-        provinceList:false,
         okProvince: '',
         okCity: '',
         okDist: '',
@@ -186,6 +154,7 @@
       // 初始化
       init () {
         //在API_UESR_LIVING_INFO接口中
+        this.loading = true;
         axios.post(API_UESR_LIVING_INFO,{
           //从url中取到token和requestId给后台
           comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
@@ -199,6 +168,7 @@
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
+            this.loading = false;
             this.pid=json.data.pid;
             //判断id值
             if(this.pid){
@@ -227,19 +197,17 @@
           }
           //后台返回不正常
           else{
-            this.isActive=true;
+            this.loading = false;
             this.msg = json.msg;
             let timer=window.setTimeout(() => {
               this.msg=false;
-              this.isActive=false;
             },2000);
           }
         },error =>{
-          this.isActive=true;
+          this.loading = false;
           this.msg ='提交数据失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isActive=false;
           },2000);
         })
       },
@@ -250,6 +218,7 @@
           return;
         }
         this.canClick = false;
+        this.loading = true;
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
         axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
           //从url中取到token和requestId给后台
@@ -273,12 +242,11 @@
           let json = res.data;
           //验证通过
           if (json.code == '00000') {
+            this.loading = false;
             this.pid=json.data.pid;
             this.msg = '登录成功';
-            this.isActive=true;
             let timer=window.setTimeout(() => {
               this.msg = false;
-              this.isActive=false;
               this.canClick = true;
               let time=window.setTimeout(()=>{
                 this.close();
@@ -287,15 +255,15 @@
           }
           //后台验证不通过
           else{
+            this.loading = false;
             this.msg = json.msg;
-            this.isActive=true;
             let timer=window.setTimeout(() => {
               this.msg=false;
               this.canClick = true;
             },2000);
           }
         },error =>{
-          this.isActive=true;
+          this.loading = false;
           this.msg ='提交数据失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
@@ -309,133 +277,20 @@
         //关闭界面
       },
 
-      //获取地区
-      getProvince(){
-        this.msg='加载中...';
-        this.isActive = true;
-        if(this.localData.hasOwnProperty(this.num)){
-          this.isActive = false;
-          this.msg=false;
-          this.$set(this, 'provinces', this.localData[this.num]);//给this赋值
-          this.provinceList=true;
-        }
-        else {
-          axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
-            let json = res.data;
-            if (json.code == '00000') {
-              this.isActive = false;
-              this.msg=false;
-              this.$set(this, 'provinces', json.data);//给this赋值
-              this.provinceList=true;
-              this.localData[this.num] = json.data;
-            }else{
-              this.isActive = true;
-              this.msg = json.msg;
-              this.timeout();
-            }
-          }).catch(error =>{
-            this.isActive = true;
-            this.msg ='提交数据失败，请稍后重试！';
-            this.timeout();
-          });
-        }
-      },
-
-      //点击省份折叠对应的市
-      showCity(province){
-        //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
-        this.provinceCode = province.value;
-        this.okProvince = this.okProvince === province.text ? '' : province.text;
-        this.isActive = true;
-        this.msg='加载中...';
-
-        if(this.localData.hasOwnProperty(this.provinceCode)){
-          this.isActive = false;
-          this.msg=false;
-          this.$set(this, 'cities', this.localData[this.provinceCode]);//给this赋值
-          this.provinceList=true;
-        }
-        else {
-          axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
-            let json = res.data;
-            //打断点，查看debugger;
-            if (json.code == '00000') {
-              this.msg=false;
-              this.isActive = false;
-              this.$set(this, 'cities', json.data);//给this赋值
-              this.provinceList=true;
-              this.localData[this.provinceCode] = json.data;
-            }else{
-              this.isActive = true;
-              this.msg = json.msg;
-              this.timeout();
-            }
-          }).catch(error =>{
-            this.isActive = true;
-            this.msg ='提交数据失败，请稍后重试！';
-            this.timeout();
-          });
-        }
-      },
-
-      //点击市折叠对应的区
-      showDist(city){
-        this.cityCode = city.value;
-        this.okCity = this.okCity === city.text ? '' : city.text;
-        this.isActive = true;
-        this.msg='加载中...';
-
-        if(this.localData.hasOwnProperty(this.cityCode)){
-          this.isActive = false;
-          this.msg=false;
-          this.$set(this, 'dists', this.localData[this.cityCode]);//给this赋值
-          this.provinceList=true;
-        }
-        else {
-          axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
-            let json = res.data;
-            //打断点，查看debugger;
-            if (json.code == '00000') {
-              this.isActive = false;
-              this.msg=false;
-              this.$set(this, 'dists', json.data);//给this赋值
-              this.provinceList=true;
-              this.localData[this.cityCode] = json.data;
-            }else{
-              this.isActive = true;
-              this.msg = json.msg;
-              this.timeout();
-            }
-          }).catch(error =>{
-            this.isActive = true;
-            this.msg ='提交数据失败，请稍后重试！';
-            this.timeout();
-          });
-        }
-      },
-
-      //选中县区
-      chooseDist(value,text){
-        this.dist = text;
-        this.distCode = value;
-        this.provinceList = false;
-        this.livingPlace = this.okProvince+this.okCity+this.dist;
-        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
-        this.fullAddress = this.completeaddress.split(" ");
+      getChildProvince(){
+        this.cityOptionsVisible = true;
+        console.log('1');
+        this.$refs.childMethod.getProvince();
+        console.log('2');
       },
 
       //定时关闭弹框
       timeout(){
         window.setTimeout(() => {
           this.msg = false;
-          this.isActive = false;
         },2000);
       },
 
-      //取消选择城市
-      colseCity(){
-        this.provinceList=false;
-      },
 
       getLivingStyle(action){
         this.livingType = action.name;
@@ -453,7 +308,7 @@
       this.init();
     },
 
-    components: {cTitle, Actionsheet}
+    components: {cTitle, Actionsheet, cMsg, cLoading, cCityOptions}
   }
 
 </script>
@@ -467,101 +322,8 @@
     $bfb: 100%;
     $zero: 0px;
     $color: #4d4d4d;
-    #cityoptions{
-      z-index: 1;
-      position: fixed;
-      left: $zero;
-      bottom: $zero;
-      width: $bfb;
-      height: $bfb;
-      overflow: auto;
-      -webkit-user-select: none;
-      background: rgba(0, 0, 0, 0.2);
-      .box{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: $bfb;
-        height: $bfb;
-        ul.provinces{
-          width: $bfb;
-          margin: $zero;
-          background-color: #fff;
-          padding: $zero;
-          flex:1;
-          position:fixed;
-          top:$zero;
-          bottom:1rem;
-          overflow:scroll;
-          li{
-            list-style: none;
-            label{
-              padding-left: 16px;
-            }
-            ul{
-              position: initial;
-              padding: $zero;
-              label{
-                padding-left: 45px;
-              }
-              div{}
-              ul{
-                li{
-                  label{
-                    padding-left: 74px;
-                  }
-                }
-              }
-            }
-            .op {
-              width: $bfb;
-              //height: 43px;
-              line-height: 43px;
-              background: #fff;
-              border-bottom: 1px #ececec solid;
-              cursor: pointer;
-              font-size: 15px;
-              color: #192e54;
-              position: relative;
-              .pull_up {
-                background: url("../../../assets/app/user/icon_sj1.png") 10px center no-repeat;
-                background-size: 45% auto;
-              }
-              .pull_down {
-                background: url("../../../assets/app/user/icon_sj2.png") 10px center no-repeat;
-                background-size: 45% auto;
-              }
-              .pull {
-                width: 30px;
-                height: 25px;
-                right: 8px;
-                background-size: 45% auto;
-                top: 10px;
-                cursor: pointer;
-                position: absolute;
-              }
-            }
-            .op2 {
-              background: #DDEDF1;
-            }
-          }
-        }
-        .qx{
-          position: fixed;
-          width: $bfb;
-          height: 1rem;
-          line-height: 1rem;
-          background: #fff;
-          border-top: 1px #45aa9c solid;
-          cursor: pointer;
-          bottom: $zero;
-          left: $zero;
-          font-size: 16px;
-          color: #45aa9c;
-          text-align: center;
-        }
-      }
-    }
+
+
     div.layer{
       position: absolute;
       top:0;
@@ -572,31 +334,6 @@
       width:100%;
       height: 100%;
       display: none;
-    }
-    div.loading{
-      position: absolute;
-      top:3.87rem;
-      left: 0.59rem;
-      z-index: 999;
-      width: 6.3rem;
-      height: 3.58rem;
-      background-color: #fff;
-      border-radius: 11px;
-      div{
-        margin: 0.9rem auto 0;
-        width: 0.6rem;
-        height: 0.6rem;
-        img{
-          width: 100%;
-          height: 100%;
-        }
-      }
-      p{
-        width: 4.4rem;
-        margin: 0.2rem auto;
-        text-align: center;
-        font-size: .36rem;
-      }
     }
     div.active{
       display: block;

@@ -1,6 +1,7 @@
 <template>
-  <div class="component-loading" :style="{display: show ? '' : 'none'}">
-    <img src="../assets/app/loading.png" alt="">
+  <div class="components-loading" :style="{display: show ? '' : 'none'}">
+    <img src="../assets/components/loading/loading.png" alt="">
+    <span>正在加载...</span>
   </div>
 </template>
 
@@ -34,24 +35,31 @@
     0%   { transform: rotate(360deg) ; }
     100% { transform: rotate(0deg); }
   }
-  .component-loading {
+  .components-loading {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.5);
+    left: 2.25rem;
+    top: 6.18rem;
+    width: 3rem;
+    height: .98rem;
     z-index: 1024;
+    border-radius: .1rem;
+    background-color: #5a5a5a;
+    opacity: 0.8;
     img {
       animation: spin 1200ms infinite linear;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 50px;
-      height: 50px;
-      margin-top: -31px;
-      margin-left: -31px;
+      width: .34rem;
+      height: .34rem;
       z-index: 1025;
+      position: absolute;
+      top: .3rem;
+      left: .6rem;
+    }
+    span{
+      color: #fff;
+      font-size: .32rem;
+      position: absolute;
+      top: .23rem;
+      left: 1rem;
     }
   }
 </style>

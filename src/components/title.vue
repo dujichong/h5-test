@@ -1,6 +1,6 @@
 <template>
-  <div v-if="!hide" class="title" >
-    <img src="../assets/app/title-angle.png" @click="backwards"/>
+  <div v-if="!hide" class="components-title" >
+    <img src="../assets/components/title/title-angle.png" @click="backwards"/>
     <h1>{{ text }}</h1>
   </div>
   <!---->
@@ -60,7 +60,7 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  div.title{
+  div.components-title{
     width: 100%;
     height: .88rem;
     background-color: #fff;

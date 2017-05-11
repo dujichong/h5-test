@@ -1,15 +1,9 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="job-information">
     <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
-    <div class="layer" v-bind:class="{ active: isMyActive }"></div>
     <c-title :text="title" :hide="false"></c-title>
-    <div class="loading" v-if="msg">
-      <div>
-        <img v-if="msg=='登录成功'" src="../../../assets/app/user/suc.png"/>
-        <img v-if="msg=='提交数据失败，请稍后重试！'||msg =='系统异常,请稍后重试'" src="../../../assets/app/user/fail.png" />
-      </div>
-      <p>{{msg}}</p>
-    </div>
+    <c-loading :show="loading"></c-loading>
+    <c-msg :msg="msg"></c-msg>
 
     <div class="job-business" v-bind:class="{ show: businessShow }">
       <div class="border"></div>
@@ -96,7 +90,6 @@
       <div class="ui-form">
         <form>
           <ul>
-
             <li>
               <label>现单位地区</label>
               <span class="paddingRight" @click="getProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
@@ -185,24 +178,24 @@
       </Picker>
     </Popup>
 
-    <div id="cityoptions" v-if="provinceList">
+    <div id="cityOptions" v-if="provinceList">
       <div class="box">
         <ul class="provinces">
           <li v-for="(province , index) of provinces">
-            <div :class="'op ' + (province.text == okProvince ? 'op2' : '')" @click="showCity(province)">
+            <div :class="'op ' + (province.value == okProvinceCode ? 'op2' : '')" @click="showCity(province)">
               <label>{{province.text}}</label>
-              <span :class="'pull ' + (province.text == okProvince ? 'pull_down' : 'pull_up')"></span>
+              <span :class="'pull ' + (province.value == okProvinceCode ? 'pull_down' : 'pull_up')"></span>
             </div>
 
-            <ul v-if="province.text == okProvince">
+            <ul v-if="province.value == okProvinceCode">
               <!--@click="chooseCity(city.text,city.value)"-->
               <li v-for="(city,index) of cities" class="op">
-                <div :class="'op ' + (city.text == okCity ? 'op2' : '')" @click="showDist(city)"><!---->
+                <div :class="'op ' + (city.value == okCityCode ? 'op2' : '')" @click="showDist(city)"><!---->
                   <label>{{city.text}}</label>
-                  <span :class="'pull ' + (city.text == okCity ? 'pull_down' : 'pull_up')"></span><!---->
+                  <span :class="'pull ' + (city.value == okCityCode ? 'pull_down' : 'pull_up')"></span><!---->
                 </div><!---->
 
-                <ul v-if="city.text == okCity">
+                <ul v-if="city.value == okCityCode">
                   <li @click="chooseDist(dist.value,dist.text)" v-for="(dist,index) of dists" class="op">
                     <label>{{dist.text}}</label>
                   </li>
@@ -219,6 +212,7 @@
 <script>
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
+  import cMsg from 'components/msg';
   import axios from 'axios';
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
   const ROOTPATH = window.$rootPath;
@@ -239,7 +233,7 @@
 
         canClick: true,//多次点击
 
-        loading: true,
+        loading: false,
         provinceCode: '',   //省code
         cityCode: '',         //市code
         distCode: '',         //县code
@@ -250,10 +244,13 @@
         okProvince: '',
         okCity: '',
         okDist: '',
+        okProvinceCode: '',
+        okCityCode: '',
+        okDistCode: '',
         city: '',
         dist:'',
         name:'',
-        msg:'',
+        msg: '',
         provinces: [],
         cities: [],
         dists: [],
@@ -293,7 +290,6 @@
         workTimePopupVisible: false,
         entryTimePopupVisible: false,
         isActive: false,//使用了两个朦层，mint-ui统一使用这个，因为这个朦层有一个功能，点击朦层本身的时候，朦层会消失
-        isMyActive: false,//其他的使用这个，包括ajax请求时的弹层使用这个
         currentYear: 2017,
         before: 30,
         after: 10,
@@ -405,11 +401,41 @@
         ],
       };
     },
+
     // 计算属性将被混入到 Vue 实例中。
     computed: {
       //按钮颜色改变
       ok () {
-          return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName&&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.branchNumber;
+        if(this.businessShow == true){
+          return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
+            &&this.housenumber&&this.areaCode&&this.telephoneNumber;
+        }
+        else {
+
+          if(this.jobTitleType=='其他' && this.companyType!='其他'){
+            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
+              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
+              &&(this.jobTitleType!='请选择您的职位')&&this.messageOfJobTitleType
+              &&(this.companyType!='请选择您的单位性质')&&(this.enterCompanyDate!='请选择您的入职时间');
+          }
+          else if(this.companyType=='其他' && this.jobTitleType!='其他'){
+            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
+              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
+              &&(this.jobTitleType!='请选择您的职位')&&(this.companyType!='请选择您的单位性质')
+              &&this.messageOfCompanyType&&(this.enterCompanyDate!='请选择您的入职时间');
+          }
+          else if(this.companyType!='其他' && this.jobTitleType!='其他'){
+            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
+              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
+              &&(this.jobTitleType!='请选择您的职位')&&(this.companyType!='请选择您的单位性质')&&(this.enterCompanyDate!='请选择您的入职时间');
+          }
+          else {
+            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
+              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
+              &&(this.jobTitleType!='请选择您的职位')&&this.messageOfJobTitleType
+              &&(this.companyType!='请选择您的单位性质')&&this.messageOfCompanyType&&(this.enterCompanyDate!='请选择您的入职时间');
+          }
+        }
       },
     },
 
@@ -417,6 +443,7 @@
       // 初始化
       init () {
         //在API_UESR_LIVING_INFO接口中
+        this.loading = true;
         axios.post(API_UESR_OCCOPATION_INFO,{
           //从url中取到token和requestId给后台
           comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
@@ -430,6 +457,7 @@
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
+            this.loading = false;
             this.pid=json.data.pid;
             this.salaryFrom = json.data.salaryFrom;
             if(this.salaryFrom==1){
@@ -489,19 +517,17 @@
           }
           //后台返回不正常
           else{
-            this.isMyActive=true;
+            this.loading = false;
             this.msg = json.msg;
             let timer=window.setTimeout(() => {
               this.msg=false;
-              this.isMyActive=false;
             },2000);
           }
         },error =>{
-          this.isMyActive=true;
+          this.loading = false;
           this.msg ='提交数据失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isMyActive=false;
           },2000);
         })
       },
@@ -524,23 +550,24 @@
         this.officialJobDateYear = this.officialJobDate.split('月')[0].split('年')[0];
         this.officialJobDateMonth = this.officialJobDate.split('月')[0].split('年')[1].length==2 ? this.officialJobDate.split('月')[0].split('年')[1] : 0+this.officialJobDate.split('月')[0].split('年')[1];
 
-        //areaCode: '',//区号
-        //  telephoneNumber: '',//电话号码
-        //  branchNumber: '',//分机号
-
         //验证电话是否正确
         let areaCode = /^0\d{2,3}$/;
+        let telephoneNumber = /\d{7,8}$/
         if(!areaCode.test(this.areaCode)){
-          this.isMyActive=true;
-          this.msg = '您输入的区号有误，请重新输入';
+          this.msg = '区号格式错误';
           let timer=window.setTimeout(() => {
             this.msg = false;
-            this.isMyActive=false;
           },2000);
         }
-        //手机号码通过验证
+        else if(!telephoneNumber.test(this.telephoneNumber)){
+          this.msg = '电话号码格式错误';
+          let timer=window.setTimeout(() => {
+            this.msg = false;
+          },2000);
+        }
         else{
           this.canClick = false;
+          this.loading = true;
           //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
           axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
             //从url中取到token和requestId给后台
@@ -579,12 +606,11 @@
             let json = res.data;
             //验证通过
             if (json.code == '00000') {
+              this.loading = false;
               this.pid=json.data.pid;
               this.msg = '登录成功';
-              this.isMyActive=true;
               let timer=window.setTimeout(() => {
                 this.msg = false;
-                this.isMyActive=false;
                 this.canClick = true;
                 let time=window.setTimeout(()=>{
                   this.close();
@@ -593,20 +619,18 @@
             }
             //后台验证不通过
             else{
+              this.loading = false;
               this.msg = json.msg;
-              this.isMyActive=true;
               let timer=window.setTimeout(() => {
                 this.msg=false;
-                this.isMyActive=false;
                 this.canClick = true;
               },2000);
             }
           },error =>{
-            this.isMyActive=true;
+            this.loading = false;
             this.msg ='提交数据失败，请稍后重试！';
             let timer=window.setTimeout(() => {
               this.msg = false;
-              this.isMyActive=false;
               this.canClick = true;
             },2000);
           })
@@ -620,30 +644,26 @@
 
       //获取地区
       getProvince(){
-        this.msg='加载中...';
-        this.isMyActive = true;
         if(this.localData.hasOwnProperty(this.num)){
-          this.isMyActive = false;
-          this.msg=false;
           this.$set(this, 'provinces', this.localData[this.num]);//给this赋值
           this.provinceList=true;
         }
         else {
+          this.loading = true;
           axios.post(API_CITY+this.num,{},{timeout:90000}).then(res => {
             let json = res.data;
             if (json.code == '00000') {
-              this.isMyActive = false;
-              this.msg=false;
+              this.loading=false;
               this.$set(this, 'provinces', json.data);//给this赋值
               this.provinceList=true;
               this.localData[this.num] = json.data;
             }else{
-              this.isMyActive = true;
+              this.loading = false;
               this.msg = json.msg;
               this.timeout();
             }
           }).catch(error =>{
-            this.isMyActive = true;
+            this.loading = false;
             this.msg ='提交数据失败，请稍后重试！';
             this.timeout();
           });
@@ -654,33 +674,31 @@
       showCity(province){
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
         this.provinceCode = province.value;
-        this.okProvince = this.okProvince === province.text ? '' : province.text;
-        this.isMyActive = true;
-        this.msg='加载中...';
-
+//      this.okProvince = this.okProvince === province.text ? '' : province.text;
+        this.okProvince = province.text;
+        this.okProvinceCode = this.okProvinceCode === province.value ? '' : province.value;
+        //在请求之前让数组cities为空，否则会出现一个小问题。假设第一步点击了河北省，会出现石家庄，唐山，秦皇岛等等
+        //再点击北京或者其他城市，如果ajax请求比较慢，一直无法返回数据的话，依然会出现石家庄，唐山，秦皇岛等等。
+        this.$set(this, 'cities', []);
         if(this.localData.hasOwnProperty(this.provinceCode)){
-          this.isMyActive = false;
-          this.msg=false;
           this.$set(this, 'cities', this.localData[this.provinceCode]);//给this赋值
-          this.provinceList=true;
         }
         else {
+          this.loading = true;
           axios.post(API_CITY+this.provinceCode,{},{timeout:90000}).then(res => {
             let json = res.data;
             //打断点，查看debugger;
             if (json.code == '00000') {
-              this.msg=false;
-              this.isMyActive = false;
+              this.loading=false;
               this.$set(this, 'cities', json.data);//给this赋值
-              this.provinceList=true;
               this.localData[this.provinceCode] = json.data;
             }else{
-              this.isMyActive = true;
+              this.loading = false;
               this.msg = json.msg;
               this.timeout();
             }
           }).catch(error =>{
-            this.isMyActive = true;
+            this.loading = false;
             this.msg ='提交数据失败，请稍后重试！';
             this.timeout();
           });
@@ -690,33 +708,30 @@
       //点击市折叠对应的区
       showDist(city){
         this.cityCode = city.value;
-        this.okCity = this.okCity === city.text ? '' : city.text;
-        this.isMyActive = true;
-        this.msg='加载中...';
-
+        //使用city.value而不是city.text是因为value独一无二，而text并不是唯一的，比如北京市和天津市都有直辖市和县
+        //this.okCity = this.okCity === city.text ? '' : city.text;
+        this.okCity = city.text;
+        this.okCityCode = this.okCityCode === city.value ? '' : city.value;
+        this.$set(this, 'dists', []);
         if(this.localData.hasOwnProperty(this.cityCode)){
-          this.isMyActive = false;
-          this.msg=false;
           this.$set(this, 'dists', this.localData[this.cityCode]);//给this赋值
-          this.provinceList=true;
         }
         else {
+          this.loading = true;
           axios.post(API_CITY+this.cityCode,{},{timeout:90000}).then(res => {
             let json = res.data;
             //打断点，查看debugger;
             if (json.code == '00000') {
-              this.isMyActive = false;
-              this.msg=false;
+              this.loading=false;
               this.$set(this, 'dists', json.data);//给this赋值
-              this.provinceList=true;
               this.localData[this.cityCode] = json.data;
             }else{
-              this.isMyActive = true;
+              this.loading = false;
               this.msg = json.msg;
               this.timeout();
             }
           }).catch(error =>{
-            this.isMyActive = true;
+            this.loading = false;
             this.msg ='提交数据失败，请稍后重试！';
             this.timeout();
           });
@@ -727,7 +742,6 @@
       timeout(){
         window.setTimeout(() => {
           this.msg = false;
-          this.isMyActive = false;
         },2000);
       },
 
@@ -847,7 +861,7 @@
       this.init();
     },
 
-    components: {cTitle, Actionsheet, Picker, Popup, DatetimePicker}
+    components: {cTitle, Actionsheet, Picker, Popup, DatetimePicker, cLoading, cMsg}
   }
 
 </script>
@@ -855,7 +869,7 @@
   $bfb: 100%;
   $zero: 0px;
   $color: #4d4d4d;
-  #cityoptions{
+  #cityOptions{
     z-index: 1;
     position: fixed;
     left: $zero;
@@ -956,31 +970,6 @@
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     background-color: #f1f1f1;
-    div.loading{
-      position: absolute;
-      top:3.87rem;
-      left: 0.59rem;
-      z-index: 999;
-      width: 6.3rem;
-      height: 3.58rem;
-      background-color: #fff;
-      border-radius: 11px;
-      div{
-        margin: 0.9rem auto 0;
-        width: 0.6rem;
-        height: 0.6rem;
-        img{
-          width: 100%;
-          height: 100%;
-        }
-      }
-      p{
-        width: 4.4rem;
-        margin: 0.2rem auto;
-        text-align: center;
-        font-size: .36rem;
-      }
-    }
     div.layer{
       position: absolute;
       top:0;
