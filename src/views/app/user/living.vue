@@ -40,8 +40,13 @@
       <p style="color: #9cd2ff;">确认并提交</p>
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
-
-    <c-cityOptions :provinceList="cityOptionsVisible" :provinceCode="provinceCode" :cityCode="cityCode" :distCode="distCode" :okProvince="okProvince"  :okCity="okCity"  :dist="dist" ref="childMethod"></c-cityOptions>
+    <c-cityOptions :provinceList="cityOptionsVisible"
+                   ref="childMethod"
+                   @closeCity="closeCity"
+                   @chooseDist="chooseDist"
+                   @showCity="showCity"
+                   @showDist="showDist"
+    ></c-cityOptions>
   </div>
 </template>
 
@@ -205,7 +210,7 @@
           }
         },error =>{
           this.loading = false;
-          this.msg ='提交数据失败，请稍后重试！';
+          this.msg ='加载失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
           },2000);
@@ -244,7 +249,7 @@
           if (json.code == '00000') {
             this.loading = false;
             this.pid=json.data.pid;
-            this.msg = '登录成功';
+            this.msg = '提交成功!';
             let timer=window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
@@ -264,7 +269,7 @@
           }
         },error =>{
           this.loading = false;
-          this.msg ='提交数据失败，请稍后重试！';
+          this.msg ='提交失败!';
           let timer=window.setTimeout(() => {
             this.msg = false;
             this.canClick = true;
@@ -279,9 +284,29 @@
 
       getChildProvince(){
         this.cityOptionsVisible = true;
-        console.log('1');
         this.$refs.childMethod.getProvince();
-        console.log('2');
+      },
+
+      showCity(province){
+        this.okProvince = province.text;
+        this.provinceCode = province.value;
+      },
+
+      showDist(city){
+        this.okCity = city.text;
+        this.cityCode = city.value;
+      },
+
+      chooseDist(value,text){
+        this.dist = text;
+        this.distCode = value;
+        this.livingPlace = this.okProvince+this.okCity+this.dist;
+        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
+        this.fullAddress = this.completeaddress.split(" ");
+      },
+
+      closeCity(){
+        this.cityOptionsVisible = false;
       },
 
       //定时关闭弹框

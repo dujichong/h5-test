@@ -26,7 +26,7 @@
           </ul>
         </li>
       </ul>
-      <div class="qx" @click="colseCity">取消</div>
+      <div class="qx" @click="closeCity">取消</div>
     </div>
   </div>
 </template>
@@ -59,10 +59,11 @@
         localData: {},
         fullAddress: '',
         completeaddress: '',
+        livingPlace: '',
       };
     },
 
-    props: ['provinceList', 'provinceCode', 'cityCode', 'distCode', 'okProvince', 'okCity', 'dist', ],
+    props: ['provinceList'],
 
     methods: {
       //获取地区
@@ -93,6 +94,7 @@
 
       //点击省份折叠对应的市
       showCity(province){
+        this.$emit('showCity',province);
         //判断当前点击省份是否和okProvince值相同，如不同当前省份赋值给okProvince;
         this.provinceCode = province.value;
 //      this.okProvince = this.okProvince === province.text ? '' : province.text;
@@ -128,6 +130,7 @@
 
       //点击市折叠对应的区
       showDist(city){
+        this.$emit('showDist',city);
         this.cityCode = city.value;
         //使用city.value而不是city.text是因为value唯一，而text并不是唯一的，比如北京市和天津市都有直辖市和县
         //this.okCity = this.okCity === city.text ? '' : city.text;
@@ -168,17 +171,18 @@
 
       //选中县区
       chooseDist(value,text){
+        this.$emit('chooseDist',value,text);
         this.dist = text;
         this.distCode = value;
-        this.provinceList = false;
-        this.workPlace = this.okProvince+this.okCity+this.dist;
+        this.livingPlace = this.okProvince+this.okCity+this.dist;
         this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
         this.fullAddress = this.completeaddress.split(" ");
+        this.closeCity();
       },
 
       //取消选择城市
-      colseCity(){
-        this.provinceList=false;
+      closeCity(){
+        this.$emit('closeCity');
       },
     },
 

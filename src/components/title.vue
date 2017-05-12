@@ -64,6 +64,7 @@
     width: 100%;
     height: .88rem;
     background-color: #fff;
+    color: #595959;
     img{
       width: .19rem;
       height: .36rem;

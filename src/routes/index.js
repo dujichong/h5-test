@@ -11,6 +11,7 @@ const AppHelpDetails = r => require(['views/app/help/details'], r);
 const AppProdcutDetail = r => require(['views/app/product/detail'], r);
 const AppUserLivingInformation = r => require(['views/app/user/living'], r);
 const AppUserJobInformationJob = r => require(['views/app/user/job'], r);
+const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registration'], r);
 
 // 页面路由list
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
   {path: '/app/product/detail', component: AppProdcutDetail, name: 'AppProdcutDetail'},
   {path: '/app/user/living', component: AppUserLivingInformation, name: 'AppUserLivingInformation'},
   {path: '/app/user/job', component: AppUserJobInformationJob, name: 'AppUserJobInformationJob'},
+  {path: '/app/login/registration', component: AppUserLoginRegistrationAgreement, name: 'AppUserLoginRegistrationAgreement'},
 
 ].map(route => {
   route.path = rootPath + route.path;

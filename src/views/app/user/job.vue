@@ -38,9 +38,9 @@
 
             <li class="noBorder">
               <label>单位电话</label>
-              <input class="width105" v-model="areaCode" placeholder="区号">
+              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号">
               <div class="border-right"></div>
-              <input class="width218" v-model="telephoneNumber" placeholder="电话号码">
+              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码">
               <div class="border-right"></div>
               <input class="width131" v-model="branchNumber" placeholder="分机号">
             </li>
@@ -525,7 +525,7 @@
           }
         },error =>{
           this.loading = false;
-          this.msg ='提交数据失败，请稍后重试！';
+          this.msg ='加载失败，请稍后重试！';
           let timer=window.setTimeout(() => {
             this.msg = false;
           },2000);
@@ -608,7 +608,7 @@
             if (json.code == '00000') {
               this.loading = false;
               this.pid=json.data.pid;
-              this.msg = '登录成功';
+              this.msg = '提交成功!';
               let timer=window.setTimeout(() => {
                 this.msg = false;
                 this.canClick = true;
@@ -628,7 +628,7 @@
             }
           },error =>{
             this.loading = false;
-            this.msg ='提交数据失败，请稍后重试！';
+            this.msg ='提交失败!';
             let timer=window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
@@ -664,7 +664,7 @@
             }
           }).catch(error =>{
             this.loading = false;
-            this.msg ='提交数据失败，请稍后重试！';
+            this.msg ='加载失败，请稍后重试！';
             this.timeout();
           });
         }
@@ -699,7 +699,7 @@
             }
           }).catch(error =>{
             this.loading = false;
-            this.msg ='提交数据失败，请稍后重试！';
+            this.msg ='加载失败，请稍后重试！';
             this.timeout();
           });
         }
@@ -732,7 +732,7 @@
             }
           }).catch(error =>{
             this.loading = false;
-            this.msg ='提交数据失败，请稍后重试！';
+            this.msg ='加载失败，请稍后重试！';
             this.timeout();
           });
         }

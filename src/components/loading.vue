@@ -46,7 +46,7 @@
     background-color: #5a5a5a;
     opacity: 0.8;
     img {
-      animation: spin 1200ms infinite linear;
+      animation: spin 800ms infinite linear;
       width: .34rem;
       height: .34rem;
       z-index: 1025;

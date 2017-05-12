@@ -1,8 +1,8 @@
 <template>
   <div class="components-msg" v-if="msg">
     <div>
-      <img v-if="msg=='登录成功'" src="../assets/components/msg/success.png"/>
-      <img v-if="msg=='提交数据失败，请稍后重试！'||msg =='系统异常,请稍后重试'" src="../assets/components/msg/fail.png"/>
+      <img v-if="msg=='提交成功!'" src="../assets/components/msg/success.png"/>
+      <img v-if="msg=='提交失败!'||msg =='系统异常,请稍后重试'||msg == '加载失败，请稍后重试！'||msg=='区号格式错误'||msg=='电话号码格式错误'" src="../assets/components/msg/fail.png"/>
     </div>
     <p>{{msg}}</p>
   </div>
