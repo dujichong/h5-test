@@ -71,7 +71,6 @@
         title: '居住信息',
         livingType: '请选择您的居住情况',
         livingPlace: '请选择您的现居住地',
-
         canClick: true,//多次点击
 
         sheetVisible: false,

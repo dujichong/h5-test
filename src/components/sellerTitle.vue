@@ -1,7 +1,6 @@
-<template xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<template>
   <div v-if="!hide" class="components-title">
-    <img v-if="!seller" src="../assets/components/title/title-angle.png" @click="backwards"/>
-    <img v-if="seller" src="../assets/components/title/back.png" @click="backwards">
+    <img src="../assets/components/title/back.png" @click="backwards">
     <h1>{{ text }}</h1>
   </div>
   <!---->
@@ -10,7 +9,7 @@
 <script>
   export default {
 
-    props: ['text', 'hide', 'seller', 'isActive'],
+    props: ['text', 'hide', ],
 
     watch: {
       text(){
@@ -64,8 +63,8 @@
   div.components-title{
     width: 100%;
     height: .88rem;
-    background-color: #fff;
-    color: #595959;
+    background-color: #39f;
+    color: #fff;
     img{
       width: .19rem;
       height: .36rem;
@@ -82,9 +81,5 @@
       line-height: .88rem;
       width: 5.88rem;
     }
-  }
-  div.sellerColor{
-    background-color: #39f;
-    color: #fff;
   }
 </style>

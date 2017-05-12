@@ -60,6 +60,7 @@
         fullAddress: '',
         completeaddress: '',
         livingPlace: '',
+        workPlace: '',
       };
     },
 
@@ -174,7 +175,7 @@
         this.$emit('chooseDist',value,text);
         this.dist = text;
         this.distCode = value;
-        this.livingPlace = this.okProvince+this.okCity+this.dist;
+        //this.livingPlace = this.okProvince+this.okCity+this.dist;
         this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
         this.fullAddress = this.completeaddress.split(" ");
         this.closeCity();
