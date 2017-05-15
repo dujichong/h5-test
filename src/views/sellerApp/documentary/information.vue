@@ -11,25 +11,25 @@
         <div class="info-content">
           <ul>
             <li>
-              <p class="name">客户姓名</p><div></div>
+              <p class="name">客户姓名</p><div>张三丰</div>
             </li>
             <li>
-              <p class="phoneNumberOne">手机号码1</p><div></div>
+              <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
             </li>
             <li>
-              <p class="phoneNumberTwo">手机号码2</p><div></div>
+              <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
             </li>
             <li>
-              <p class="amount">融资申请</p><div></div>
+              <p class="amount">融资申请</p><div>20，000.00元</div>
             </li>
             <li>
-              <p class="salaryForm">客户类别</p><div></div>
+              <p class="salaryForm">客户类别</p><div>薪类</div>
             </li>
             <li>
-              <p class="status">进件状态</p><div></div>
+              <p class="status">进件状态</p><div>录件中</div>
             </li>
             <li>
-              <p class="updateTime">更新时间</p><div></div>
+              <p class="updateTime">更新时间</p><div>2017-03-12 15:20</div>
             </li>
           </ul>
         </div>
@@ -45,7 +45,7 @@
             <ul>
               <li>
                 <p class="left">征信报告</p>
-                <p class="mid">获取成功</p>
+                <p class="mid suc">获取成功</p>
                 <p class="right">05-12 13:00</p>
               </li>
               <li>
@@ -55,9 +55,86 @@
               </li>
             </ul>
           </div>
-          <div class="personal-info"></div>
-          <div class="important-info"></div>
-          <div class="credit-info"></div>
+          <div class="personal-info">
+            <h4 class="sub-title">个人信息</h4>
+            <ul>
+              <li>
+                <p class="left">基础信息</p>
+                <p class="mid">未提交</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">居住信息</p>
+                <p class="mid">待质检</p>
+                <p class="right">——</p>
+              </li>
+              <li>
+                <p class="left">职业信息</p>
+                <p class="mid fail">质检不通过</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">联系人信息</p>
+                <p class="mid suc">质检通过</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+            </ul>
+          </div>
+          <div class="important-info">
+            <h4 class="sub-title">重要资料项</h4>
+            <ul>
+              <li>
+                <p class="left">身份证明</p>
+                <p class="mid">未提交</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">房产信息</p>
+                <p class="mid">待质检</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">收入证明</p>
+                <p class="mid fail">质检不通过</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">已婚证明</p>
+                <p class="mid suc">质检通过</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">经营证明</p>
+                <p class="mid">未提交</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+            </ul>
+          </div>
+          <div class="credit-info">
+            <h4 class="sub-title">增新资料项</h4>
+            <ul>
+              <li>
+                <p class="left">学历证明</p>
+                <p class="mid">未提交</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">房产信息</p>
+                <p class="mid">待质检</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">经营证明</p>
+                <p class="mid fail">质检不通过</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+              <li>
+                <p class="left">其他证明</p>
+                <p class="mid">未提交</p>
+                <p class="right">05-12 13:00</p>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +147,7 @@
     data () {
       return {
         currentIndex: 0,//this.$route.query.id ||
-        title: '录件中',
+        title: '客户资料',
         tabTitleObj: [
           {
             subTitle:'客户录件',
@@ -153,8 +230,9 @@
           img{
             width: .32rem;
             height: .32rem;
-            margin-top: .27rem;
-            display: inline-block;
+            margin: .34rem .2rem 0 0;
+            display: block;
+            float: left;
           }
           h3{
             display: inline-block;
@@ -168,10 +246,12 @@
         .info-content{
           height: 4.39rem;
           padding: 0 .32rem;
+          border-bottom: 1px solid #d4d4d4;
           ul{
             height: 100%;
             padding: 0;
             margin: 0;
+            color: #666;
             li{
               list-style-type: none;
               height: .57rem;
@@ -187,20 +267,27 @@
                 margin: .3rem 0 0 0;
                 line-height: .27rem;
               }
+              .phone{
+                color: #3295f9;
+              }
             }
           }
         }
       }
       .review-progress{
+        background-color: #f1f1f1;
+        padding-top: .2rem;
         .pro-title{
           height: .98rem;
           border-bottom: 1px solid #d4d4d4;
           padding: 0 .32rem;
+          background-color: #fff;
           img{
             width: .32rem;
             height: .32rem;
-            margin-top: .27rem;
-            display: inline-block;
+            margin: .34rem .2rem 0 0;
+            display: block;
+            float: left;
           }
           h3{
             display: inline-block;
@@ -212,8 +299,18 @@
           }
         }
         .pro-content{
+          background-color: #f1f1f1;
+          height: 12.93rem;
+          padding-top: .2rem;
           .core-info, .personal-info, .important-info, .credit-info{
+            background-color: #fff;
+            margin: 0 .2rem .2rem .2rem;
+            width: 7.1rem;
+            border: 1px solid #e6e6e6;
+            border-radius: .2rem;
             h4{
+              font-size: .28rem;
+              font-weight: normal;
               margin: 0;
               width: 1.78rem;
               height: .55rem;
@@ -225,24 +322,52 @@
               line-height: .55rem;
             }
             ul{
+              margin: 0;
+              padding-left: .3rem;
+              color: #333;
               li{
+                position: relative;
                 list-style-type: none;
+                height: .54rem;
+                .left, .mid, .right{
+                  margin: .3rem 0 0 0;
+                  font-size: .26rem;
+                  height: .24rem;
+                  line-height: .24rem;
+                }
                 .left{
                   display: inline-block;
                 }
                 .mid{
                   display: inline-block;
+                  position: absolute;
+                  left: 2.7rem;
+                }
+                .fail{
+                  color: #ff4e4e;
+                }
+                .suc{
+                  color: #39f;
                 }
                 .right{
                   display: inline-block;
+                  float: right;
+                  margin-right: .3rem;
                 }
               }
             }
           }
           .core-info{
             height: 2.02rem;
-            padding: .2rem;
-            width: 7.1rem;
+          }
+          .personal-info{
+            height: 3.1rem;
+          }
+          .important-info{
+            height: 3.64rem;
+          }
+          .credit-info{
+            height: 3.1rem;
           }
         }
       }

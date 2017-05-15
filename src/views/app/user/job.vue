@@ -448,6 +448,7 @@
               this.businessShow = true;
               this.salaryShow = false;
             }
+
             //判断id值
             if(this.pid){
               //更新操作之前需要回显数据
@@ -515,6 +516,8 @@
       //点击提交按钮提交
       commit(){
 
+        console.log(this.payOfSocialSecurityFund);
+        console.log(typeof (this.payOfSocialSecurityFund));
         if (!this.canClick) {
           return;
         }
