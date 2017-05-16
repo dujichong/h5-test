@@ -34,6 +34,7 @@
         tabTitleObj: [
           {
             subTitle:'客户录件',
+
           },
           {
             subTitle: '质检驳回',
@@ -105,6 +106,7 @@
 
 
     mounted(){
+      //根据小红圈里面的数字来设置圆圈的宽度，如果是2位以上，如果是1位，或者没有
       let element = this.$el.getElementsByClassName('circle');
       for (let i = 0; i < element.length; i++) {
         if(element[i].innerText == 0){

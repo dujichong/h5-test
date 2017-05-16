@@ -2,59 +2,29 @@
   <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
-      <div class="base-information">
+      <div class="living-information">
         <!--v-for="(info,index) in infoObj"-->
         <ul>
           <li>
-            <p class="name">客户姓名</p><div>张三丰</div>
+            <p class="livingType">居住情况</p><div>{{livingType}}</div>
           </li>
           <li>
-            <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
+            <p class="livingPlace">现居住地</p><div>{{livingPlace}}</div>
           </li>
           <li>
-            <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
+            <p class="housenumber">详细地址</p><div>{{housenumber}}</div>
           </li>
           <li>
-            <p class="IDNumber">身份证号</p><div>610425199901010217</div>
-          </li>
-          <li>
-            <p class="IDNumber">民族</p><div>汉</div>
-          </li>
-          <li>
-            <p class="IDNumber">学历</p><div>本科</div>
-          </li>
-          <li>
-            <p class="IDNumber">婚姻状况</p><div>已婚</div>
-          </li>
-          <li>
-            <p class="IDNumber">子女数量</p><div>2</div>
-          </li>
-          <li>
-            <p class="IDNumber">供养人数</p><div>2</div>
-          </li>
-          <li>
-            <p class="IDNumber">主要收入来源</p><div>打卡发薪</div>
-          </li>
-          <li>
-            <p class="IDNumber">年收入(元)</p><div>800.00</div>
-          </li>
-          <li>
-            <p class="IDNumber">本市房产情况</p><div>有房无贷款</div>
-          </li>
-          <li>
-            <p class="IDNumber">了解渠道</p><div>网络</div>
-          </li>
-          <li>
-            <p class="IDNumber">QQ</p><div>824999824</div>
+            <p class="lifeYears">居住年限(年)</p><div>{{lifeYears}}</div>
           </li>
         </ul>
       </div>
 
       <div class="radios">
         <label class="item">审核结果</label>
-        <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+        <label v-if="livingInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-        <div v-if="baseInfoStatus=='待质检'">
+        <div v-if="livingInfoStatus=='待质检'">
           <label  class="no" for="no">不通过</label>
           <div class="wrapper">
             <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
@@ -67,7 +37,7 @@
       </div>
 
       <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-      <div v-if="baseInfoStatus=='待质检'">
+      <div v-if="livingInfoStatus=='待质检'">
         <div v-if="pass=='true'" class="text">
           <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
         </div>
@@ -77,14 +47,14 @@
       </div>
 
       <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-      <div v-if="baseInfoStatus!='待质检'">
+      <div v-if="livingInfoStatus!='待质检'">
         <div v-if="pass=='false'" class="text">
           <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
         </div>
       </div>
 
       <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-      <div v-if="baseInfoStatus=='待质检'" class="button">
+      <div v-if="livingInfoStatus=='待质检'" class="button">
         <div class="submit" v-if="ok" @click="commit">
           <p style="color: #fff;">确认并提交</p>
         </div>
@@ -101,28 +71,16 @@
   export default {
     data () {
       return {
-        title: '基础信息',
+        title: '居住信息',
         message: '',
         pass: 'true',
         passStatus: '通过',
 
-        baseInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        name: '',//姓名
-        mobile: '',//手机号
-        mobile2: '',//备用手机号
-        cardNo: '',//身份证号
-        nation: '',//民族
-        education: '',//学历
-        marriage: '',//婚姻状况
-        childrenNumber: '',//子女数量
-        supportNumber: '',//供养人数
-        salaryFrom: '',//主要收入来源
-        annual_income: '',//年收入
-        localHouseProperty: '',//本地房产情况
-        understandWay: '',//了解渠道
-        understandWayOthers: '',//了解渠道_其他说明
-        qq: '',//qq号码
-
+        livingInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
+        livingType: '',//姓名
+        livingPlace: '',//手机号
+        housenumber: '',//备用手机号
+        lifeYears: '',//身份证号
       }
     },
 
@@ -157,6 +115,7 @@
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
+    background-color: #f1f1f1;
     .border{
       width: 100%;
       height: .21rem;
@@ -166,7 +125,7 @@
     .box{
       width: 100%;
       background-color: #f1f1f1;
-      .base-information{
+      .living-information{
         font-size: .3rem;
         padding: 0 .32rem .4rem;
         border-bottom: 1px solid #d4d4d4;
@@ -198,7 +157,6 @@
           }
         }
       }
-
       .radios{
         clear: both;
         height: .88rem;
@@ -281,7 +239,6 @@
           }
         }
       }
-
       div{
         .text{
           width: 100%;
@@ -302,7 +259,6 @@
           }
         }
       }
-
       .button {
         width: 100%;
         background: #f1f1f1;

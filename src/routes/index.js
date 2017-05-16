@@ -16,6 +16,7 @@ const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registr
 const AppSellerDocumentaryEntry = r => require(['views/sellerApp/documentary/entry'], r);
 const AppSellerDocumentaryInformation = r => require(['views/sellerApp/documentary/information'], r);
 const AppSellerDocumentaryBaseInformation = r => require(['views/sellerApp/documentary/baseInfo'], r);
+const AppSellerDocumentaryLivingInformation = r => require(['views/sellerApp/documentary/livingInfo'], r);
 
 // 页面路由list
 const routes = [
@@ -29,6 +30,7 @@ const routes = [
   {path: '/sellerApp/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
   {path: '/sellerApp/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
   {path: '/sellerApp/documentary/baseInfo', component: AppSellerDocumentaryBaseInformation, name: 'AppSellerDocumentaryBaseInformation'},
+  {path: '/sellerApp/documentary/livingInfo', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
 
 ].map(route => {
   route.path = rootPath + route.path;
