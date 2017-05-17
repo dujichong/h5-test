@@ -4,68 +4,31 @@
     <div class="box">
       <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
+        <h3>身份证明</h3>
         <ul>
-          <li>
-            <p class="name">客户姓名</p><div>张三丰</div>
-          </li>
-          <li>
-            <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
-          </li>
-          <li>
-            <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
-          </li>
-          <li>
-            <p class="IDNumber">身份证号</p><div>610425199901010217</div>
-          </li>
-          <li>
-            <p class="IDNumber">民族</p><div>汉</div>
-          </li>
-          <li>
-            <p class="IDNumber">学历</p><div>本科</div>
-          </li>
-          <li>
-            <p class="IDNumber">婚姻状况</p><div>已婚</div>
-          </li>
-          <li>
-            <p class="IDNumber">子女数量</p><div>2</div>
-          </li>
-          <li>
-            <p class="IDNumber">供养人数</p><div>2</div>
-          </li>
-          <li>
-            <p class="IDNumber">主要收入来源</p><div>打卡发薪</div>
-          </li>
-          <li>
-            <p class="IDNumber">年收入(元)</p><div>800.00</div>
-          </li>
-          <li>
-            <p class="IDNumber">本市房产情况</p><div>有房无贷款</div>
-          </li>
-          <li>
-            <p class="IDNumber">了解渠道</p><div>网络</div>
-          </li>
-          <li>
-            <p class="IDNumber">QQ</p><div>824999824</div>
-          </li>
+          <li><img src="../../../assets/sellerApp/documentary/pic1.png"></li>
+          <li><img src="../../../assets/sellerApp/documentary/pic2.png"></li>
+          <li><img src="../../../assets/sellerApp/documentary/pic3.png"></li>
+          <li><img src="../../../assets/sellerApp/documentary/pic4.png"></li>
+          <li><img src="../../../assets/sellerApp/documentary/pic5.png"></li>
         </ul>
       </div>
-
       <div class="component">
         <div class="radios">
-        <label class="item">审核结果</label>
-        <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+          <label class="item">审核结果</label>
+          <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-        <div v-if="baseInfoStatus=='待质检'">
-          <label  class="no" for="no">不通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
-          </div>
-          <label class="yes" for="yes">通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+          <div v-if="baseInfoStatus=='待质检'">
+            <label  class="no" for="no">不通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
+            </div>
+            <label class="yes" for="yes">通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+            </div>
           </div>
         </div>
-      </div>
         <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
         <div class="txt-box" v-if="baseInfoStatus=='待质检'">
           <div v-if="pass=='true'" class="text">
@@ -105,7 +68,7 @@
         pass: 'true',
         passStatus: '通过',
 
-        baseInfoStatus: '质检通过',//居住信息的审核状态;待质检,质检不通过,质检通过
+        baseInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
         name: '',//姓名
         mobile: '',//手机号
         mobile2: '',//备用手机号
@@ -168,32 +131,30 @@
       background-color: #f1f1f1;
       .base-information{
         font-size: .3rem;
-        padding: 0 .32rem .4rem;
+        padding: 0 .32rem;
         border-bottom: 1px solid #d4d4d4;
         background-color: #fff;
+        h3{
+          font-weight: normal;
+          font-size: .3rem;
+          color: #333;
+          margin: 0;
+          height: .87rem;
+          line-height: .87rem;
+        }
         ul{
-          height: 100%;
           padding: 0;
           margin: 0;
-          color: #666;
           li{
             list-style-type: none;
-            height: .57rem;
-            p,div{
-              height: .28rem;
-              margin: .29rem 0 0 0;
-              line-height: .28rem;
-            }
-            p{
-              float: left;
-              color: #666;
-            }
-            div{
-              float: right;
-              color: #333;
-            }
-            .phone{
-              color: #3295f9;
+            width: 2rem;
+            height:2rem;
+            display: inline-block;
+            margin-right: .22rem;
+            margin-bottom: .32rem;
+            img{
+              width: 100%;
+              height: 100%;
             }
           }
         }

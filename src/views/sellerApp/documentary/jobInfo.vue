@@ -4,48 +4,53 @@
     <div class="box">
       <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
-        <ul>
+        <ul v-if="salaryFrom==2">
           <li>
-            <p class="name">客户姓名</p><div>张三丰</div>
+            <p class="name">工作时间</p><div>2011年4月</div>
           </li>
           <li>
-            <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
+            <p class="phoneNumberOne">经营主体</p><div>凡普金科</div>
           </li>
           <li>
-            <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
+            <p class="phoneNumberTwo">现单位地址</p><div>北京市东城区</div>
           </li>
           <li>
-            <p class="IDNumber">身份证号</p><div>610425199901010217</div>
+            <p class="IDNumber">详细地址</p><div>银河SOHO A座11层</div>
           </li>
           <li>
-            <p class="IDNumber">民族</p><div>汉</div>
+            <p class="IDNumber">单位电话</p><div>010-88888888</div>
+          </li>
+        </ul>
+        <ul v-if="salaryFrom==1">
+          <li>
+            <p class="name">工作时间</p><div>2011年4月</div>
           </li>
           <li>
-            <p class="IDNumber">学历</p><div>本科</div>
+            <p class="phoneNumberOne">现单位名称</p><div>凡普金科</div>
           </li>
           <li>
-            <p class="IDNumber">婚姻状况</p><div>已婚</div>
+            <p class="phoneNumberOne">是否缴纳社保/公积金</p><div>凡普金科</div>
           </li>
           <li>
-            <p class="IDNumber">子女数量</p><div>2</div>
+            <p class="phoneNumberTwo">现单位地址</p><div>北京市东城区</div>
           </li>
           <li>
-            <p class="IDNumber">供养人数</p><div>2</div>
+            <p class="IDNumber">详细地址</p><div>银河SOHO A座11层</div>
           </li>
           <li>
-            <p class="IDNumber">主要收入来源</p><div>打卡发薪</div>
+            <p class="IDNumber">单位电话</p><div>010-88888888</div>
           </li>
           <li>
-            <p class="IDNumber">年收入(元)</p><div>800.00</div>
+            <p class="IDNumber">现单位部门</p><div>凡普信贷</div>
           </li>
           <li>
-            <p class="IDNumber">本市房产情况</p><div>有房无贷款</div>
+            <p class="IDNumber">现单位职位</p><div>开发工程师</div>
           </li>
           <li>
-            <p class="IDNumber">了解渠道</p><div>网络</div>
+            <p class="IDNumber">企业性质</p><div>民营</div>
           </li>
           <li>
-            <p class="IDNumber">QQ</p><div>824999824</div>
+            <p class="IDNumber">入职时间</p><div>2014年5月</div>
           </li>
         </ul>
       </div>
@@ -53,9 +58,9 @@
       <div class="component">
         <div class="radios">
         <label class="item">审核结果</label>
-        <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+        <label v-if="jobInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-        <div v-if="baseInfoStatus=='待质检'">
+        <div v-if="jobInfoStatus=='待质检'">
           <label  class="no" for="no">不通过</label>
           <div class="wrapper">
             <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
@@ -67,7 +72,7 @@
         </div>
       </div>
         <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="baseInfoStatus=='待质检'">
+        <div class="txt-box" v-if="jobInfoStatus=='待质检'">
           <div v-if="pass=='true'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
@@ -76,13 +81,13 @@
           </div>
         </div>
         <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="baseInfoStatus!='待质检'">
+        <div class="txt-box" v-if="jobInfoStatus!='待质检'">
           <div v-if="pass=='false'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
         </div>
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="baseInfoStatus=='待质检'" class="button">
+        <div v-if="jobInfoStatus=='待质检'" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -104,8 +109,10 @@
         message: '',
         pass: 'true',
         passStatus: '通过',
+        salaryFrom: 1,//1位薪类，2位商类
 
-        baseInfoStatus: '质检通过',//居住信息的审核状态;待质检,质检不通过,质检通过
+
+        jobInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
         name: '',//姓名
         mobile: '',//手机号
         mobile2: '',//备用手机号
@@ -115,7 +122,6 @@
         marriage: '',//婚姻状况
         childrenNumber: '',//子女数量
         supportNumber: '',//供养人数
-        salaryFrom: '',//主要收入来源
         annual_income: '',//年收入
         localHouseProperty: '',//本地房产情况
         understandWay: '',//了解渠道

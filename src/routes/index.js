@@ -16,7 +16,10 @@ const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registr
 const AppSellerDocumentaryEntry = r => require(['views/sellerApp/documentary/entry'], r);
 const AppSellerDocumentaryInformation = r => require(['views/sellerApp/documentary/information'], r);
 const AppSellerDocumentaryBaseInformation = r => require(['views/sellerApp/documentary/baseInfo'], r);
+const AppSellerDocumentaryPicturesInformation = r => require(['views/sellerApp/documentary/picturesInfo'], r);
 const AppSellerDocumentaryLivingInformation = r => require(['views/sellerApp/documentary/livingInfo'], r);
+const AppSellerDocumentaryJobInformation = r => require(['views/sellerApp/documentary/jobInfo'], r);
+const AppSellerDocumentaryContactPersonInformation = r => require(['views/sellerApp/documentary/contactPersonInfo'], r);
 
 // 页面路由list
 const routes = [
@@ -30,7 +33,10 @@ const routes = [
   {path: '/sellerApp/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
   {path: '/sellerApp/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
   {path: '/sellerApp/documentary/baseInfo', component: AppSellerDocumentaryBaseInformation, name: 'AppSellerDocumentaryBaseInformation'},
+  {path: '/sellerApp/documentary/picturesInfo', component: AppSellerDocumentaryPicturesInformation, name: 'AppSellerDocumentaryPicturesInformation'},
   {path: '/sellerApp/documentary/livingInfo', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
+  {path: '/sellerApp/documentary/jobInfo', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
+  {path: '/sellerApp/documentary/contactPersonInfo', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
 
 ].map(route => {
   route.path = rootPath + route.path;
