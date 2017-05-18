@@ -278,7 +278,7 @@
           line-height: .88rem;
           list-style: none;
           padding: 0 .32rem;
-          border-bottom: 0.01rem solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {
             color: #666;
@@ -357,7 +357,7 @@
           .text {
             width: 100%;
             height: 2rem;
-            border-bottom: .01rem solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
             textarea {
               width: 100%;
               height: 1.7rem;

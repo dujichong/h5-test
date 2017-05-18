@@ -477,8 +477,8 @@
               this.fullAddress = this.completeaddress.split(" ");
               this.workPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
               this.appCustomerId = json.data.appCustomerId;
-              this.officialJobDate = officialJobTime.split('/')[0]+'年'+officialJobTime.split('/')[1]+'月';
-              this.enterCompanyDate = enterCompanyTime.split('/')[0]+'年'+enterCompanyTime.split('/')[1]+'月';
+              this.officialJobDate = officialJobTime.split('-')[0]+'年'+officialJobTime.split('-')[1]+'月';
+              this.enterCompanyDate = enterCompanyTime.split('-')[0]+'年'+enterCompanyTime.split('-')[1]+'月';
               this.companyName = json.data.companyName;
               this.completePhone =  json.data.completePhone;
               this.areaCode = json.data.completePhone.split('-')[0];
@@ -515,9 +515,6 @@
 
       //点击提交按钮提交
       commit(){
-
-        console.log(this.payOfSocialSecurityFund);
-        console.log(typeof (this.payOfSocialSecurityFund));
         if (!this.canClick) {
           return;
         }

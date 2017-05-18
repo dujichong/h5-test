@@ -10,11 +10,11 @@
         <!--v-for="(info,index) in infoObj"-->
         <div class="info-content">
           <ul>
-            <li>
-              <p class="name">客户姓名</p><div>张三丰</div>
+            <li class="name">
+              <p>客户姓名</p><div>张三丰</div>
             </li>
-            <li>
-              <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
+            <li class="phoneNumberOne">
+              <p>手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
             </li>
             <li>
               <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>

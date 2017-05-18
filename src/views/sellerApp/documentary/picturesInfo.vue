@@ -6,8 +6,8 @@
         <!--v-for="(info,index) in infoObj"-->
         <h3>身份证明</h3>
         <ul>
-          <li><img src="../../../assets/sellerApp/documentary/pic1.png"></li>
-          <li><img src="../../../assets/sellerApp/documentary/pic2.png"></li>
+          <li @click="showBgPic(0)"><img src="../../../assets/sellerApp/documentary/pic1.png"></li>
+          <li @click="showBgPic(1)"><img src="../../../assets/sellerApp/documentary/pic2.png"></li>
           <li><img src="../../../assets/sellerApp/documentary/pic3.png"></li>
           <li><img src="../../../assets/sellerApp/documentary/pic4.png"></li>
           <li><img src="../../../assets/sellerApp/documentary/pic5.png"></li>
@@ -55,6 +55,13 @@
         </div>
       </div>
     </div>
+    <div class="backgroundPic" @click="hideBgPic(0)">
+      <img src="../../../assets/sellerApp/documentary/bc1.jpg"/>
+    </div>
+
+    <div class="backgroundPic" @click="hideBgPic(1)">
+      <img src="../../../assets/sellerApp/documentary/bc2.jpeg"/>
+    </div>
   </div>
 </template>
 <script>
@@ -68,7 +75,9 @@
         pass: 'true',
         passStatus: '通过',
 
+        bgPicShow: false,
         baseInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
+
         name: '',//姓名
         mobile: '',//手机号
         mobile2: '',//备用手机号
@@ -102,6 +111,16 @@
     //自定义的方法放在 methods
     methods : {
       commit() {
+      },
+
+      showBgPic(index){
+        let element = this.$el.getElementsByClassName('backgroundPic');
+        element[index].className = "backgroundPic show";
+      },
+
+      hideBgPic(index){
+        let element = this.$el.getElementsByClassName('backgroundPic');
+        element[index].className = "backgroundPic";
       },
     },
 
@@ -168,7 +187,7 @@
           list-style: none;
           padding: 0 .32rem;
           margin-top: .2rem;
-          border-bottom: 0.01rem solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {
             color: #666;
@@ -247,7 +266,7 @@
           .text {
             width: 100%;
             height: 2rem;
-            border-bottom: .01rem solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
             textarea {
               width: 100%;
               height: 1.7rem;
@@ -286,6 +305,22 @@
           }
         }
       }
+    }
+    .backgroundPic{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100000;
+      display: none;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .show{
+      display: block;
     }
   }
 </style>

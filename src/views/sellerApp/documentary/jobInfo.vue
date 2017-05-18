@@ -2,55 +2,55 @@
   <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
-      <div class="base-information">
+      <div class="job-information">
         <!--v-for="(info,index) in infoObj"-->
         <ul v-if="salaryFrom==2">
-          <li>
-            <p class="name">工作时间</p><div>2011年4月</div>
+          <li class="officialJobDate">
+            <p>工作时间</p><div>2011年4月</div>
           </li>
-          <li>
-            <p class="phoneNumberOne">经营主体</p><div>凡普金科</div>
+          <li class="companyName">
+            <p>经营主体</p><div>凡普金科</div>
           </li>
-          <li>
-            <p class="phoneNumberTwo">现单位地址</p><div>北京市东城区</div>
+          <li class="workPlace">
+            <p>现单位地址</p><div>北京市东城区</div>
           </li>
-          <li>
-            <p class="IDNumber">详细地址</p><div>银河SOHO A座11层</div>
+          <li class="housenumber">
+            <p>详细地址</p><div>银河SOHO A座11层</div>
           </li>
-          <li>
-            <p class="IDNumber">单位电话</p><div>010-88888888</div>
+          <li class="completePhone">
+            <p>单位电话</p><div>010-88888888</div>
           </li>
         </ul>
         <ul v-if="salaryFrom==1">
-          <li>
-            <p class="name">工作时间</p><div>2011年4月</div>
+          <li class="officialJobDate">
+            <p>工作时间</p><div>2011年4月</div>
           </li>
-          <li>
-            <p class="phoneNumberOne">现单位名称</p><div>凡普金科</div>
+          <li class="companyName">
+            <p>现单位名称</p><div>凡普金科</div>
           </li>
-          <li>
-            <p class="phoneNumberOne">是否缴纳社保/公积金</p><div>凡普金科</div>
+          <li class="payOfSocialSecurityFund">
+            <p>是否缴纳社保/公积金</p><div>凡普金科</div>
           </li>
-          <li>
-            <p class="phoneNumberTwo">现单位地址</p><div>北京市东城区</div>
+          <li class="workPlace">
+            <p>现单位地址</p><div>北京市东城区</div>
           </li>
-          <li>
-            <p class="IDNumber">详细地址</p><div>银河SOHO A座11层</div>
+          <li class="housenumber">
+            <p>详细地址</p><div>银河SOHO A座11层</div>
           </li>
-          <li>
-            <p class="IDNumber">单位电话</p><div>010-88888888</div>
+          <li class="completePhone">
+            <p>单位电话</p><div>010-88888888</div>
           </li>
-          <li>
-            <p class="IDNumber">现单位部门</p><div>凡普信贷</div>
+          <li class="department">
+            <p>现单位部门</p><div>凡普信贷</div>
           </li>
-          <li>
-            <p class="IDNumber">现单位职位</p><div>开发工程师</div>
+          <li class="jobTitleType">
+            <p>现单位职位</p><div>开发工程师</div>
           </li>
-          <li>
-            <p class="IDNumber">企业性质</p><div>民营</div>
+          <li class="companyType">
+            <p>企业性质</p><div>民营</div>
           </li>
-          <li>
-            <p class="IDNumber">入职时间</p><div>2014年5月</div>
+          <li class="enterCompanyDate">
+            <p>入职时间</p><div>2014年5月</div>
           </li>
         </ul>
       </div>
@@ -113,21 +113,25 @@
 
 
         jobInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        name: '',//姓名
-        mobile: '',//手机号
-        mobile2: '',//备用手机号
-        cardNo: '',//身份证号
-        nation: '',//民族
-        education: '',//学历
-        marriage: '',//婚姻状况
-        childrenNumber: '',//子女数量
-        supportNumber: '',//供养人数
-        annual_income: '',//年收入
-        localHouseProperty: '',//本地房产情况
-        understandWay: '',//了解渠道
-        understandWayOthers: '',//了解渠道_其他说明
-        qq: '',//qq号码
-
+        officialJobDate: '',//工作时间
+        enterCompanyDate: '',//入职时间
+        companyName: '',//现单位名称或者经营主体
+        payOfSocialSecurityFund: true,
+        workPlace: '',//现单位地区
+        housenumber: '',//详细地址
+        completePhone: '',//单位电话
+        areaCode: '',//区号
+        telephoneNumber: '',//中间电话号码
+        branchNumber: '',//分机号
+        department: '',//现单位部门
+        jobTitleType: '',//现单位职位
+        messageOfJobTitleType: '',//其他情况说明
+        companyType: '',//现单位性质
+        messageOfCompanyType: '',//其他情况说明
+        provinceCode: "110000",//省
+        cityCode: "110100",//市
+        distCode: "110101",//县区
+        completeaddress: "北京市 市辖区 东城区 东二环银河SOHO A座11层",
       }
     },
 
@@ -172,7 +176,7 @@
     .box{
       width: 100%;
       background-color: #f1f1f1;
-      .base-information{
+      .job-information{
         font-size: .3rem;
         padding: 0 .32rem .4rem;
         border-bottom: 1px solid #d4d4d4;
@@ -213,7 +217,7 @@
           list-style: none;
           padding: 0 .32rem;
           margin-top: .2rem;
-          border-bottom: 0.01rem solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {
             color: #666;
@@ -292,7 +296,7 @@
           .text {
             width: 100%;
             height: 2rem;
-            border-bottom: .01rem solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
             textarea {
               width: 100%;
               height: 1.7rem;

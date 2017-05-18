@@ -5,17 +5,17 @@
       <div class="living-information">
         <!--v-for="(info,index) in infoObj"-->
         <ul>
-          <li>
-            <p class="livingType">居住情况</p><div>{{livingType}}</div>
+          <li class="livingType">
+            <p>居住情况</p><div>{{livingType}}</div>
           </li>
-          <li>
-            <p class="livingPlace">现居住地</p><div>{{livingPlace}}</div>
+          <li class="livingPlace">
+            <p>现居住地</p><div>{{livingPlace}}</div>
           </li>
-          <li>
-            <p class="housenumber">详细地址</p><div>{{housenumber}}</div>
+          <li class="housenumber">
+            <p>详细地址</p><div>{{housenumber}}</div>
           </li>
-          <li>
-            <p class="lifeYears">居住年限(年)</p><div>{{lifeYears}}</div>
+          <li class="lifeYears">
+            <p>居住年限(年)</p><div>{{lifeYears}}</div>
           </li>
         </ul>
       </div>
@@ -165,7 +165,7 @@
           list-style: none;
           padding: 0 .32rem;
           margin-top: .2rem;
-          border-bottom: 0.01rem solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {
             color: #666;
@@ -244,7 +244,7 @@
           .text {
             width: 100%;
             height: 2rem;
-            border-bottom: .01rem solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
             textarea {
               width: 100%;
               height: 1.7rem;

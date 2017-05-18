@@ -5,47 +5,47 @@
       <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
         <ul>
-          <li>
-            <p class="name">客户姓名</p><div>张三丰</div>
+          <li class="name">
+            <p>客户姓名</p><div>张三丰</div>
           </li>
-          <li>
-            <p class="phoneNumberOne">手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
+          <li class="mobile">
+            <p>手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
           </li>
-          <li>
-            <p class="phoneNumberTwo">手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
+          <li class="mobile2">
+            <p>手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
           </li>
-          <li>
-            <p class="IDNumber">身份证号</p><div>610425199901010217</div>
+          <li class="cardNo">
+            <p>身份证号</p><div>610425199901010217</div>
           </li>
-          <li>
-            <p class="IDNumber">民族</p><div>汉</div>
+          <li class="nation">
+            <p>民族</p><div>汉</div>
           </li>
-          <li>
-            <p class="IDNumber">学历</p><div>本科</div>
+          <li class="education">
+            <p>学历</p><div>本科</div>
           </li>
-          <li>
-            <p class="IDNumber">婚姻状况</p><div>已婚</div>
+          <li class="marriage">
+            <p>婚姻状况</p><div>已婚</div>
           </li>
-          <li>
-            <p class="IDNumber">子女数量</p><div>2</div>
+          <li class="childrenNumber">
+            <p>子女数量</p><div>2</div>
           </li>
-          <li>
-            <p class="IDNumber">供养人数</p><div>2</div>
+          <li class="supportNumber">
+            <p>供养人数</p><div>2</div>
           </li>
-          <li>
-            <p class="IDNumber">主要收入来源</p><div>打卡发薪</div>
+          <li class="salaryFrom">
+            <p>主要收入来源</p><div>打卡发薪</div>
           </li>
-          <li>
-            <p class="IDNumber">年收入(元)</p><div>800.00</div>
+          <li class="annual_income">
+            <p>年收入(元)</p><div>800.00</div>
           </li>
-          <li>
-            <p class="IDNumber">本市房产情况</p><div>有房无贷款</div>
+          <li class="localHouseProperty">
+            <p>本市房产情况</p><div>有房无贷款</div>
           </li>
-          <li>
-            <p class="IDNumber">了解渠道</p><div>网络</div>
+          <li class="understandWay">
+            <p>了解渠道</p><div>网络</div>
           </li>
-          <li>
-            <p class="IDNumber">QQ</p><div>824999824</div>
+          <li class="qq">
+            <p>QQ</p><div>824999824</div>
           </li>
         </ul>
       </div>
@@ -207,7 +207,7 @@
           list-style: none;
           padding: 0 .32rem;
           margin-top: .2rem;
-          border-bottom: 0.01rem solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {
             color: #666;
@@ -286,7 +286,7 @@
           .text {
             width: 100%;
             height: 2rem;
-            border-bottom: .01rem solid #d4d4d4;
+            border-bottom: 1px solid #d4d4d4;
             textarea {
               width: 100%;
               height: 1.7rem;
