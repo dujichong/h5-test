@@ -1,3 +1,4 @@
+<!--帮助列表-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="help-list">
     <div class="layer" v-bind:class="{ active: isActive }"></div>

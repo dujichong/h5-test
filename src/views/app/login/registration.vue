@@ -1,3 +1,4 @@
+<!--注册协议-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="registration-agreement">
     <c-title :text="title" :hide="false"></c-title>

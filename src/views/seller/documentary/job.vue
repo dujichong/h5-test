@@ -1,101 +1,79 @@
+<!--职业信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
-  <div class="contactPerson-information">
+  <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
-      <div class="review-progress">
-        <div class="pro-content">
-          <div class="immediate-info">
-            <h4 class="sub-title">直系亲属</h4>
-            <ul>
-              <li>
-                <p class="left">姓名</p>
-                <div class="right">张三</div>
-              </li>
-              <li>
-                <p class="left">关系</p>
-                <div class="right">父亲</div>
-              </li>
-              <li v-if="marriage==true">
-                <p class="left">身份证号</p>
-                <div class="right">{{610425199202121234}}</div>
-              </li>
-              <li>
-                <p class="left">联系电话</p>
-                <div class="right">{{13888888888}}</div>
-              </li>
-            </ul>
-
-            <ul>
-              <li>
-                <p class="left">姓名</p>
-                <div class="right">李四</div>
-              </li>
-              <li>
-                <p class="left">关系</p>
-                <div class="right">母亲</div>
-              </li>
-              <li>
-                <p class="left">联系电话</p>
-                <div class="right">18666666666</div>
-              </li>
-            </ul>
-          </div>
-          <div class="career-info">
-            <h4 class="sub-title">职业证明人</h4>
-            <ul>
-              <li>
-                <p class="left">姓名</p>
-                <div class="right">李四</div>
-              </li>
-              <li>
-                <p class="left">关系</p>
-                <div class="right">母亲</div>
-              </li>
-              <li>
-                <p class="left">联系电话</p>
-                <div class="right">18666666666</div>
-              </li>
-            </ul>
-          </div>
-          <div class="other-info">
-            <h4 class="sub-title">其他联系人</h4>
-            <ul>
-              <li>
-                <p class="left">姓名</p>
-                <div class="right">王五</div>
-              </li>
-              <li>
-                <p class="left">关系</p>
-                <div class="right">同事</div>
-              </li>
-              <li>
-                <p class="left">联系电话</p>
-                <div class="right">{{13700000000}}</div>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <p class="notice">可知晓本次融资申请的联系人：家属、同事</p>
+      <div class="job-information">
+        <!--v-for="(info,index) in infoObj"-->
+        <ul v-if="salaryFrom==2">
+          <li class="officialJobDate">
+            <p>工作时间</p><div>2011年4月</div>
+          </li>
+          <li class="companyName">
+            <p>经营主体</p><div>凡普金科</div>
+          </li>
+          <li class="workPlace">
+            <p>现单位地址</p><div>北京市东城区</div>
+          </li>
+          <li class="housenumber">
+            <p>详细地址</p><div>银河SOHO A座11层</div>
+          </li>
+          <li class="completePhone">
+            <p>单位电话</p><div>010-88888888</div>
+          </li>
+        </ul>
+        <ul v-if="salaryFrom==1">
+          <li class="officialJobDate">
+            <p>工作时间</p><div>2011年4月</div>
+          </li>
+          <li class="companyName">
+            <p>现单位名称</p><div>凡普金科</div>
+          </li>
+          <li class="payOfSocialSecurityFund">
+            <p>是否缴纳社保/公积金</p><div>凡普金科</div>
+          </li>
+          <li class="workPlace">
+            <p>现单位地址</p><div>北京市东城区</div>
+          </li>
+          <li class="housenumber">
+            <p>详细地址</p><div>银河SOHO A座11层</div>
+          </li>
+          <li class="completePhone">
+            <p>单位电话</p><div>010-88888888</div>
+          </li>
+          <li class="department">
+            <p>现单位部门</p><div>凡普信贷</div>
+          </li>
+          <li class="jobTitleType">
+            <p>现单位职位</p><div>开发工程师</div>
+          </li>
+          <li class="companyType">
+            <p>企业性质</p><div>民营</div>
+          </li>
+          <li class="enterCompanyDate">
+            <p>入职时间</p><div>2014年5月</div>
+          </li>
+        </ul>
       </div>
 
       <div class="component">
         <div class="radios">
-          <label class="item">审核结果</label>
-          <label v-if="conPersonInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+        <label class="item">审核结果</label>
+        <label v-if="jobInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-          <div v-if="conPersonInfoStatus=='待质检'">
-            <label  class="no" for="no">不通过</label>
-            <div class="wrapper">
-              <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
-            </div>
-            <label class="yes" for="yes">通过</label>
-            <div class="wrapper">
-              <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
-            </div>
+        <div v-if="jobInfoStatus=='待质检'">
+          <label  class="no" for="no">不通过</label>
+          <div class="wrapper">
+            <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
+          </div>
+          <label class="yes" for="yes">通过</label>
+          <div class="wrapper">
+            <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
           </div>
         </div>
+      </div>
         <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="conPersonInfoStatus=='待质检'">
+        <div class="txt-box" v-if="jobInfoStatus=='待质检'">
           <div v-if="pass=='true'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
@@ -104,13 +82,13 @@
           </div>
         </div>
         <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="conPersonInfoStatus!='待质检'">
+        <div class="txt-box" v-if="jobInfoStatus!='待质检'">
           <div v-if="pass=='false'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
         </div>
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="conPersonInfoStatus=='待质检'" class="button">
+        <div v-if="jobInfoStatus=='待质检'" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -128,17 +106,33 @@
   export default {
     data () {
       return {
-        title: '联系人信息',
+        title: '基础信息',
         message: '',
         pass: 'true',
         passStatus: '通过',
+        salaryFrom: 1,//1位薪类，2位商类
 
-        marriage: true,//婚姻状况
-        conPersonInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        livingType: '',//姓名
-        livingPlace: '',//手机号
-        housenumber: '',//备用手机号
-        lifeYears: '',//身份证号
+
+        jobInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
+        officialJobDate: '',//工作时间
+        enterCompanyDate: '',//入职时间
+        companyName: '',//现单位名称或者经营主体
+        payOfSocialSecurityFund: true,
+        workPlace: '',//现单位地区
+        housenumber: '',//详细地址
+        completePhone: '',//单位电话
+        areaCode: '',//区号
+        telephoneNumber: '',//中间电话号码
+        branchNumber: '',//分机号
+        department: '',//现单位部门
+        jobTitleType: '',//现单位职位
+        messageOfJobTitleType: '',//其他情况说明
+        companyType: '',//现单位性质
+        messageOfCompanyType: '',//其他情况说明
+        provinceCode: "110000",//省
+        cityCode: "110100",//市
+        distCode: "110101",//县区
+        completeaddress: "北京市 市辖区 东城区 东二环银河SOHO A座11层",
       }
     },
 
@@ -168,7 +162,7 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .contactPerson-information{
+  .customer-information{
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
@@ -181,93 +175,38 @@
       border-top: 1px solid #e3e3e5;
     }
     .box{
-      background-color: #f1f1f1;
       width: 100%;
-      .review-progress{
-        .pro-content{
-          background-color: #f1f1f1;
-          padding-top: .2rem;
-          .immediate-info, .career-info, .other-info{
-            background-color: #fff;
-            margin: 0 .2rem .2rem .2rem;
-            width: 7.1rem;
-            border: 1px solid #e6e6e6;
-            border-radius: .2rem;
-            h4{
-              font-size: .28rem;
-              font-weight: normal;
-              margin: 0;
-              width: 1.78rem;
-              height: .55rem;
-              border-top-left-radius: .2rem;
-              border-bottom-right-radius: .2rem;
-              background-color: #3399ff;
-              color: #fff;
-              text-align: center;
-              line-height: .55rem;
-            }
-            ul{
-              color: #333;
-              margin: 0 .3rem;
-              padding-left: 0;
-              li{
-                position: relative;
-                list-style-type: none;
-                height: .54rem;
-                .left,.right{
-                  margin: .2rem 0 0 0;
-                  font-size: .26rem;
-                  height: .24rem;
-                  line-height: .24rem;
-                }
-                .left{
-                  display: inline-block;
-                }
-                .fail{
-                  color: #ff4e4e;
-                }
-                .suc{
-                  color: #39f;
-                }
-                .right{
-                  display: inline-block;
-                  float: right;
-                }
-              }
-            }
-          }
-          .immediate-info{
-            ul:nth-child(2){
-              border-bottom: 1px solid #e6e6e6;
-              padding-bottom: .35rem;
-              padding-top: .1rem;
-            }
-            ul:nth-child(3){
-              padding-top: .2rem;
-              padding-bottom: .32rem;
-            }
-          }
-          .career-info{
-            ul:nth-child(2){
-              padding-bottom: .32rem;
-              padding-top: .1rem;
-            }
-          }
-          .other-info{
-            margin: 0 .2rem;
-            ul:nth-child(2){
-              padding-bottom: .32rem;
-              padding-top: .1rem;
-            }
-          }
-        }
-        .notice{
-          height: 1.06rem;
-          padding: 0 .32rem;
-          width: 6.86rem;
-          font-size: .28rem;
-          line-height: 1.06rem;
+      background-color: #f1f1f1;
+      .job-information{
+        font-size: .3rem;
+        padding: 0 .32rem .4rem;
+        border-bottom: 1px solid #d4d4d4;
+        background-color: #fff;
+        ul{
+          height: 100%;
+          padding: 0;
           margin: 0;
+          color: #666;
+          li{
+            list-style-type: none;
+            height: .57rem;
+            p,div{
+              height: .28rem;
+              margin: .29rem 0 0 0;
+              line-height: .28rem;
+            }
+            p{
+              float: left;
+              color: #666;
+            }
+            div{
+              float: right;
+              color: #333;
+            }
+            .phone{
+              color: #3295f9;
+            }
+          }
         }
       }
 
@@ -278,6 +217,7 @@
           line-height: .88rem;
           list-style: none;
           padding: 0 .32rem;
+          margin-top: .2rem;
           border-bottom: 1px solid #e5e5e5;
           background-color: #fff;
           .item {

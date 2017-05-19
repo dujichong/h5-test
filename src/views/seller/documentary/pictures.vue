@@ -1,78 +1,37 @@
+<!--拍照资料项-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
-      <div class="job-information">
+      <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
-        <ul v-if="salaryFrom==2">
-          <li class="officialJobDate">
-            <p>工作时间</p><div>2011年4月</div>
-          </li>
-          <li class="companyName">
-            <p>经营主体</p><div>凡普金科</div>
-          </li>
-          <li class="workPlace">
-            <p>现单位地址</p><div>北京市东城区</div>
-          </li>
-          <li class="housenumber">
-            <p>详细地址</p><div>银河SOHO A座11层</div>
-          </li>
-          <li class="completePhone">
-            <p>单位电话</p><div>010-88888888</div>
-          </li>
-        </ul>
-        <ul v-if="salaryFrom==1">
-          <li class="officialJobDate">
-            <p>工作时间</p><div>2011年4月</div>
-          </li>
-          <li class="companyName">
-            <p>现单位名称</p><div>凡普金科</div>
-          </li>
-          <li class="payOfSocialSecurityFund">
-            <p>是否缴纳社保/公积金</p><div>凡普金科</div>
-          </li>
-          <li class="workPlace">
-            <p>现单位地址</p><div>北京市东城区</div>
-          </li>
-          <li class="housenumber">
-            <p>详细地址</p><div>银河SOHO A座11层</div>
-          </li>
-          <li class="completePhone">
-            <p>单位电话</p><div>010-88888888</div>
-          </li>
-          <li class="department">
-            <p>现单位部门</p><div>凡普信贷</div>
-          </li>
-          <li class="jobTitleType">
-            <p>现单位职位</p><div>开发工程师</div>
-          </li>
-          <li class="companyType">
-            <p>企业性质</p><div>民营</div>
-          </li>
-          <li class="enterCompanyDate">
-            <p>入职时间</p><div>2014年5月</div>
-          </li>
+        <h3>身份证明</h3>
+        <ul>
+          <li @click="showBgPic(0)"><img src="../../../assets/seller/documentary/pic1.png"></li>
+          <li @click="showBgPic(1)"><img src="../../../assets/seller/documentary/pic2.png"></li>
+          <li><img src="../../../assets/seller/documentary/pic3.png"></li>
+          <li><img src="../../../assets/seller/documentary/pic4.png"></li>
+          <li><img src="../../../assets/seller/documentary/pic5.png"></li>
         </ul>
       </div>
-
       <div class="component">
         <div class="radios">
-        <label class="item">审核结果</label>
-        <label v-if="jobInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+          <label class="item">审核结果</label>
+          <label v-if="picInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-        <div v-if="jobInfoStatus=='待质检'">
-          <label  class="no" for="no">不通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
-          </div>
-          <label class="yes" for="yes">通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+          <div v-if="picInfoStatus=='待质检'">
+            <label  class="no" for="no">不通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
+            </div>
+            <label class="yes" for="yes">通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+            </div>
           </div>
         </div>
-      </div>
         <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="jobInfoStatus=='待质检'">
+        <div class="txt-box" v-if="picInfoStatus=='待质检'">
           <div v-if="pass=='true'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
@@ -81,13 +40,13 @@
           </div>
         </div>
         <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="jobInfoStatus!='待质检'">
+        <div class="txt-box" v-if="picInfoStatus!='待质检'">
           <div v-if="pass=='false'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
         </div>
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="jobInfoStatus=='待质检'" class="button">
+        <div v-if="picInfoStatus=='待质检'" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -96,6 +55,13 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="backgroundPic" @click="hideBgPic(0)">
+      <img src="../../../assets/seller/documentary/pic1.png"/>
+    </div>
+
+    <div class="backgroundPic" @click="hideBgPic(1)">
+      <img src="../../../assets/seller/documentary/bc2.jpeg"/>
     </div>
   </div>
 </template>
@@ -109,29 +75,9 @@
         message: '',
         pass: 'true',
         passStatus: '通过',
-        salaryFrom: 1,//1位薪类，2位商类
-
-
-        jobInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        officialJobDate: '',//工作时间
-        enterCompanyDate: '',//入职时间
-        companyName: '',//现单位名称或者经营主体
-        payOfSocialSecurityFund: true,
-        workPlace: '',//现单位地区
-        housenumber: '',//详细地址
-        completePhone: '',//单位电话
-        areaCode: '',//区号
-        telephoneNumber: '',//中间电话号码
-        branchNumber: '',//分机号
-        department: '',//现单位部门
-        jobTitleType: '',//现单位职位
-        messageOfJobTitleType: '',//其他情况说明
-        companyType: '',//现单位性质
-        messageOfCompanyType: '',//其他情况说明
-        provinceCode: "110000",//省
-        cityCode: "110100",//市
-        distCode: "110101",//县区
-        completeaddress: "北京市 市辖区 东城区 东二环银河SOHO A座11层",
+        bgPicShow: false,
+        picInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
+        
       }
     },
 
@@ -149,6 +95,16 @@
     //自定义的方法放在 methods
     methods : {
       commit() {
+      },
+
+      showBgPic(index){
+        let element = this.$el.getElementsByClassName('backgroundPic');
+        element[index].className = "backgroundPic show";
+      },
+
+      hideBgPic(index){
+        let element = this.$el.getElementsByClassName('backgroundPic');
+        element[index].className = "backgroundPic";
       },
     },
 
@@ -176,34 +132,32 @@
     .box{
       width: 100%;
       background-color: #f1f1f1;
-      .job-information{
+      .base-information{
         font-size: .3rem;
-        padding: 0 .32rem .4rem;
+        padding: 0 .32rem;
         border-bottom: 1px solid #d4d4d4;
         background-color: #fff;
+        h3{
+          font-weight: normal;
+          font-size: .3rem;
+          color: #333;
+          margin: 0;
+          height: .87rem;
+          line-height: .87rem;
+        }
         ul{
-          height: 100%;
           padding: 0;
           margin: 0;
-          color: #666;
           li{
             list-style-type: none;
-            height: .57rem;
-            p,div{
-              height: .28rem;
-              margin: .29rem 0 0 0;
-              line-height: .28rem;
-            }
-            p{
-              float: left;
-              color: #666;
-            }
-            div{
-              float: right;
-              color: #333;
-            }
-            .phone{
-              color: #3295f9;
+            width: 2rem;
+            height:2rem;
+            display: inline-block;
+            margin-right: .22rem;
+            margin-bottom: .32rem;
+            img{
+              width: 100%;
+              height: 100%;
             }
           }
         }
@@ -335,6 +289,25 @@
           }
         }
       }
+    }
+    .backgroundPic{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 100000;
+      display: none;
+      background-color: #000;
+      img{
+        width: 100%;
+        max-height: 100%;
+        display: block;
+        margin: auto;
+      }
+    }
+    .show{
+      display: block;
     }
   }
 </style>

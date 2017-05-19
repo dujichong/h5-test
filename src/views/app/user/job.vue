@@ -1,3 +1,4 @@
+<!--职业信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="job-information">
     <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
@@ -191,7 +192,7 @@
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
   import cMsg from 'components/msg';
-  import cCityOptions from 'components/cityOptions';
+  import cCityOptions from 'components/provinces';
   import axios from 'axios';
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
   const ROOTPATH = window.$rootPath;

@@ -1,3 +1,4 @@
+<!--帮助详情-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="help-detail">
     <c-title :text="title" :hide="false"></c-title>

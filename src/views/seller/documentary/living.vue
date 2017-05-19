@@ -1,24 +1,32 @@
+<!--居住信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
-      <div class="base-information">
+      <div class="living-information">
         <!--v-for="(info,index) in infoObj"-->
-        <h3>身份证明</h3>
         <ul>
-          <li @click="showBgPic(0)"><img src="../../../assets/sellerApp/documentary/pic1.png"></li>
-          <li @click="showBgPic(1)"><img src="../../../assets/sellerApp/documentary/pic2.png"></li>
-          <li><img src="../../../assets/sellerApp/documentary/pic3.png"></li>
-          <li><img src="../../../assets/sellerApp/documentary/pic4.png"></li>
-          <li><img src="../../../assets/sellerApp/documentary/pic5.png"></li>
+          <li class="livingType">
+            <p>居住情况</p><div>{{livingType}}</div>
+          </li>
+          <li class="livingPlace">
+            <p>现居住地</p><div>{{livingPlace}}</div>
+          </li>
+          <li class="housenumber">
+            <p>详细地址</p><div>{{housenumber}}</div>
+          </li>
+          <li class="lifeYears">
+            <p>居住年限(年)</p><div>{{lifeYears}}</div>
+          </li>
         </ul>
       </div>
+
       <div class="component">
         <div class="radios">
           <label class="item">审核结果</label>
-          <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+          <label v-if="livingInfoStatus!='待质检'" class="no">{{passStatus}}</label>
 
-          <div v-if="baseInfoStatus=='待质检'">
+          <div v-if="livingInfoStatus=='待质检'">
             <label  class="no" for="no">不通过</label>
             <div class="wrapper">
               <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
@@ -30,7 +38,7 @@
           </div>
         </div>
         <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="baseInfoStatus=='待质检'">
+        <div class="txt-box" v-if="livingInfoStatus=='待质检'">
           <div v-if="pass=='true'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
@@ -39,13 +47,13 @@
           </div>
         </div>
         <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="baseInfoStatus!='待质检'">
+        <div class="txt-box" v-if="livingInfoStatus!='待质检'">
           <div v-if="pass=='false'" class="text">
             <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
           </div>
         </div>
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="baseInfoStatus=='待质检'" class="button">
+        <div v-if="livingInfoStatus=='待质检'" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -55,13 +63,6 @@
         </div>
       </div>
     </div>
-    <div class="backgroundPic" @click="hideBgPic(0)">
-      <img src="../../../assets/sellerApp/documentary/bc1.jpg"/>
-    </div>
-
-    <div class="backgroundPic" @click="hideBgPic(1)">
-      <img src="../../../assets/sellerApp/documentary/bc2.jpeg"/>
-    </div>
   </div>
 </template>
 <script>
@@ -70,30 +71,16 @@
   export default {
     data () {
       return {
-        title: '基础信息',
+        title: '居住信息',
         message: '',
         pass: 'true',
         passStatus: '通过',
 
-        bgPicShow: false,
-        baseInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-
-        name: '',//姓名
-        mobile: '',//手机号
-        mobile2: '',//备用手机号
-        cardNo: '',//身份证号
-        nation: '',//民族
-        education: '',//学历
-        marriage: '',//婚姻状况
-        childrenNumber: '',//子女数量
-        supportNumber: '',//供养人数
-        salaryFrom: '',//主要收入来源
-        annual_income: '',//年收入
-        localHouseProperty: '',//本地房产情况
-        understandWay: '',//了解渠道
-        understandWayOthers: '',//了解渠道_其他说明
-        qq: '',//qq号码
-
+        livingInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
+        livingType: '',//居住情况
+        livingPlace: '',//现居住地
+        housenumber: '',//详细地址
+        lifeYears: '',//居住年限(年)
       }
     },
 
@@ -111,16 +98,6 @@
     //自定义的方法放在 methods
     methods : {
       commit() {
-      },
-
-      showBgPic(index){
-        let element = this.$el.getElementsByClassName('backgroundPic');
-        element[index].className = "backgroundPic show";
-      },
-
-      hideBgPic(index){
-        let element = this.$el.getElementsByClassName('backgroundPic');
-        element[index].className = "backgroundPic";
       },
     },
 
@@ -148,32 +125,34 @@
     .box{
       width: 100%;
       background-color: #f1f1f1;
-      .base-information{
+      .living-information{
         font-size: .3rem;
-        padding: 0 .32rem;
+        padding: 0 .32rem .4rem;
         border-bottom: 1px solid #d4d4d4;
         background-color: #fff;
-        h3{
-          font-weight: normal;
-          font-size: .3rem;
-          color: #333;
-          margin: 0;
-          height: .87rem;
-          line-height: .87rem;
-        }
         ul{
+          height: 100%;
           padding: 0;
           margin: 0;
+          color: #666;
           li{
             list-style-type: none;
-            width: 2rem;
-            height:2rem;
-            display: inline-block;
-            margin-right: .22rem;
-            margin-bottom: .32rem;
-            img{
-              width: 100%;
-              height: 100%;
+            height: .57rem;
+            p,div{
+              height: .28rem;
+              margin: .29rem 0 0 0;
+              line-height: .28rem;
+            }
+            p{
+              float: left;
+              color: #666;
+            }
+            div{
+              float: right;
+              color: #333;
+            }
+            .phone{
+              color: #3295f9;
             }
           }
         }
@@ -305,22 +284,6 @@
           }
         }
       }
-    }
-    .backgroundPic{
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 100000;
-      display: none;
-      img{
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .show{
-      display: block;
     }
   }
 </style>

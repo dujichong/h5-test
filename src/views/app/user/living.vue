@@ -1,3 +1,4 @@
+<!--居住信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="living-information">
     <c-title :text="title" :hide="false"></c-title>
@@ -54,7 +55,7 @@
   import cTitle from 'components/title';
   import cLoading from 'components/loading';
   import cMsg from 'components/msg';
-  import cCityOptions from 'components/cityOptions';
+  import cCityOptions from 'components/provinces';
   import axios from 'axios';
   import { Actionsheet} from 'mint-ui';
   const ROOTPATH = window.$rootPath;

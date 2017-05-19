@@ -12,14 +12,15 @@ const AppProdcutDetail = r => require(['views/app/product/detail'], r);
 const AppUserLivingInformation = r => require(['views/app/user/living'], r);
 const AppUserJobInformationJob = r => require(['views/app/user/job'], r);
 const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registration'], r);
+const AppMineNewsCenter = r => require(['views/app/mine/news'], r);
 
-const AppSellerDocumentaryEntry = r => require(['views/sellerApp/documentary/entry'], r);
-const AppSellerDocumentaryInformation = r => require(['views/sellerApp/documentary/information'], r);
-const AppSellerDocumentaryBaseInformation = r => require(['views/sellerApp/documentary/baseInfo'], r);
-const AppSellerDocumentaryPicturesInformation = r => require(['views/sellerApp/documentary/picturesInfo'], r);
-const AppSellerDocumentaryLivingInformation = r => require(['views/sellerApp/documentary/livingInfo'], r);
-const AppSellerDocumentaryJobInformation = r => require(['views/sellerApp/documentary/jobInfo'], r);
-const AppSellerDocumentaryContactPersonInformation = r => require(['views/sellerApp/documentary/contactPersonInfo'], r);
+const AppSellerDocumentaryEntry = r => require(['views/seller/documentary/entry'], r);
+const AppSellerDocumentaryInformation = r => require(['views/seller/documentary/information'], r);
+const AppSellerDocumentaryBaseInformation = r => require(['views/seller/documentary/base'], r);
+const AppSellerDocumentaryPicturesInformation = r => require(['views/seller/documentary/pictures'], r);
+const AppSellerDocumentaryLivingInformation = r => require(['views/seller/documentary/living'], r);
+const AppSellerDocumentaryJobInformation = r => require(['views/seller/documentary/job'], r);
+const AppSellerDocumentaryContactPersonInformation = r => require(['views/seller/documentary/contact'], r);
 
 // 页面路由list
 const routes = [
@@ -29,14 +30,15 @@ const routes = [
   {path: '/app/user/living', component: AppUserLivingInformation, name: 'AppUserLivingInformation'},
   {path: '/app/user/job', component: AppUserJobInformationJob, name: 'AppUserJobInformationJob'},
   {path: '/app/login/registration', component: AppUserLoginRegistrationAgreement, name: 'AppUserLoginRegistrationAgreement'},
+  {path: '/app/mine/news', component: AppMineNewsCenter, name: 'AppMineNewsCenter'},
 
-  {path: '/sellerApp/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
-  {path: '/sellerApp/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
-  {path: '/sellerApp/documentary/baseInfo', component: AppSellerDocumentaryBaseInformation, name: 'AppSellerDocumentaryBaseInformation'},
-  {path: '/sellerApp/documentary/picturesInfo', component: AppSellerDocumentaryPicturesInformation, name: 'AppSellerDocumentaryPicturesInformation'},
-  {path: '/sellerApp/documentary/livingInfo', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
-  {path: '/sellerApp/documentary/jobInfo', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
-  {path: '/sellerApp/documentary/contactPersonInfo', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
+  {path: '/seller/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
+  {path: '/seller/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
+  {path: '/seller/documentary/base', component: AppSellerDocumentaryBaseInformation, name: 'AppSellerDocumentaryBaseInformation'},
+  {path: '/seller/documentary/pictures', component: AppSellerDocumentaryPicturesInformation, name: 'AppSellerDocumentaryPicturesInformation'},
+  {path: '/seller/documentary/living', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
+  {path: '/seller/documentary/job', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
+  {path: '/seller/documentary/contact', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
 
 ].map(route => {
   route.path = rootPath + route.path;

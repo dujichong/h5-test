@@ -1,3 +1,4 @@
+<!--录件中页面-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="entry">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>

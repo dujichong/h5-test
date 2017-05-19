@@ -1,10 +1,11 @@
+<!--客户资料-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
     <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
     <div class="box">
       <div class="base-information">
         <div class="info-title">
-          <img src="../../../assets/sellerApp/documentary/base-info.png">
+          <img src="../../../assets/seller/documentary/base-info.png">
           <h3>客户基本信息</h3>
         </div>
         <!--v-for="(info,index) in infoObj"-->
@@ -36,7 +37,7 @@
       </div>
       <div class="review-progress">
         <div class="pro-title">
-          <img src="../../../assets/sellerApp/documentary/review-progress.png">
+          <img src="../../../assets/seller/documentary/review-progress.png">
           <h3>资料审核进度</h3>
         </div>
         <div class="pro-content">
@@ -60,7 +61,7 @@
             <ul>
               <li @click="turnToBaseInfo">
                 <p class="left">基础信息</p>
-                <p v-bind:class="{fail:baseInfoStatus=='质检不通过',suc:baseInfoStatus=='质检通过'}" class="mid" >{{baseInfoStatus}}</p>
+                <p v-bind:class="{fail:infoStatus=='质检不通过',suc:infoStatus=='质检通过'}" class="mid" >{{infoStatus}}</p>
                 <p class="right">05-12 13:00</p>
               </li>
               <li>
@@ -151,7 +152,7 @@
         mobile: '',//手机号
         mobile2: '',//备用手机号
 
-        baseInfoStatus: '质检不通过',//未提交,待质检,质检不通过,质检通过
+        infoStatus: '质检不通过',//未提交,待质检,质检不通过,质检通过
       }
     },
 
@@ -162,9 +163,9 @@
     //自定义的方法放在 methods
     methods : {
       turnToBaseInfo:function(){
-        if(this.baseInfoStatus!='未提交'){
+        if(this.infoStatus!='未提交'){
           this.$router.push({
-            path: 'sellerApp/documentary/baseInfo',
+            path: 'seller/documentary/baseInfo',
             name: 'AppSellerDocumentaryBaseInformation',
             //query: { num: num },
           });
