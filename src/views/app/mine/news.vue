@@ -17,9 +17,9 @@
         <div v-if="todayMessage.length" class="news-today">
           <label class="label">今天</label>
           <ul>
-            <li v-for="(item, index) of todayMessage" :data-id="item.id" :data-requestId="item.requestId">
+            <li v-for="(item, index) of todayMessage" :data-id="item.id" :data-requestId="item.requestId" @click="toggle('todayMessage', item, index)">
               <span v-if="!editting && item.readStatus == 0" class="mark"></span>
-              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('todayMessage', item, index)"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}"></span>
               <p class="content" :class="{editting: editting}">{{item.message}}</p>
               <p class="time">{{item.time}}</p>
             </li>
@@ -28,9 +28,9 @@
         <div v-if="withinAWeekMessage.length" class="news-one-week">
           <label class="label">一周内</label>
           <ul>
-            <li v-for="(item, index) of withinAWeekMessage" :data-id="item.id" :data-requestId="item.requestId">
+            <li v-for="(item, index) of withinAWeekMessage" :data-id="item.id" :data-requestId="item.requestId" @click="toggle('withinAWeekMessage', item, index)">
               <span v-if="!editting && item.readStatus == 0" class="mark"></span>
-              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('withinAWeekMessage', item, index)"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}"></span>
               <p class="content" :class="{editting: editting}">{{item.message}}</p>
               <p class="time">{{item.time}}</p>
             </li>
@@ -39,9 +39,9 @@
         <div v-if="aWeekAgoMessage.length" class="news-before-one-week">
           <label class="label">一周前</label>
           <ul>
-            <li v-for="(item, index) of aWeekAgoMessage" :data-id="item.id" :data-requestId="item.requestId">
+            <li v-for="(item, index) of aWeekAgoMessage" :data-id="item.id" :data-requestId="item.requestId" @click="toggle('aWeekAgoMessage', item, index)">
               <span v-if="!editting && item.readStatus == 0" class="mark"></span>
-              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('aWeekAgoMessage', item, index)"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}"></span>
               <p class="content" :class="{editting: editting}">{{item.message}}</p>
               <p class="time">{{item.time}}</p>
             </li>
@@ -94,8 +94,10 @@
 
       // 选择/取消选择消息
       toggle (arr, item, index) {
-        item.selected = !item.selected;
-        this[arr].splice(index, 1, item);
+        if (this.editting) {
+          item.selected = !item.selected;
+          this[arr].splice(index, 1, item);
+        }
       },
 
       // 撤销删除
@@ -129,9 +131,13 @@
           const json = response.data;
           if (json.code == '00000' && json.data && json.data.success == 'true') {
             ['todayMessage', 'withinAWeekMessage', 'aWeekAgoMessage'].forEach(arr => {
-              this[arr].forEach((msg, index) => {
-                msg.selected && this[arr].splice(index, 1);
-              });
+              for (let i = 0; i < this[arr].length; i++) {
+                let msg = this[arr][i];
+                if (msg.selected) {
+                  this[arr].splice(i, 1);
+                  --i;
+                }
+              }
             });
           }
           this.editting = false;
