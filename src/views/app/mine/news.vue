@@ -1,152 +1,114 @@
 <!--我的-消息中心-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
-    <div v-if="!hide" class="title">
+    <c-title :hide="true" :text="title"></c-title>
+    <div class="title">
       <img class="back" src="../../../assets/components/title/title-angle.png" @click="backwards"/>
       <h1>{{ title }}</h1>
       <div class="delete">
-        <span class="cancel" v-bind:class="{ show: cancelShow }" @click="del">取消</span>
-        <img src="../../../assets/components/title/delete.png" v-bind:class="{ show: !cancelShow }" @click="del"/>
+        <span class="cancel" v-bind:class="{ show: editting }" @click="cancel">取消</span>
+        <img src="../../../assets/components/title/delete.png" v-bind:class="{ show: !editting }"
+             @click="editting = true"/>
       </div>
     </div>
 
     <div class="box">
       <div class="news-content">
-        <div class="news-today">
+        <div v-if="todayMessage.length" class="news-today">
           <label class="label">今天</label>
           <ul>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
-            </li>
-            <li>
-              <span class="mark"></span>
-              <p class="content">亲爱的 XXXX女士  您好，恭喜您通过了我们的审核，获得了本次的融资金额，请尽快联系客服经理进应......</p>
-              <p class="time">2017-02-12  12:23</p>
+            <li v-for="(item, index) of todayMessage" :data-id="item.id" :data-requestId="item.requestId">
+              <span v-if="!editting && item.readStatus == 0" class="mark"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('todayMessage', item, index)"></span>
+              <p class="content" :class="{editting: editting}">{{item.message}}</p>
+              <p class="time">{{item.time}}</p>
             </li>
           </ul>
         </div>
-        <div class="news-one-week"></div>
-        <div class="news-before-one-week"></div>
+        <div v-if="withinAWeekMessage.length" class="news-one-week">
+          <label class="label">一周内</label>
+          <ul>
+            <li v-for="(item, index) of withinAWeekMessage" :data-id="item.id" :data-requestId="item.requestId">
+              <span v-if="!editting && item.readStatus == 0" class="mark"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('withinAWeekMessage', item, index)"></span>
+              <p class="content" :class="{editting: editting}">{{item.message}}</p>
+              <p class="time">{{item.time}}</p>
+            </li>
+          </ul>
+        </div>
+        <div v-if="aWeekAgoMessage.length" class="news-before-one-week">
+          <label class="label">一周前</label>
+          <ul>
+            <li v-for="(item, index) of aWeekAgoMessage" :data-id="item.id" :data-requestId="item.requestId">
+              <span v-if="!editting && item.readStatus == 0" class="mark"></span>
+              <span v-if="editting" class="checkbox" :class="{selected: item.selected}" @click="toggle('aWeekAgoMessage', item, index)"></span>
+              <p class="content" :class="{editting: editting}">{{item.message}}</p>
+              <p class="time">{{item.time}}</p>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div v-bind:class="{ show: deleteLabel }" class="delete-label">
+    <div v-bind:class="{ show: editting }" class="delete-label" @click="del">
       <img src="../../../assets/app/mine/delete-label.png">
       <span>删除</span>
     </div>
   </div>
 </template>
 <script>
+
+  import cTitle from 'components/title';
+  import axios from 'axios';
+
+  const API_GET_TOTAL_MESSAGE = `${$rootPath}/common/getTotalMessage`;
+  const API_GET_ALL_MESSAGE = `${$rootPath}/common/getAllMessage`;
+  const API_DELETE_ALL_MESSAGE = `${$rootPath}/common/deleteMessage`;
+
   export default {
 
     data () {
       return {
         title: '消息中心',
         hide: false,
-
-        cancelShow: false,
-        deleteLabel: false,
-        message: '',
-        pass: 'true',
-        passStatus: '通过',
-
-        baseInfoStatus: '质检通过',//居住信息的审核状态;待质检,质检不通过,质检通过
+        editting: false,
+        todayMessage: [],
+        withinAWeekMessage: [],
+        aWeekAgoMessage: [],
       }
     },
 
-    watch: {
-      text(){
-        this.setTitle();
+    computed: {
+      selectedMessage (){
+        let ret = [];
+        ['todayMessage', 'withinAWeekMessage', 'aWeekAgoMessage'].forEach(arr => {
+          this[arr].forEach(msg => {
+            msg.selected && ret.push(msg);
+          });
+        });
+        return ret;
       }
     },
 
     methods: {
-      setTitle(){
-        document.title = this.text;
-        if (navigator.userAgent.indexOf('MicroMessenger') >= 0) {
-          var iframe = document.createElement("iframe");
-          iframe.style.display = 'none';
-          iframe.src = window.$spaRootPath + '/static/empty.png';
-          iframe.onload = function () {
-            setTimeout(function () {
-              iframe.onload = null;
-              document.body.removeChild(iframe);
-            }, 0);
-          };
-          document.body.appendChild(iframe);
-        }
+
+      // 选择/取消选择消息
+      toggle (arr, item, index) {
+        item.selected = !item.selected;
+        this[arr].splice(index, 1, item);
+      },
+
+      // 撤销删除
+      cancel () {
+        this.selectedMessage.forEach(msg => {
+          msg.selected = false;
+        });
+        this.editting = false;
       },
 
       //回退按钮
       backwards(){
-        if(history.state.__page==1){
+        if (history.state.__page == 1) {
           window.nativeCloseWebview();
         }
         else {
@@ -154,53 +116,87 @@
         }
       },
 
-
-      //删除按钮
-      del(){
-        if(this.cancelShow){
-          this.deleteLabel = false;
-          this.cancelShow = false;
-        }
-        else {
-          this.deleteLabel = true;
-          this.cancelShow = true;
-        }
+      // 删除消息
+      del () {
+        axios.post(API_DELETE_ALL_MESSAGE, {
+          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
+          "token": this.$route.token,
+          "body": {
+            "requestId": this.$route.requestId,
+            "messageIds": this.selectedMessage.map(msg=>msg.id).join(',')
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data && json.data.success == 'true') {
+            ['todayMessage', 'withinAWeekMessage', 'aWeekAgoMessage'].forEach(arr => {
+              this[arr].forEach((msg, index) => {
+                msg.selected && this[arr].splice(index, 1);
+              });
+            });
+          }
+          this.editting = false;
+        });
       },
+
+      getData () {
+        axios.post(API_GET_ALL_MESSAGE, {
+          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
+          "token": this.$route.token,
+          "body": {
+            "requestId": this.$route.requestId,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data && json.data.length) {
+            json.data.forEach(item => {
+              const msgTime = new Date(item.time);
+              const now = new Date();
+              const today = now.getDate();
+              const aWeek = now.getTime() - (1000 * 60 * 60 * 24 * 7);
+              this[msgTime.getDate() === today ? 'todayMessage' : msgTime.getTime() >= aWeek ? 'withinAWeekMessage' : 'aWeekAgoMessage'].push(item);
+            });
+          }
+        });
+      }
     },
 
     //初始化调用事件
     created(){
-      if(!history.state || !history.state.__page){
+
+      if (!history.state || !history.state.__page) {
         Object.assign(history.state || {}, {__page: history.length});
-        history.replaceState(history.state, null ,'');
+        history.replaceState(history.state, null, '');
       }
+
+      this.getData();
     },
 
     mounted: function () {
-      this.setTitle();
     },
+
+    components: {cTitle}
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .customer-information{
+  .customer-information {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
-    .title{
+    .title {
       width: 100%;
       height: .88rem;
       background-color: #fff;
       color: #595959;
       border-bottom: 1px solid #e6e6e6;
-      .back{
+      .back {
         width: .19rem;
         height: .36rem;
         display: inline-block;
         margin: .26rem .42rem .26rem .32rem;
         float: left;
       }
-      h1{
+      h1 {
         text-align: center;
         height: 100%;
         float: left;
@@ -210,18 +206,18 @@
         line-height: .88rem;
         width: 5.64rem;
       }
-      .delete{
+      .delete {
         float: left;
         width: .61rem;
         height: .88rem;
-        .cancel{
+        .cancel {
           line-height: .88rem;
           height: .88rem;
           color: #333;
           display: none;
           font-size: .3rem;
         }
-        img{
+        img {
           width: .36rem;
           height: .36rem;
           display: inline-block;
@@ -229,80 +225,94 @@
           margin: .26rem 0 .26rem .25rem;
           display: none;
         }
-        .show{
+        .show {
           display: block;
         }
       }
     }
-    .box{
+    .box {
       width: 100%;
       background-color: #f1f1f1;
-      .news-content{
+      .news-content {
         width: 100%;
-        .news-today{
+        .label {
+          height: .64rem;
+          line-height: .64rem;
+          background-color: #f1f1f1;
+          font-size: .26rem;
+          color: #7f7f7f;
+          padding-left: .32rem;
+          display: inline-block;
+        }
+        ul {
           width: 100%;
-          .label{
-            height: .64rem;
-            line-height: .64rem;
-            background-color: #f1f1f1;
-            font-size: .26rem;
-            color: #7f7f7f;
-            padding-left: .32rem;
-            display: inline-block;
-          }
-          ul{
-            width: 100%;
-            padding: 0;
-            margin: 0;
-            background-color: #fff;
-            li{
-              list-style-type: none;
-              height: 1.9rem;
-              width: 6.86rem;
-              padding: 0 .32rem;
-              position: relative;
-              .checkbox {
-                input {
-                }
+          padding: 0;
+          margin: 0;
+          background-color: #fff;
+          li {
+            list-style-type: none;
+            height: 1.9rem;
+            width: 6.86rem;
+            padding: 0 .32rem;
+            position: relative;
+            .checkbox {
+              input {
               }
-              .mark{
-                display: inline-block;
-                width: .16rem;
-                height: .16rem;
-                border-radius: .08rem;
-                background-color: #ff4d4d;
-                position: absolute;
-                top: .44rem;
-                left: .12rem;
-              }
-              .content{
-                display: inline-block;
-                font-size: .28rem;
-                line-height: .36rem;
-                margin:  .35rem 0 .16rem;
-                width: 6.78rem;
-                padding-left: .08rem;
-                color: #343434;
-                float: right;
-              }
-              .time{
-                font-size: .24rem;
-                line-height: .36rem;
-                color: #7f7f7f;
-                margin: 0 0 0 .31rem;
-                float: right;
-              }
-              &+li{
-                border-top: 1px solid #e6e6e6;
-              }
+            }
+            .mark {
+              display: inline-block;
+              width: .16rem;
+              height: .16rem;
+              border-radius: .08rem;
+              background-color: #ff4d4d;
+              position: absolute;
+              top: .44rem;
+              left: .12rem;
+            }
+            .checkbox {
+              display: inline-block;
+              width: .35rem;
+              height: .35rem;
+              border: 1px #b2b2b2 solid;
+              border-radius: 50%;
+              margin-top: .65rem;
+            }
+            .selected {
+              background-color: #3295f9;
+              background-image: url(../../../assets/app/mine/icon-selected-message.png);
+              background-repeat: no-repeat;
+              background-size: 100% 100%;
+              border: 1px #3295f9 solid;;
+
+            }
+            .content {
+              display: inline-block;
+              font-size: .28rem;
+              line-height: .36rem;
+              margin: .35rem 0 .16rem;
+              width: 6.78rem;
+              padding-left: .08rem;
+              color: #343434;
+              float: right;
+            }
+            .content.editting {
+              width: 6.2rem;
+            }
+            .time {
+              font-size: .24rem;
+              line-height: .36rem;
+              color: #7f7f7f;
+              margin: 0 0 0 .31rem;
+              float: right;
+            }
+            & + li {
+              border-top: 1px solid #e6e6e6;
             }
           }
         }
-        .news-one-week{}
-        .news-before-one-week{}
       }
     }
-    .delete-label{
+    .delete-label {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -311,13 +321,13 @@
       border-top: 1px solid #cdcdcd;
       background-color: #f8f8f8;
       display: none;
-      img{
+      img {
         width: .36rem;
         height: .36rem;
         display: inline-block;
         margin: .3rem 0 0 3.23rem;
       }
-      span{
+      span {
         display: inline-block;
         line-height: .99rem;
         font-size: .34rem;
@@ -325,7 +335,7 @@
         height: .99rem;
       }
     }
-    .show{
+    .show {
       display: block;
     }
   }
