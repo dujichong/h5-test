@@ -222,10 +222,7 @@
             width: 6.86rem;
             padding: 0 .32rem;
             position: relative;
-            .checkbox {
-              input {
-              }
-            }
+
             .mark {
               display: inline-block;
               width: .16rem;

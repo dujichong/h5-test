@@ -65,7 +65,7 @@
 
       //回退按钮
       backwards(){
-        if(history.state.__page==1){
+        if(!history.state || !history.state.__page || history.state.__page <= 1){
           window.nativeCloseWebview();
         }
         else {
@@ -77,8 +77,7 @@
     //初始化调用事件
     created(){
       if(!history.state || !history.state.__page){
-        Object.assign(history.state || {}, {__page: history.length});
-        history.replaceState(history.state, null ,'');
+        history.replaceState(Object.assign(history.state || {}, {__page: history.length}), null , '');
       }
     },
 

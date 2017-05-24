@@ -2,7 +2,7 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
 
-    <c-title :icon="true" :text="title" @iconclick="toggleEdit">
+    <c-title :icon="true" :text="title" @iconclick="toggleEdit" ref="title">
       <span v-if="editting" class="cancel show" v-bind:class="{ show: editting }">取消</span>
       <img v-else src="../../../assets/components/title/delete.png" class="show"/>
     </c-title>
@@ -66,7 +66,7 @@
         }).then(response => {
           const json = response.data;
           if (json.code == '00000' && json.data && json.data.success == 'true') {
-            this.backwards();
+            this.$refs.title.backwards();
           }
         });
       },
@@ -106,10 +106,7 @@
             width: 6.86rem;
             padding: 0 .32rem;
             position: relative;
-            .checkbox {
-              input {
-              }
-            }
+
             .mark {
               display: inline-block;
               width: .16rem;
@@ -145,9 +142,6 @@
               padding-left: .08rem;
               color: #343434;
               float: right;
-            }
-            .content.editting {
-              width: 6.2rem;
             }
             .time {
               font-size: .24rem;
