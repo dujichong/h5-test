@@ -13,6 +13,9 @@
     </div>
 
     <div class="box">
+
+      <div v-if="nodata" class="nodata">没有消息</div>
+
       <div class="news-content">
         <div v-if="todayMessage.length" class="news-today">
           <label class="label">今天</label>
@@ -61,7 +64,8 @@
   import cTitle from 'components/title';
   import axios from 'axios';
 
-  const API_GET_TOTAL_MESSAGE = `${$rootPath}/common/getTotalMessage`;
+  const $rootPath = window.$rootPath;
+  const API_GET_TOTAL_MESSAGE = `${window.$rootPath}/common/getTotalMessage`;
   const API_GET_ALL_MESSAGE = `${$rootPath}/common/getAllMessage`;
   const API_DELETE_ALL_MESSAGE = `${$rootPath}/common/deleteMessage`;
 
@@ -79,6 +83,12 @@
     },
 
     computed: {
+
+      nodata () {
+        return !this.todayMessage.length && !this.withinAWeekMessage.length && !this.aWeekAgoMessage.length;
+      },
+
+      // 已选择的消息
       selectedMessage (){
         let ret = [];
         ['todayMessage', 'withinAWeekMessage', 'aWeekAgoMessage'].forEach(arr => {
@@ -92,11 +102,19 @@
 
     methods: {
 
-      // 选择/取消选择消息
+      // 点击消息，选择/取消选择消息
       toggle (arr, item, index) {
         if (this.editting) {
           item.selected = !item.selected;
           this[arr].splice(index, 1, item);
+        }
+        else {
+          this.$router.push({
+            name: 'AppMineNews',
+            query: Object.assign({}, this.$route.query, {
+              id: item.id
+            })
+          })
         }
       },
 
@@ -125,7 +143,7 @@
           "token": this.$route.token,
           "body": {
             "requestId": this.$route.requestId,
-            "messageIds": this.selectedMessage.map(msg=>msg.id).join(',')
+            "messageIds": this.selectedMessage.map(msg => msg.id).join(',')
           }
         }).then(response => {
           const json = response.data;
@@ -149,7 +167,7 @@
           "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
           "token": this.$route.token,
           "body": {
-            "requestId": this.$route.requestId,
+            "requestId": this.$route.requestId
           }
         }).then(response => {
           const json = response.data;
