@@ -14,7 +14,9 @@ const options = {
 
   // 多页面共享数据
   state: {
-    message: '',
+
+    // 用户正在查看的消息
+    message: {},
   },
 
   // 操作

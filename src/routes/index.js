@@ -13,6 +13,7 @@ const AppUserLivingInformation = r => require(['views/app/user/living'], r);
 const AppUserJobInformationJob = r => require(['views/app/user/job'], r);
 const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registration'], r);
 const AppMineNews = r => require(['views/app/mine/news'], r);
+const AppMineMessage = r => require(['views/app/mine/message'], r);
 
 const AppSellerDocumentaryEntry = r => require(['views/seller/documentary/entry'], r);
 const AppSellerDocumentaryInformation = r => require(['views/seller/documentary/information'], r);
@@ -31,6 +32,7 @@ const routes = [
   {path: '/app/user/job', component: AppUserJobInformationJob, name: 'AppUserJobInformationJob'},
   {path: '/app/login/registration', component: AppUserLoginRegistrationAgreement, name: 'AppUserLoginRegistrationAgreement'},
   {path: '/app/mine/news', component: AppMineNews, name: 'AppMineNews'},
+  {path: '/app/mine/message', component: AppMineMessage, name: 'AppMineMessage'},
 
   {path: '/seller/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
   {path: '/seller/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
