@@ -1,15 +1,38 @@
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
-  <div v-if="!hide" class="components-title">
-    <img src="../assets/components/title/title-angle.png" @click="backwards"/>
+  <div v-if="!hide" class="components-title" :class="'components-title-' + skin">
+    <span class="arrow" @click="backwards"></span>
+    <div v-if="icon" class="icon" @click="iconClick">
+      <slot></slot>
+    </div>
     <h1>{{ text }}</h1>
   </div>
-  <!---->
 </template>
 
 <script>
   export default {
 
-    props: ['text', 'hide'],
+    props: {
+      // 标题文字
+      text: {
+        type: String,
+        default: '#595959'
+      },
+      // 是否隐藏
+      hide: {
+        type: Boolean,
+        default: false
+      },
+      // 皮肤：white, blue
+      skin: {
+        type: String,
+        default: 'white'
+      },
+      // 是否显示右侧图标
+      icon: {
+        type: Boolean,
+        default: false
+      }
+    },
 
     watch: {
       text(){
@@ -18,6 +41,12 @@
     },
 
     methods: {
+
+      iconClick (){
+        this.$emit('iconclick')
+      },
+
+
       setTitle(){
         document.title = this.text;
         if (navigator.userAgent.indexOf('MicroMessenger') >= 0) {
@@ -60,27 +89,49 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  div.components-title{
+
+  .components-title {
     width: 100%;
     height: .88rem;
-    background-color: #fff;
-    color: #595959;
-    img{
+    line-height: .88rem;
+    .arrow{
       width: .19rem;
       height: .36rem;
       display: inline-block;
       margin: .26rem 0 .26rem .32rem;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
       float: left;
     }
     h1{
       text-align: center;
       height: 100%;
-      float: left;
       margin: 0;
       font-weight: normal;
       font-size: .36rem;
-      line-height: .88rem;
-      width: 6.48rem;
+    }
+    .icon {
+      width: .61rem;
+      float: right;
+      margin-right: .26rem;
+      text-align: right;
+      img {
+        width: .36rem;
+        height: .36rem;
+        display: inline-block;
+        margin-top: .25rem;
+      }
+      span {
+        font-size: .3rem;
+      }
+    }
+  }
+
+  .components-title-white {
+    background-color: #fff;
+    color: #595959;
+    .arrow {
+      background-image: url(../assets/components/title/title-angle.png);
     }
   }
 </style>

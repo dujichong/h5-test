@@ -1,15 +1,11 @@
 <!--我的-消息详情-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
-    <c-title :hide="true" :text="title"></c-title>
-    <div class="title">
-      <img class="back" src="../../../assets/components/title/title-angle.png" @click="backwards"/>
-      <h1>{{ title }}</h1>
-      <div class="delete">
-        <span class="cancel" v-bind:class="{ show: editting }" @click="editting = false">取消</span>
-        <img src="../../../assets/components/title/delete.png" v-bind:class="{ show: !editting }" @click="editting = true"/>
-      </div>
-    </div>
+
+    <c-title :icon="true" :text="title" @iconclick="toggleEdit">
+      <span v-if="editting" class="cancel show" v-bind:class="{ show: editting }">取消</span>
+      <img v-else src="../../../assets/components/title/delete.png" class="show"/>
+    </c-title>
 
     <div class="box">
       <div class="news-content">
@@ -54,14 +50,8 @@
 
     methods: {
 
-      //回退按钮
-      backwards(){
-        if (history.state.__page == 1) {
-          window.nativeCloseWebview();
-        }
-        else {
-          this.$router.go(-1);
-        }
+      toggleEdit (){
+        this.editting = !this.editting;
       },
 
       // 删除消息
@@ -82,15 +72,6 @@
       },
     },
 
-    //初始化调用事件
-    created(){
-
-      if (!history.state || !history.state.__page) {
-        Object.assign(history.state || {}, {__page: history.length});
-        history.replaceState(history.state, null, '');
-      }
-    },
-
     components: {cTitle}
   }
 </script>
@@ -100,53 +81,6 @@
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
-    .title {
-      width: 100%;
-      height: .88rem;
-      background-color: #fff;
-      color: #595959;
-      border-bottom: 1px solid #e6e6e6;
-      .back {
-        width: .19rem;
-        height: .36rem;
-        display: inline-block;
-        margin: .26rem .42rem .26rem .32rem;
-        float: left;
-      }
-      h1 {
-        text-align: center;
-        height: 100%;
-        float: left;
-        margin: 0;
-        font-weight: normal;
-        font-size: .36rem;
-        line-height: .88rem;
-        width: 5.64rem;
-      }
-      .delete {
-        float: left;
-        width: .61rem;
-        height: .88rem;
-        .cancel {
-          line-height: .88rem;
-          height: .88rem;
-          color: #333;
-          display: none;
-          font-size: .3rem;
-        }
-        img {
-          width: .36rem;
-          height: .36rem;
-          display: inline-block;
-          float: right;
-          margin: .26rem 0 .26rem .25rem;
-          display: none;
-        }
-        .show {
-          display: block;
-        }
-      }
-    }
     .box {
       width: 100%;
       background-color: #f1f1f1;
