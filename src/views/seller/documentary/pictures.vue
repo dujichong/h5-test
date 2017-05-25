@@ -1,7 +1,7 @@
 <!--拍照资料项-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
-    <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
+    <c-title :text="title" skin="blue"></c-title>
     <div class="box">
       <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
@@ -66,7 +66,7 @@
   </div>
 </template>
 <script>
-  import cSellerTitle from 'components/sellerTitle';
+  import cTitle from 'components/title';
 
   export default {
     data () {
@@ -113,7 +113,7 @@
     },
 
     //titie
-    components: {cSellerTitle}
+    components: {cTitle}
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>

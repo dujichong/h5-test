@@ -1,7 +1,7 @@
 <!--录件中页面-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="entry">
-    <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
+    <c-title :text="title" skin="blue"></c-title>
 
     <div class="nav">
       <div v-for="(item, index) of tabTitleObj" @click="change(item, index)" :class="{item: true , active: index == currentIndex}">{{item.subTitle}}</div>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import cSellerTitle from 'components/sellerTitle';
+  import cTitle from 'components/title';
 
   export default {
     data () {
@@ -121,7 +121,7 @@
     },
 
     //titie
-    components: {cSellerTitle}
+    components: {cTitle}
   }
 </script>
 

@@ -93,16 +93,18 @@
     width: 100%;
     height: .88rem;
     line-height: .88rem;
-    .arrow{
+    position: relative;
+    .arrow {
+      position: absolute;
+      top: .26rem;
+      left: .32rem;
       width: .19rem;
       height: .36rem;
-      display: inline-block;
-      margin: .26rem 0 .26rem .32rem;
+      display: block;
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      float: left;
     }
-    h1{
+    h1 {
       text-align: center;
       height: 100%;
       margin: 0;
@@ -110,9 +112,10 @@
       font-size: .36rem;
     }
     .icon {
+      position: absolute;
+      top: 0;
+      right: .26rem;
       width: .61rem;
-      float: right;
-      margin-right: .26rem;
       text-align: right;
       img {
         width: .36rem;
@@ -131,6 +134,14 @@
     color: #595959;
     .arrow {
       background-image: url(../assets/components/title/title-angle.png);
+    }
+  }
+
+  .components-title-blue {
+    background-color: #3399ff;
+    color: #fff;
+    .arrow {
+      background-image: url(../assets/components/title/back.png);
     }
   }
 </style>

@@ -22,6 +22,7 @@ const AppSellerDocumentaryPicturesInformation = r => require(['views/seller/docu
 const AppSellerDocumentaryLivingInformation = r => require(['views/seller/documentary/living'], r);
 const AppSellerDocumentaryJobInformation = r => require(['views/seller/documentary/job'], r);
 const AppSellerDocumentaryContactPersonInformation = r => require(['views/seller/documentary/contact'], r);
+const SellerApplicatinVerify = r => require(['views/seller/application/verify'], r);
 
 // 页面路由list
 const routes = [
@@ -41,6 +42,7 @@ const routes = [
   {path: '/seller/documentary/living', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
   {path: '/seller/documentary/job', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
   {path: '/seller/documentary/contact', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
+  {path: '/seller/application/verify', component: SellerApplicatinVerify, name: 'SellerApplicatinVerify'},
 
 ].map(route => {
   route.path = rootPath + route.path;

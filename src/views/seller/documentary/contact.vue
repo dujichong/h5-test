@@ -1,7 +1,7 @@
 <!--联系人信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="contactPerson-information">
-    <c-sellerTitle :text="title" :hide="false"></c-sellerTitle>
+    <c-title :text="title" skin="blue"></c-title>
     <div class="box">
       <div class="review-progress">
         <div class="pro-content">
@@ -124,7 +124,7 @@
   </div>
 </template>
 <script>
-  import cSellerTitle from 'components/sellerTitle';
+  import cTitle from 'components/title';
 
   export default {
     data () {
@@ -162,7 +162,7 @@
     },
 
     //titie
-    components: {cSellerTitle}
+    components: {cTitle}
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
