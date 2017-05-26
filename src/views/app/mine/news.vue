@@ -62,7 +62,6 @@
   import {mapMutations, mapState} from 'vuex';
 
   const $rootPath = window.$rootPath;
-  const API_GET_TOTAL_MESSAGE = `${window.$rootPath}/common/getTotalMessage`;
   const API_GET_ALL_MESSAGE = `${$rootPath}/common/getAllMessage`;
   const API_DELETE_ALL_MESSAGE = `${$rootPath}/common/deleteMessage`;
 

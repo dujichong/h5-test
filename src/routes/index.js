@@ -22,7 +22,9 @@ const AppSellerDocumentaryPicturesInformation = r => require(['views/seller/docu
 const AppSellerDocumentaryLivingInformation = r => require(['views/seller/documentary/living'], r);
 const AppSellerDocumentaryJobInformation = r => require(['views/seller/documentary/job'], r);
 const AppSellerDocumentaryContactPersonInformation = r => require(['views/seller/documentary/contact'], r);
-const SellerApplicatinVerify = r => require(['views/seller/application/verify'], r);
+const SellerApplicatinAudit = r => require(['views/seller/application/audit'], r);
+const SellerApplicatinAuditResult = r => require(['views/seller/application/audit-result'], r);
+const SellerApplicatinRepayment = r => require(['views/seller/application/repayment'], r);
 
 // 页面路由list
 const routes = [
@@ -42,7 +44,9 @@ const routes = [
   {path: '/seller/documentary/living', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
   {path: '/seller/documentary/job', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
   {path: '/seller/documentary/contact', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
-  {path: '/seller/application/verify', component: SellerApplicatinVerify, name: 'SellerApplicatinVerify'},
+  {path: '/seller/application/verify', component: SellerApplicatinAudit, name: 'SellerApplicatinAudit'},
+  {path: '/seller/application/verify-result', component: SellerApplicatinAuditResult, name: 'SellerApplicatinAuditResult'},
+  {path: '/seller/application/repayment', component: SellerApplicatinRepayment, name: 'SellerApplicatinRepayment'},
 
 ].map(route => {
   route.path = rootPath + route.path;
