@@ -15,6 +15,7 @@
   import axios from 'axios';
 
   const API = `${window.$rootPath}/sale/requestController/auditResult`;
+  let timmer;
 
   export default {
 
@@ -53,14 +54,20 @@
         refusePageNo: 1,
         returnPageNo: 1,
         giveupPageNo: 1,
+        approveLoading: false,
+        refuseLoading: false,
+        returnLoading: false,
+        giveupLoading: false,
       }
     },
 
     computed: {
-      list () {
-        const tab = this.tabs[this.currentTabIndex].tab;
-        return this[`${tab}List`];
+      tab () {
+        return this.tabs[this.currentTabIndex].tab;
       },
+      list () {
+        return this[`${this.tab}List`];
+      }
     },
 
     methods: {
@@ -88,11 +95,17 @@
       },
 
       getData (pageNo, tab) {
+
+        if (this[`${tab}Loading`]) {
+          return;
+        }
+
+        this[`${tab}Loading`] = true;
         axios.post(`${API}/${tab}`, {
           "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
           "token": this.$route.token,
           "body": {
-            "requestId": this.$route.requestId
+            "pageNo": pageNo,
           }
         }).then(response => {
           const json = response.data;
@@ -109,8 +122,21 @@
           else {
             this.msg = '没有数据';
           }
+          this[`${tab}Loading`] = false;
+        }).catch((err) => {
+          this[`${tab}Loading`] = false;
         });
-      }
+      },
+
+      getNextPageData () {
+        self = this;
+        clearTimeout(timmer);
+        timmer = setTimeout(function() {
+          if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+            self.getData(self[`${self.tab}PageNo`] + 1, self.tab);
+          }
+        }, 300);
+      },
     },
 
     //初始化调用事件
@@ -118,6 +144,14 @@
       ['approve', 'refuse', 'return', 'giveup'].forEach(item => {
         this.getData(1, item);
       });
+    },
+
+    mounted () {
+      window.addEventListener('scroll', this.getNextPageData);
+    },
+
+    destroyed () {
+      window.removeEventListener('scroll', this.getNextPageData);
     },
 
     components: {cTitle, cTab, cItem}

@@ -8,7 +8,7 @@
 
   html, body {
     position: relative;
-    height: 100%;
+    min-height: 100%;
     width: 100%;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -59,7 +59,6 @@
 
   body {
     #app {
-      height: 100%;
       #scroll-top {
         height: 1px;
         top: 0px;

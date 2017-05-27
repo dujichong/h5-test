@@ -1,8 +1,7 @@
-<!--销售-还款进件-->
+<!--销售-结清进件-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
-  <div class="app-seller-application-repayment">
+  <div class="app-seller-application-settled">
     <c-title skin="blue" :text="title"></c-title>
-    <c-tab :list="tabs" @change="changeList"></c-tab>
     <c-item v-for="item of list" :name="item.name" :fields="item.fields"></c-item>
     <div v-if="msg" class="msg">{{msg}}</div>
   </div>
@@ -10,65 +9,33 @@
 <script>
 
   import cTitle from 'components/title';
-  import cTab from 'components/tab';
   import cItem from './item';
   import axios from 'axios';
 
-  const API = `${window.$rootPath}/sale/requestController/repayment`;
+  const API = `${window.$rootPath}/sale/requestController/settled`;
   let timmer;
 
   export default {
 
     data () {
       return {
-        title: '还款进件',
+        loading: false,
+        title: '结清进件',
         msg: null,
-        currentTabIndex: 0,
-        tabs: [
-          {
-            tab: 'delay',
-            prompt: 0,
-            text: '逾期中',
-          },
-          {
-            tab: 'pay',
-            prompt: 0,
-            text: '还款中',
-          },
-        ],
-        delayList: [],
-        payList: [],
-        delayPageNo: 1,
-        payPageNo: 1,
-        delayLoading: false,
-        payLoading: false,
-      }
-    },
-
-    computed: {
-      tab () {
-        return this.tabs[this.currentTabIndex].tab;
-      },
-      list () {
-        return this[`${this.tab}List`];
+        pageNo: 1,
+        list: [],
       }
     },
 
     methods: {
 
-      changeList (tabData, index){
-        this.currentTabIndex = index;
-      },
+      formatData (list) {
 
-      formatData (list) { // todo
         return list.map(item => {
           return {
             name: item.customerName,
             fields: [
-              {
-                label: '客户电话',
-                value: `<a href="tel:${item.phone}">${item.phone}</a>`
-              },
+              { label: '客户电话', value: `<a href="tel:${item.phone}">${item.phone}</a>`},
               {label: '融资金融', value: `${item.requestAmount}元`},
               {label: '还款期数', value: item.repaymentPeriod},
               {label: '账单日', value: item.billDate},
@@ -79,37 +46,31 @@
         });
       },
 
-      getData (pageNo, tab) {
+      getData (pageNo) {
 
-        if (this[`${tab}Loading`]) {
+        if (this.loading) {
           return;
         }
 
-        this[`${tab}Loading`] = true;
-        axios.post(`${API}/${tab}`, {
+        this.loading = true;
+        axios.post(API, {
           "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
           "token": this.$route.token,
           "body": {
-            "pageNo": pageNo,
+            "pageNo": pageNo
           }
         }).then(response => {
           const json = response.data;
           if (json.code == '00000' && json.data && json.data.list && json.data.list.length) {
-            for (let i = 0; i < this.tabs.length; i++) {
-              if (this.tabs[i].tab === tab) {
-                this.tabs[i].prompt += parseInt(json.data.number, 10);
-                this.$set(this.tabs, i, this.tabs[i]);
-              }
-            }
-            this[`${tab}PageNo`] = pageNo;
-            this[`${tab}List`] = this[`${tab}List`].concat(this.formatData(json.data.list));
+            this.pageNo = pageNo;
+            this.list = this.list.concat(this.formatData(json.data.list));
           }
           else {
             this.msg = '没有数据';
           }
-          this[`${tab}Loading`] = false;
+          this.loading = false;
         }).catch((err) => {
-          this[`${tab}Loading`] = false;
+          this.loading = false;
         });
       },
 
@@ -118,17 +79,15 @@
         clearTimeout(timmer);
         timmer = setTimeout(function() {
           if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
-            self.getData(self[`${self.tab}PageNo`] + 1, self.tab);
+            self.getData(self.pageNo + 1);
           }
         }, 300);
       },
     },
 
     //初始化调用事件
-    created(){
-      ['delay', 'pay'].forEach(item => {
-        this.getData(1, item);
-      });
+    created () {
+      this.getData(1);
     },
 
     mounted () {
@@ -139,11 +98,11 @@
       window.removeEventListener('scroll', this.getNextPageData);
     },
 
-    components: {cTitle, cTab, cItem}
+    components: {cTitle, cItem}
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .app-seller-application-repayment {
+  .app-seller-application-settled {
     .msg {
       margin-top: .3rem;
       text-align: center;

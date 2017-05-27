@@ -13,11 +13,13 @@
   import axios from 'axios';
 
   const API = `${window.$rootPath}/sale/requestController/auditing`;
+  let timmer;
 
   export default {
 
     data () {
       return {
+        loading: false,
         title: '进件审核',
         msg: null,
         pageNo: 1,
@@ -43,6 +45,12 @@
       },
 
       getData (pageNo) {
+
+        if (this.loading) {
+          return;
+        }
+
+        this.loading = true;
         axios.post(API, {
           "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
           "token": this.$route.token,
@@ -58,13 +66,35 @@
           else {
             this.msg = '没有数据';
           }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
         });
-      }
+      },
+
+      getNextPageData () {
+        self = this;
+        clearTimeout(timmer);
+        timmer = setTimeout(function() {
+          if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+            self.getData(self.pageNo + 1);
+          }
+        }, 300);
+      },
     },
 
     //初始化调用事件
-    created(){
+    created () {
       this.getData(1);
+
+    },
+
+    mounted () {
+      window.addEventListener('scroll', this.getNextPageData);
+    },
+
+    destroyed () {
+      window.removeEventListener('scroll', this.getNextPageData);
     },
 
     components: {cTitle, cItem}
