@@ -21,7 +21,6 @@
     },
 
     created () {
-      native.closeWebview();
       native.getDeviceInfo({
         onsuccess: function(data){
           alert(JSON.stringify(data));
