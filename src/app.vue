@@ -21,7 +21,8 @@
     },
 
     created () {
-      native.getDeviceInfo && native.getDeviceInfo({
+      native.closeWebview();
+      native.getDeviceInfo({
         onsuccess: function(data){
           alert(JSON.stringify(data));
           this.$store.commit('pid', data.pid);
