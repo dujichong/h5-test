@@ -4,6 +4,43 @@
     <router-view></router-view>
   </div>
 </template>
+
+<script>
+
+  import {mapState} from 'vuex';
+  import cTitle from 'components/title';
+
+  export default {
+    data () {
+      mapState([
+        'pid',
+        'version',
+        'token',
+        'type',
+      ])
+    },
+
+    created () {
+      native.getDeviceInfo({
+        onsuccess: function(data){
+          alert(JSON.stringify(data));
+          this.$store.commit('pid', data.pid);
+          this.$store.commit('version', data.version);
+          this.$store.commit('token', data.token);
+          this.$store.commit('type', data.type);
+        },
+        onfail: function(error){
+          alert(error);
+        },
+      });
+
+    },
+
+    components: {cTitle}
+  }
+
+</script>
+
 <style lang="scss" rel="stylesheet/scss">
 
   html, body {

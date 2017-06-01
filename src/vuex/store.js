@@ -17,6 +17,11 @@ const options = {
 
     // 用户正在查看的消息
     message: {},
+
+    pid: '',
+    version: '',
+    token: '',
+    type: '',
   },
 
   // 操作
