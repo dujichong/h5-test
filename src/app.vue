@@ -22,7 +22,6 @@
 
     created () {
       const jsonDeviceInfo = native.getDeviceInfo();
-      alert(jsonDeviceInfo);
       const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
       this.$store.commit('pid', dataDeviceInfo.pid);
       this.$store.commit('version', dataDeviceInfo.version);
