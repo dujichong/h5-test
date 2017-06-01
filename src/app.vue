@@ -21,7 +21,7 @@
     },
 
     created () {
-      native.getDeviceInfo({
+      native.getDeviceInfo && native.getDeviceInfo({
         onsuccess: function(data){
           alert(JSON.stringify(data));
           this.$store.commit('pid', data.pid);
