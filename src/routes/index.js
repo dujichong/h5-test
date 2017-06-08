@@ -2,18 +2,20 @@
  * @file
  * Created by hanan on 16/10/15.
  */
-const NotFound = r => require(['views/notfound'], r);
 
 // 根目录
 const rootPath = window.$spaRootPath || '';
+
+const NotFound = r => require(['views/notfound'], r);
+const News = r => require(['views/news'], r);
+const Message = r => require(['views/message'], r);
+
 const AppHelpList = r => require(['views/app/help/list'], r);
 const AppHelpDetails = r => require(['views/app/help/details'], r);
 const AppProdcutDetail = r => require(['views/app/product/detail'], r);
 const AppUserLivingInformation = r => require(['views/app/user/living'], r);
 const AppUserJobInformationJob = r => require(['views/app/user/job'], r);
 const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registration'], r);
-const AppMineNews = r => require(['views/app/mine/news'], r);
-const AppMineMessage = r => require(['views/app/mine/message'], r);
 
 const AppSellerDocumentaryEntry = r => require(['views/seller/documentary/entry'], r);
 const AppSellerDocumentaryInformation = r => require(['views/seller/documentary/information'], r);
@@ -29,14 +31,15 @@ const SellerApplicatinSettled = r => require(['views/seller/application/settled'
 
 // 页面路由list
 const routes = [
+  {path: '/news', component: News, name: 'News'},
+  {path: '/message', component: Message, name: 'Message'},
+
   {path: '/app/help/list', component: AppHelpList, name: 'AppHelpList'},
   {path: '/app/help/details', component: AppHelpDetails, name: 'AppHelpDetails'},
   {path: '/app/product/detail', component: AppProdcutDetail, name: 'AppProdcutDetail'},
   {path: '/app/user/living', component: AppUserLivingInformation, name: 'AppUserLivingInformation'},
   {path: '/app/user/job', component: AppUserJobInformationJob, name: 'AppUserJobInformationJob'},
   {path: '/app/login/registration', component: AppUserLoginRegistrationAgreement, name: 'AppUserLoginRegistrationAgreement'},
-  {path: '/app/mine/news', component: AppMineNews, name: 'AppMineNews'},
-  {path: '/app/mine/message', component: AppMineMessage, name: 'AppMineMessage'},
 
   {path: '/seller/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
   {path: '/seller/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},

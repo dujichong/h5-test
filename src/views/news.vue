@@ -1,10 +1,10 @@
 <!--我的-消息中心-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
-  <div class="app-mine-news">
+  <div class="views-news">
 
     <c-title :icon="true" :text="title" @iconclick="toggleEdit">
       <span v-if="editting" class="cancel show">取消</span>
-      <img v-else src="../../../assets/components/title/delete.png" class="show"/>
+      <img v-else src="../components/title/delete.png" class="show"/>
     </c-title>
 
     <div class="box">
@@ -49,7 +49,7 @@
     </div>
 
     <div v-bind:class="{ show: editting }" class="delete-label" @click="del">
-      <img src="../../../assets/app/mine/delete-label.png">
+      <img src="../assets/app/mine/delete-label.png">
       <span>删除</span>
     </div>
 
@@ -193,7 +193,7 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .app-mine-news {
+  .views-news {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
