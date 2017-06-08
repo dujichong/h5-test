@@ -17,6 +17,7 @@
         'version',
         'token',
         'type',
+        'requestId',
       ])
     },
 
@@ -27,6 +28,8 @@
       this.$store.commit('version', dataDeviceInfo.version);
       this.$store.commit('token', dataDeviceInfo.token);
       this.$store.commit('type', dataDeviceInfo.type);
+      this.$store.commit('requestId', dataDeviceInfo.requestId);
+
     },
 
     components: {cTitle}
@@ -79,6 +82,7 @@
   p {
     margin: 1em 0;
   }
+
   .clear:after {
     height: 0;
     clear: both;
@@ -96,7 +100,7 @@
       }
     }
     .mint-msgbox {
-      border-radius: 7px ;
+      border-radius: 7px;
       .mint-msgbox-btn {
         font-size: 16px;
       }
@@ -104,8 +108,8 @@
         color: #fff;
         background-color: #45aa9c;
       }
-      .mint-msgbox-cancel{
-        color: #45aa9c ;
+      .mint-msgbox-cancel {
+        color: #45aa9c;
       }
     }
   }

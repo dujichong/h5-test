@@ -49,7 +49,7 @@
     </div>
 
     <div v-bind:class="{ show: editting }" class="delete-label" @click="del">
-      <img src="../assets/app/mine/delete-label.png">
+      <img src="../assets/images/delete-label.png">
       <span>删除</span>
     </div>
 
@@ -80,10 +80,12 @@
 
     computed: {
 
-      ...mapState(['message']),
+      ...mapState(['message', 'pid', 'version', 'token', 'type']),
 
       nodata () {
-        return !this.todayMessage.length && !this.withinAWeekMessage.length && !this.aWeekAgoMessage.length;
+        return !this.todayMessage.length
+            && !this.withinAWeekMessage.length
+            && !this.aWeekAgoMessage.length;
       },
 
       // 已选择的消息
@@ -136,11 +138,15 @@
       // 删除消息
       del () {
         axios.post(API_DELETE_ALL_MESSAGE, {
-          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
-          "token": this.$route.token,
-          "body": {
-            "requestId": this.$route.requestId,
-            "messageIds": this.selectedMessage.map(msg => msg.id).join(',')
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.requestId,
+            messageIds: this.selectedMessage.map(msg => msg.id).join(',')
           }
         }).then(response => {
           const json = response.data;

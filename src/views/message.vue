@@ -13,7 +13,7 @@
     </div>
 
     <div v-if="editting" class="delete-label" @click="del">
-      <img src="../assets/app/mine/delete-label.png">
+      <img src="../assets/images/delete-label.png">
       <span>删除</span>
     </div>
   </div>
@@ -37,7 +37,7 @@
     },
 
     computed: {
-      ...mapState(['message']),
+      ...mapState(['message', 'pid', 'version', 'token', 'type']),
     },
 
     methods: {
@@ -49,11 +49,15 @@
       // 删除消息
       del () {
         axios.post(API_DELETE_ALL_MESSAGE, {
-          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
-          "token": this.$route.token,
-          "body": {
-            "requestId": this.$route.requestId,
-            "messageIds": [this.message.id]
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.requestId,
+            messageIds: [this.message.id]
           }
         }).then(response => {
           const json = response.data;
