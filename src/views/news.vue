@@ -244,7 +244,7 @@
             }
             .selected {
               background-color: #3295f9;
-              background-image: url(../../../assets/app/mine/icon-selected-message.png);
+              background-image: url(../assets/app/mine/icon-selected-message.png);
               background-repeat: no-repeat;
               background-size: 100% 100%;
               border: 1px #3295f9 solid;;
