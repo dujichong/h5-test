@@ -4,7 +4,7 @@
 
     <c-title :icon="true" :text="title" @iconclick="toggleEdit">
       <span v-if="editting" class="cancel show">取消</span>
-      <img v-else src="../components/title/delete.png" class="show"/>
+      <img v-else src="../assets/components/title/delete.png" class="show"/>
     </c-title>
 
     <div class="box">
