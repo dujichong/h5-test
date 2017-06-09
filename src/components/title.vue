@@ -15,14 +15,14 @@
       // 标题文字
       text: {
         type: String,
-        default: '#595959'
+        default: ''
       },
       // 是否隐藏
       hide: {
         type: Boolean,
         default: false
       },
-      // 皮肤：white, blue
+      // 皮肤：white, blue, black
       skin: {
         type: String,
         default: 'white'
@@ -66,7 +66,7 @@
       //回退按钮
       backwards(){
         if(!history.state || !history.state.__page || history.state.__page <= 1){
-          window.nativeCloseWebview();
+          window.native.CloseWebview();
         }
         else {
           this.$router.go(-1);
@@ -139,6 +139,14 @@
 
   .components-title-blue {
     background-color: #3399ff;
+    color: #fff;
+    .arrow {
+      background-image: url(../assets/components/title/back.png);
+    }
+  }
+
+  .components-title-black {
+    background-color: #000;
     color: #fff;
     .arrow {
       background-image: url(../assets/components/title/back.png);

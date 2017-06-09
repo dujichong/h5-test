@@ -28,6 +28,7 @@ const SellerApplicatinAudit = r => require(['views/seller/application/audit'], r
 const SellerApplicatinAuditResult = r => require(['views/seller/application/audit-result'], r);
 const SellerApplicatinRepayment = r => require(['views/seller/application/repayment'], r);
 const SellerApplicatinSettled = r => require(['views/seller/application/settled'], r);
+const SellerCard = r => require(['views/seller/card'], r);
 
 // 页面路由list
 const routes = [
@@ -52,6 +53,7 @@ const routes = [
   {path: '/seller/application/audit-result', component: SellerApplicatinAuditResult, name: 'SellerApplicatinAuditResult'},
   {path: '/seller/application/repayment', component: SellerApplicatinRepayment, name: 'SellerApplicatinRepayment'},
   {path: '/seller/application/settled', component: SellerApplicatinSettled, name: 'SellerApplicatinSettled'},
+  {path: '/seller/card', component: SellerCard, name: 'SellerCard'},
 
 ].map(route => {
   route.path = rootPath + route.path;

@@ -12,7 +12,11 @@
 
   export default {
     data () {
-      mapState([
+      return {}
+    },
+
+    computed: {
+      ...mapState([
         'pid',
         'version',
         'token',
@@ -22,14 +26,15 @@
     },
 
     created () {
-      const jsonDeviceInfo = native.getDeviceInfo();
-      const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
-      this.$store.commit('pid', dataDeviceInfo.pid);
-      this.$store.commit('version', dataDeviceInfo.version);
-      this.$store.commit('token', dataDeviceInfo.token);
-      this.$store.commit('type', dataDeviceInfo.type);
-      this.$store.commit('requestId', dataDeviceInfo.requestId);
-
+      if (native.getDeviceInfo) {
+        const jsonDeviceInfo = native.getDeviceInfo();
+        const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
+        this.$store.commit('pid', dataDeviceInfo.pid);
+        this.$store.commit('version', dataDeviceInfo.version);
+        this.$store.commit('token', dataDeviceInfo.token);
+        this.$store.commit('type', dataDeviceInfo.type);
+        this.$store.commit('requestId', dataDeviceInfo.requestId);
+      }
     },
 
     components: {cTitle}
