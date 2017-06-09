@@ -92,16 +92,17 @@
       p{
         margin: 0;
         line-height: 150%;
+        font-size: .28rem;
       }
       .info {
         box-sizing: border-box;
-        padding: .5rem;
+        padding: .44rem;
         width: 6.87rem;
         height: 3.63rem;
         margin:0 auto;
         .header {
           display: flex;
-          margin-bottom: .5rem;
+          margin-bottom: .44rem;
           img {
             width: 1.15rem;
             height: 1.15rem;
@@ -121,7 +122,7 @@
           }
         }
         .item {
-          background-size: auto 90%;
+          background-size: auto 80%;
           background-repeat: no-repeat;
           background-position: left center;
           padding-left: .4rem;
@@ -129,6 +130,7 @@
         }
         .phone {
           background-image: url(../../assets/seller/card/icon-phone.png);
+          text-decoration: underline;
         }
         .adress {
           background-image: url(../../assets/seller/card/icon-adress.png);
