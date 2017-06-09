@@ -34,7 +34,7 @@
       return {
         title: '消息详情',
         editting: false,
-        deleteUrl: this.$route.client == 1 ? API_DELETE_ALL_MESSAGE_USER : API_DELETE_ALL_MESSAGE_SELLER
+        deleteUrl: this.$route.client == 2 ? API_DELETE_ALL_MESSAGE_SELLER : API_DELETE_ALL_MESSAGE_USER
       }
     },
 

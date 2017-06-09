@@ -76,9 +76,9 @@
         todayMessage: [],
         withinAWeekMessage: [],
         aWeekAgoMessage: [],
-        getUrl: this.$route.client == 1 ? API_GET_ALL_MESSAGE_USER : API_GET_ALL_MESSAGE_SELLER,
-        deleteUrl: this.$route.client == 1 ? API_DELETE_ALL_MESSAGE_USER : API_DELETE_ALL_MESSAGE_SELLER
-      }
+        getUrl: this.$route.client == 2 ? API_GET_ALL_MESSAGE_SELLER : API_GET_ALL_MESSAGE_USER,
+        deleteUrl: this.$route.client == 2 ? API_DELETE_ALL_MESSAGE_SELLER : API_DELETE_ALL_MESSAGE_USER
+    }
     },
 
     computed: {
