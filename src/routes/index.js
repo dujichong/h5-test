@@ -17,13 +17,13 @@ const AppUserLivingInformation = r => require(['views/app/user/living'], r);
 const AppUserJobInformationJob = r => require(['views/app/user/job'], r);
 const AppUserLoginRegistrationAgreement = r => require(['views/app/login/registration'], r);
 
-const AppSellerDocumentaryEntry = r => require(['views/seller/documentary/entry'], r);
-const AppSellerDocumentaryInformation = r => require(['views/seller/documentary/information'], r);
-const AppSellerDocumentaryBaseInformation = r => require(['views/seller/documentary/base'], r);
-const AppSellerDocumentaryPicturesInformation = r => require(['views/seller/documentary/pictures'], r);
-const AppSellerDocumentaryLivingInformation = r => require(['views/seller/documentary/living'], r);
-const AppSellerDocumentaryJobInformation = r => require(['views/seller/documentary/job'], r);
-const AppSellerDocumentaryContactPersonInformation = r => require(['views/seller/documentary/contact'], r);
+const SellerDocumentaryEntry = r => require(['views/seller/documentary/entry'], r);
+const SellerDocumentaryInformation = r => require(['views/seller/documentary/information'], r);
+const SellerDocumentaryBaseInformation = r => require(['views/seller/documentary/base'], r);
+const SellerDocumentaryPicturesInformation = r => require(['views/seller/documentary/pictures'], r);
+const SellerDocumentaryLivingInformation = r => require(['views/seller/documentary/living'], r);
+const SellerDocumentaryJobInformation = r => require(['views/seller/documentary/job'], r);
+const SellerDocumentaryContactPersonInformation = r => require(['views/seller/documentary/contact'], r);
 const SellerApplicatinAudit = r => require(['views/seller/application/audit'], r);
 const SellerApplicatinAuditResult = r => require(['views/seller/application/audit-result'], r);
 const SellerApplicatinRepayment = r => require(['views/seller/application/repayment'], r);
@@ -41,13 +41,13 @@ const routes = [
   {path: '/app/user/job', component: AppUserJobInformationJob, name: 'AppUserJobInformationJob'},
   {path: '/app/login/registration', component: AppUserLoginRegistrationAgreement, name: 'AppUserLoginRegistrationAgreement'},
 
-  {path: '/seller/documentary/entry', component: AppSellerDocumentaryEntry, name: 'AppSellerDocumentaryEntry'},
-  {path: '/seller/documentary/information', component: AppSellerDocumentaryInformation, name: 'AppSellerDocumentaryInformation'},
-  {path: '/seller/documentary/base', component: AppSellerDocumentaryBaseInformation, name: 'AppSellerDocumentaryBaseInformation'},
-  {path: '/seller/documentary/pictures', component: AppSellerDocumentaryPicturesInformation, name: 'AppSellerDocumentaryPicturesInformation'},
-  {path: '/seller/documentary/living', component: AppSellerDocumentaryLivingInformation, name: 'AppSellerDocumentaryLivingInformation'},
-  {path: '/seller/documentary/job', component: AppSellerDocumentaryJobInformation, name: 'AppSellerDocumentaryJobInformation'},
-  {path: '/seller/documentary/contact', component: AppSellerDocumentaryContactPersonInformation, name: 'AppSellerDocumentaryContactPersonInformation'},
+  {path: '/seller/documentary/entry', component: SellerDocumentaryEntry, name: 'SellerDocumentaryEntry'},
+  {path: '/seller/documentary/information', component: SellerDocumentaryInformation, name: 'SellerDocumentaryInformation'},
+  {path: '/seller/documentary/base', component: SellerDocumentaryBaseInformation, name: 'SellerDocumentaryBaseInformation'},
+  {path: '/seller/documentary/pictures', component: SellerDocumentaryPicturesInformation, name: 'SellerDocumentaryPicturesInformation'},
+  {path: '/seller/documentary/living', component: SellerDocumentaryLivingInformation, name: 'SellerDocumentaryLivingInformation'},
+  {path: '/seller/documentary/job', component: SellerDocumentaryJobInformation, name: 'SellerDocumentaryJobInformation'},
+  {path: '/seller/documentary/contact', component: SellerDocumentaryContactPersonInformation, name: 'SellerDocumentaryContactPersonInformation'},
   {path: '/seller/application/audit', component: SellerApplicatinAudit, name: 'SellerApplicatinAudit'},
   {path: '/seller/application/audit-result', component: SellerApplicatinAuditResult, name: 'SellerApplicatinAuditResult'},
   {path: '/seller/application/repayment', component: SellerApplicatinRepayment, name: 'SellerApplicatinRepayment'},
