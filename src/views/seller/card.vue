@@ -1,4 +1,4 @@
-<!--我的-消息详情-->
+<!--销售 名片分享哦-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="views-seller-card">
 
