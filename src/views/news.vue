@@ -62,9 +62,10 @@
   import {mapMutations, mapState} from 'vuex';
 
   const $rootPath = window.$rootPath;
-  const API_GET_ALL_MESSAGE = `${$rootPath}/common/getAllMessage`;
-  const API_DELETE_ALL_MESSAGE = `${$rootPath}/common/deleteMessage`;
-
+  const API_GET_ALL_MESSAGE_USER = `${$rootPath}/common/getAllMessage`;
+  const API_GET_ALL_MESSAGE_SELLER = `${$rootPath}/sale/mineController/message`;
+  const API_DELETE_ALL_MESSAGE_USER = `${$rootPath}/common/deleteMessage`;
+  const API_DELETE_ALL_MESSAGE_SELLER = `${$rootPath}/sale/mineController/message/delete`;
   export default {
 
     data () {
@@ -75,6 +76,8 @@
         todayMessage: [],
         withinAWeekMessage: [],
         aWeekAgoMessage: [],
+        getUrl: this.$route.client == 1 ? API_GET_ALL_MESSAGE_USER : API_GET_ALL_MESSAGE_SELLER,
+        deleteUrl: this.$route.client == 1 ? API_DELETE_ALL_MESSAGE_USER : API_DELETE_ALL_MESSAGE_SELLER
       }
     },
 
@@ -137,7 +140,7 @@
 
       // 删除消息
       del () {
-        axios.post(API_DELETE_ALL_MESSAGE, {
+        axios.post(this.deleteUrl, {
           comm: {
             pid: this.pid,
             type: this.type,
@@ -166,11 +169,15 @@
       },
 
       getData () {
-        axios.post(API_GET_ALL_MESSAGE, {
-          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
-          "token": this.$route.token,
-          "body": {
-            "requestId": this.$route.requestId
+        axios.post(this.getUrl, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.requestId,
           }
         }).then(response => {
           const json = response.data;

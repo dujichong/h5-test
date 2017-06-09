@@ -25,7 +25,8 @@
   import {mapState} from 'vuex';
 
   const $rootPath = window.$rootPath;
-  const API_DELETE_ALL_MESSAGE = `${$rootPath}/common/deleteMessage`;
+  const API_DELETE_ALL_MESSAGE_USER = `${$rootPath}/common/deleteMessage`;
+  const API_DELETE_ALL_MESSAGE_SELLER = `${$rootPath}/sale/mineController/message/delete`;
 
   export default {
 
@@ -33,6 +34,7 @@
       return {
         title: '消息详情',
         editting: false,
+        deleteUrl: this.$route.client == 1 ? API_DELETE_ALL_MESSAGE_USER : API_DELETE_ALL_MESSAGE_SELLER
       }
     },
 
@@ -48,7 +50,7 @@
 
       // 删除消息
       del () {
-        axios.post(API_DELETE_ALL_MESSAGE, {
+        axios.post(this.deleteUrl, {
           comm: {
             pid: this.pid,
             type: this.type,
