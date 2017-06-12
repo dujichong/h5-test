@@ -29,6 +29,7 @@
       if (native.getDeviceInfo) {
         const jsonDeviceInfo = native.getDeviceInfo();
         const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
+        alert(jsonDeviceInfo);
         this.$store.commit('pid', dataDeviceInfo.pid);
         this.$store.commit('version', dataDeviceInfo.version);
         this.$store.commit('token', dataDeviceInfo.token);
