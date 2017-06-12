@@ -47,7 +47,7 @@
     },
 
     computed: {
-      ...mapState(['pid', 'version', 'token', 'type']),
+      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
     },
 
     methods: {
@@ -61,7 +61,9 @@
             version: this.version
           },
           token: this.token,
-          body: {}
+          body: {
+            requestId: this.requestId
+          }
         }).then(response => {
           const json = response.data;
           if (json.code == '00000' && json.data) {

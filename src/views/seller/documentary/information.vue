@@ -165,8 +165,7 @@
       turnToBaseInfo:function(){
         if(this.infoStatus!='未提交'){
           this.$router.push({
-            path: 'seller/documentary/baseInfo',
-            name: 'AppSellerDocumentaryBaseInformation',
+            name: 'SellerDocumentaryBaseInformation',
             //query: { num: num },
           });
         }

@@ -143,6 +143,7 @@
     },
     // 计算属性将被混入到 Vue 实例中。
     computed: {
+      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
       ok () {
         if(this.livingType=='其他'){
           return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
@@ -162,11 +163,15 @@
         this.loading = true;
         axios.post(API_UESR_LIVING_INFO,{
           //从url中取到token和requestId给后台
-          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
-          token:this.$route.query.token,
-          body:{
-            requestId:this.$route.query.requestId,
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
           },
+          token: this.token,
+          body: {
+            requestId: this.requestId,
+          }
         },{timeout:90000}).then(res => {
           let json = res.data;
           //操作成功
@@ -227,11 +232,16 @@
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
         axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
           //从url中取到token和requestId给后台
-          comm : { pid : "手机唯一标记",type:"4", version :"2.1.2"},
-          token:this.$route.query.token,
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+
           //提交数据
           body:{
-            appRequestId:this.$route.query.requestId,
+            appRequestId:this.requestId,
             addressId:this.addressId,
             pid:this.pid,
             livingType:this.livingTypeValue,

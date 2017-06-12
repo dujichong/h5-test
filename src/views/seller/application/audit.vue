@@ -27,6 +27,10 @@
       }
     },
 
+    computed: {
+      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
+    },
+
     methods: {
 
       formatData (list) {
@@ -52,10 +56,15 @@
 
         this.loading = true;
         axios.post(API, {
-          "comm": {"pid": this.$route.pid, "type": this.$route.type, "version": this.$route.version},
-          "token": this.$route.token,
-          "body": {
-            "pageNo": pageNo
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.requestId,
+            pageNo: pageNo
           }
         }).then(response => {
           const json = response.data;
