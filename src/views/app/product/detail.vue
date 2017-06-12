@@ -136,17 +136,17 @@ export default {
 
     // 后退
     back() {
-      window.nativeCloseWebview();
+      window.native.CloseWebview();
     },
 
     // 试试我能贷多少
     test() {
-      window.nativeOpen('test');
+      window.native.open('test');
     },
 
     // 申请
     apply() {
-      window.nativeOpen('apply');
+      window.native.open('apply');
     }
   },
   components: { cTitle, cNav }
