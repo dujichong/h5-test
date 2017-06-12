@@ -194,6 +194,7 @@
   import cMsg from 'components/msg';
   import cCityOptions from 'components/provinces';
   import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
   import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
   const ROOTPATH = window.$rootPath;
   //添加或更新职业信息

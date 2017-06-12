@@ -13,6 +13,8 @@
   import cTab from 'components/tab';
   import cItem from './item';
   import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
+
 
   const API = `${window.$rootPath}/sale/requestController/repayment`;
   let timmer;
