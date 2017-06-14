@@ -383,7 +383,7 @@
 
     // 计算属性将被混入到 Vue 实例中。
     computed: {
-      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
+      ...mapState(['pid', 'version', 'token', 'type']),
       //按钮颜色改变
       ok () {
         if(this.businessShow == true){
@@ -425,7 +425,6 @@
         //在API_UESR_LIVING_INFO接口中
         this.loading = true;
         axios.post(API_UESR_OCCOPATION_INFO,{
-          //从url中取到token和requestId给后台
           comm: {
             pid: this.pid,
             type: this.type,
@@ -433,7 +432,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId,
+            requestId: this.$route.query.requestId,
           }
         },{timeout:90000}).then(res => {
           let json = res.data;
@@ -554,7 +553,6 @@
           this.loading = true;
           //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
           axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
-            //从url中取到token和requestId给后台
             comm: {
               pid: this.pid,
               type: this.type,
@@ -563,7 +561,7 @@
             token: this.token,
             //提交数据
             body:{
-              appRequestId:this.requestId,
+              appRequestId:this.$route.query.requestId,
               //提交数据
               appCustomerId: this.appCustomerId,
               officialJobDate: this.officialJobDateYear+'-'+this.officialJobDateMonth+'-01',

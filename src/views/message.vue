@@ -58,7 +58,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId,
+            requestId: this.$route.query.requestId,
             messageIds: [this.message.id]
           }
         }).then(response => {

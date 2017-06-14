@@ -47,7 +47,7 @@
     },
 
     computed: {
-      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
+      ...mapState(['pid', 'version', 'token', 'type']),
     },
 
     methods: {
@@ -62,7 +62,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId
+            requestId: this.$route.query.requestId
           }
         }).then(response => {
           const json = response.data;

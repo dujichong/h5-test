@@ -21,7 +21,6 @@
         'version',
         'token',
         'type',
-        'requestId',
       ])
     },
 
@@ -33,7 +32,6 @@
         this.$store.commit('version', dataDeviceInfo.version);
         this.$store.commit('token', dataDeviceInfo.token);
         this.$store.commit('type', dataDeviceInfo.type);
-        this.$store.commit('requestId', dataDeviceInfo.requestId);
       }
     },
 

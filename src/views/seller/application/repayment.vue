@@ -47,7 +47,7 @@
     },
 
     computed: {
-      ...mapState(['pid', 'version', 'token', 'type', 'requestId']),
+      ...mapState(['pid', 'version', 'token', 'type']),
 
       tab () {
         return this.tabs[this.currentTabIndex].tab;
@@ -97,7 +97,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId,
+            requestId: this.$route.query.requestId,
             pageNo: pageNo,
           }
         }).then(response => {

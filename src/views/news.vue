@@ -149,7 +149,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId,
+            requestId: this.$route.query.requestId,
             messageIds: this.selectedMessage.map(msg => msg.id).join(',')
           }
         }).then(response => {
@@ -178,7 +178,7 @@
           },
           token: this.token,
           body: {
-            requestId: this.requestId,
+            requestId: this.$route.query.requestId,
           }
         }).then(response => {
           const json = response.data;
