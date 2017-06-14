@@ -145,12 +145,12 @@
 
       // 试试我能贷多少
       test() {
-        window.native.open(this.token ? 'test' : 'login');
+        window.native.open(this.token ? 'jump_to_carvaluation' : 'jump_to_login');
       },
 
       // 申请
       apply() {
-        window.native.open(this.token ? 'apply' : 'login');
+        window.native.open(this.token ? 'jump_to_apply"' : 'jump_to_login');
       }
     },
     components: {cTitle, cNav}
