@@ -219,7 +219,6 @@
         provinceCode: '',   //省code
         cityCode: '',         //市code
         distCode: '',         //县code
-        requestId: '',
         num: '-1',
         provinceList:false,
         okProvince: '',
