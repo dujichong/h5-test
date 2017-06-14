@@ -140,7 +140,7 @@
 
       // 后退
       back() {
-        window.native.CloseWebview();
+        window.native.closeWebview();
       },
 
       // 试试我能贷多少
