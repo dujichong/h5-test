@@ -77,10 +77,7 @@
 
         sheetVisible: false,
         loading: false,
-        pid: '',
         cityOptionsVisible: false,
-        token: '',
-        requestId: '',
         num: '-1',
         okProvince: '',
         okCity: '',

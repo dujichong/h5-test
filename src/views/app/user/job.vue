@@ -219,7 +219,6 @@
         provinceCode: '',   //省code
         cityCode: '',         //市code
         distCode: '',         //县code
-        token: '',
         requestId: '',
         num: '-1',
         provinceList:false,
@@ -245,7 +244,6 @@
         year: '',
         mounth: '',
 
-        pid: '',
         companyName: '',//现单位名称或者经营主体
         payOfSocialSecurityFund: true,
         workPlace: '请选择现单位所在地区',//现单位地区
