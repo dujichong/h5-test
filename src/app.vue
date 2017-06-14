@@ -27,11 +27,9 @@
     created () {
       if (native.getDeviceInfo) {
         const jsonDeviceInfo = native.getDeviceInfo();
+        alert(jsonDeviceInfo);
         const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
-        this.$store.commit('pid', dataDeviceInfo.pid);
-        this.$store.commit('version', dataDeviceInfo.version);
-        this.$store.commit('token', dataDeviceInfo.token);
-        this.$store.commit('type', dataDeviceInfo.type);
+        ['pid', 'version', 'token', 'type'].forEach(key => this.$store.commit(key, dataDeviceInfo[key]));
       }
     },
 
