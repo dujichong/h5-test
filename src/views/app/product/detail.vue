@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <footer>
+    <footer v-if="button">
       <div class="btn-test" @click="test"><i></i>试试我能贷多少</div>
       <div class="btn-apply" @click="apply">立即申请</div>
     </footer>
@@ -81,7 +81,8 @@
     data() {
       return {
         title: '产品详情',
-        currentIndex: this.$route.query.id || 0,
+        currentIndex: this.$route.query.tab || 0,
+        button: this.$route.query.btn == 1,
         products: [
           {
             name: '中长期模式',
