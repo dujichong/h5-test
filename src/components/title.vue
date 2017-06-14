@@ -66,7 +66,7 @@
       //回退按钮
       backwards(){
         if(!history.state || !history.state.__page || history.state.__page <= 1){
-          window.native.CloseWebview();
+          window.native.closeWebview();
         }
         else {
           this.$router.go(-1);
