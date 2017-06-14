@@ -37,6 +37,12 @@
       }
     },
 
+    mounted (){
+      let winHeight = window.innerHeight;
+      let appHeight = this.$el.offsetHeight;
+      winHeight > appHeight && (this.$el.style.height = winHeight + 'px');
+    },
+
     components: {cTitle}
   }
 
