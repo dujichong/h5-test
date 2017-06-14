@@ -65,7 +65,8 @@
 
       //回退按钮
       backwards(){
-        if(!history.state || !history.state.__page || history.state.__page <= 1){
+        let state = history.state;
+        if(!state || !state.__page || state.__page <= 1){
           native.closeWebview();
         }
         else {
