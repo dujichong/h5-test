@@ -66,6 +66,7 @@
   const API_GET_ALL_MESSAGE_SELLER = `${$rootPath}/sale/mineController/message`;
   const API_DELETE_ALL_MESSAGE_USER = `${$rootPath}/common/deleteMessage`;
   const API_DELETE_ALL_MESSAGE_SELLER = `${$rootPath}/sale/mineController/message/delete`;
+
   export default {
 
     data () {
