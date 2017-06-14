@@ -22,7 +22,9 @@
           <div class="value">{{currentDetail.money}}</div>
         </div>
       </div>
-      <div class="synopsis">{{currentDetail.synopsis}}</div>
+      <div class="synopsis">
+        <div class="inner">{{currentDetail.synopsis}}</div>
+      </div>
     </div>
 
     <div class="particular">
@@ -221,13 +223,17 @@
         }
       }
       .synopsis {
-        border: 1px solid $blue;
-        border-radius: 20px;
-        color: $blue;
-        width: 80%;
-        line-height: 200%;
-        margin: .4rem auto 0;
         text-align: center;
+        .inner {
+          padding: 0 .15rem;
+          display: inline-block;
+          border: 1px solid $blue;
+          border-radius: 20px;
+          color: $blue;
+          line-height: 200%;
+          margin: .4rem auto 0;
+          text-align: center;
+        }
       }
     }
     .particular {
