@@ -153,7 +153,7 @@
 
       // 申请
       apply() {
-        native.open(this.token ? 'jump_to_apply' : 'jump_to_login');
+        native.open(this.token ? 'jump_to_apply' : 'jump_to_login', this.currentIndex | 0);
       }
     },
     components: {cTitle, cNav}
