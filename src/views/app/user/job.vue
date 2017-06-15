@@ -1,7 +1,8 @@
 <!--职业信息-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="job-information">
-    <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer" v-bind:class="{ active: isActive }"></div>
+    <div @click="workTimePopupVisible = false, entryTimePopupVisible = false, isActive = false" class="layer"
+         v-bind:class="{ active: isActive }"></div>
     <c-title :text="title" :hide="false"></c-title>
     <c-loading :show="loading"></c-loading>
     <c-msg :msg="msg"></c-msg>
@@ -29,7 +30,8 @@
 
             <li>
               <label>现单位地区</label>
-              <span class="paddingRight" @click="getChildProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+              <span class="paddingRight" @click="getChildProvince"
+                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li>
@@ -76,11 +78,13 @@
             <li class="noBorder">
               <label class="item">是否缴纳社保/公积金</label>
               <div class="box">
-                <input class="circle" type="radio" id="yes" :checked="true" value="true" v-model="payOfSocialSecurityFund"><span class="opacity"></span>
+                <input class="circle" type="radio" id="yes" :checked="true" value="true"
+                       v-model="payOfSocialSecurityFund"><span class="opacity"></span>
               </div>
               <label class="yes" for="yes">是</label>
               <div class="box">
-                <input class="circle" type="radio" id="no" :checked="false" value="false" v-model="payOfSocialSecurityFund"><span></span>
+                <input class="circle" type="radio" id="no" :checked="false" value="false"
+                       v-model="payOfSocialSecurityFund"><span></span>
               </div>
               <label class="no" for="no">否</label>
             </li>
@@ -93,7 +97,8 @@
           <ul>
             <li>
               <label>现单位地区</label>
-              <span class="paddingRight" @click="getChildProvince" v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+              <span class="paddingRight" @click="getChildProvince"
+                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
             </li>
 
             <li class="noBorder">
@@ -107,7 +112,7 @@
       <div class="ui-form">
         <form>
           <ul>
-            <li >
+            <li>
               <label>单位电话</label>
               <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号">
               <div class="border-right"></div>
@@ -121,7 +126,7 @@
               <input v-model="department" placeholder="请填写您的部门">
             </li>
 
-            <li @click="unitPositionSheetVisible = true"  v-bind:class="{ unique: jobTitleType=='其他' }">
+            <li @click="unitPositionSheetVisible = true" v-bind:class="{ unique: jobTitleType=='其他' }">
               <label>现单位职位</label>
               <span v-bind:class="{ blackColor: jobTitleType!='请选择您的职位'}">{{jobTitleType}}</span>
             </li>
@@ -160,21 +165,22 @@
 
     <Actionsheet :actions="jobTitleTypeActions" v-model="unitPositionSheetVisible"></Actionsheet>
     <Actionsheet :actions="companyTypeActions" v-model="unitNatureSheetVisible"></Actionsheet>
-    <Popup v-model="workTimePopupVisible" position="bottom" :modal="false" >
+    <Popup v-model="workTimePopupVisible" position="bottom" :modal="false">
       <div class="button">
         <p class="cancel" @click="cancel">取消</p>
         <p class="confirm" v-bind:class="{ show: workTimeConfirmShow }" @click="workTimeConfirm">工作时间确认</p>
       </div>
-      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onWorkTimeValuesChange">
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount" :showToolbar="false" @change="onWorkTimeValuesChange">
         {{workTimeToolbar}}
       </Picker>
     </Popup>
-    <Popup v-model="entryTimePopupVisible" position="bottom" :modal="false" >
+    <Popup v-model="entryTimePopupVisible" position="bottom" :modal="false">
       <div class="button">
         <p class="cancel" @click="cancel">取消</p>
         <p class="confirm" v-bind:class="{ show: entryTimeConfirmShow }" @click="entryTimeConfirm">入职时间确认</p>
       </div>
-      <Picker :slots="slots" :visibleItemCount="visibleItemCount"  :showToolbar="false" @change="onEntryTimeValuesChange">
+      <Picker :slots="slots" :visibleItemCount="visibleItemCount" :showToolbar="false"
+              @change="onEntryTimeValuesChange">
         {{entryTimeToolbar}}
       </Picker>
     </Popup>
@@ -195,14 +201,14 @@
   import cCityOptions from 'components/provinces';
   import axios from 'axios';
   import {mapMutations, mapState} from 'vuex';
-  import { Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
+  import {Actionsheet, Toast, Picker, Popup, DatetimePicker, Button} from 'mint-ui';
   const ROOTPATH = window.$rootPath;
   //添加或更新职业信息
-  const API_UESR_OCCOPATION_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateOccupationInfoMethod`;
+  const API_UESR_OCCOPATION_INFO_SAVE_UPDATE = `${ROOTPATH}/user/requestController/saveOrUpdateOccupationInfoMethod`;
   //获取职业信息
-  const API_UESR_OCCOPATION_INFO= `${ROOTPATH}/user/requestController/getOccupationInfoMethod`;
+  const API_UESR_OCCOPATION_INFO = `${ROOTPATH}/user/requestController/getOccupationInfoMethod`;
   //获取省市区信息
-  const API_CITY= `${ROOTPATH}/dictionary/region/`;
+  const API_CITY = `${ROOTPATH}/dictionary/region/`;
   export default {
 
     data () {
@@ -220,7 +226,7 @@
         cityCode: '',         //市code
         distCode: '',         //县code
         num: '-1',
-        provinceList:false,
+        provinceList: false,
         okProvince: '',
         okCity: '',
         okDist: '',
@@ -228,8 +234,8 @@
         okCityCode: '',
         okDistCode: '',
         city: '',
-        dist:'',
-        name:'',
+        dist: '',
+        name: '',
         msg: '',
         provinces: [],
         cities: [],
@@ -238,7 +244,7 @@
 
         //商类
         officialJobDate: '请选择您的工作时间',//商类工作时间
-        officialJobDateYear:'',
+        officialJobDateYear: '',
         officialJobDateMonth: '',
         year: '',
         mounth: '',
@@ -289,7 +295,7 @@
             defaultIndex: 30,
           }, {
             flex: 1,
-            values: ['1月', '2月', '3月', '4月', '5月', '6月','7月', '8月', '9月', '10月', '11月', '12月'],
+            values: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
             textAlign: 'left',
             defaultIndex: 2,
           }
@@ -307,7 +313,7 @@
           {name: '退休人员', method: this.getJobTitleType, "value": "RETIREE"},
           {name: '其他', method: this.getJobTitleType, "value": "OTHER"},
         ],
-        unitPositionResponse : [
+        unitPositionResponse: [
           {
             "text": "负责人",
             "value": "HEAD"
@@ -348,7 +354,7 @@
           {name: '个体', method: this.getCompanyType, "value": "PRIVATE_COMPANY"},
           {name: '其他', method: this.getCompanyType, "value": "OTHER_COMPANY"},
         ],
-        unitNatureResponse : [
+        unitNatureResponse: [
           {
             "text": "机关事业单位",
             "value": "ENTERPRISE_COMPANY"
@@ -386,45 +392,45 @@
       ...mapState(['pid', 'version', 'token', 'type']),
       //按钮颜色改变
       ok () {
-        if(this.businessShow == true){
-          return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
-            &&this.housenumber&&this.areaCode&&this.telephoneNumber;
+        if (this.businessShow == true) {
+          return (this.officialJobDate != '请选择您的工作时间') && (this.workPlace != '请选择现单位所在地区') && this.companyName
+            && this.housenumber && this.areaCode && this.telephoneNumber;
         }
         else {
 
-          if(this.jobTitleType=='其他' && this.companyType!='其他'){
-            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
-              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
-              &&(this.jobTitleType!='请选择您的职位')&&this.messageOfJobTitleType
-              &&(this.companyType!='请选择您的单位性质')&&(this.enterCompanyDate!='请选择您的入职时间');
+          if (this.jobTitleType == '其他' && this.companyType != '其他') {
+            return (this.officialJobDate != '请选择您的工作时间') && (this.workPlace != '请选择现单位所在地区') && this.companyName
+              && this.housenumber && this.areaCode && this.telephoneNumber && this.department
+              && (this.jobTitleType != '请选择您的职位') && this.messageOfJobTitleType
+              && (this.companyType != '请选择您的单位性质') && (this.enterCompanyDate != '请选择您的入职时间');
           }
-          else if(this.companyType=='其他' && this.jobTitleType!='其他'){
-            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
-              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
-              &&(this.jobTitleType!='请选择您的职位')&&(this.companyType!='请选择您的单位性质')
-              &&this.messageOfCompanyType&&(this.enterCompanyDate!='请选择您的入职时间');
+          else if (this.companyType == '其他' && this.jobTitleType != '其他') {
+            return (this.officialJobDate != '请选择您的工作时间') && (this.workPlace != '请选择现单位所在地区') && this.companyName
+              && this.housenumber && this.areaCode && this.telephoneNumber && this.department
+              && (this.jobTitleType != '请选择您的职位') && (this.companyType != '请选择您的单位性质')
+              && this.messageOfCompanyType && (this.enterCompanyDate != '请选择您的入职时间');
           }
-          else if(this.companyType!='其他' && this.jobTitleType!='其他'){
-            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
-              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
-              &&(this.jobTitleType!='请选择您的职位')&&(this.companyType!='请选择您的单位性质')&&(this.enterCompanyDate!='请选择您的入职时间');
+          else if (this.companyType != '其他' && this.jobTitleType != '其他') {
+            return (this.officialJobDate != '请选择您的工作时间') && (this.workPlace != '请选择现单位所在地区') && this.companyName
+              && this.housenumber && this.areaCode && this.telephoneNumber && this.department
+              && (this.jobTitleType != '请选择您的职位') && (this.companyType != '请选择您的单位性质') && (this.enterCompanyDate != '请选择您的入职时间');
           }
           else {
-            return (this.officialJobDate!='请选择您的工作时间')&&(this.workPlace!='请选择现单位所在地区')&&this.companyName
-              &&this.housenumber&&this.areaCode&&this.telephoneNumber&&this.department
-              &&(this.jobTitleType!='请选择您的职位')&&this.messageOfJobTitleType
-              &&(this.companyType!='请选择您的单位性质')&&this.messageOfCompanyType&&(this.enterCompanyDate!='请选择您的入职时间');
+            return (this.officialJobDate != '请选择您的工作时间') && (this.workPlace != '请选择现单位所在地区') && this.companyName
+              && this.housenumber && this.areaCode && this.telephoneNumber && this.department
+              && (this.jobTitleType != '请选择您的职位') && this.messageOfJobTitleType
+              && (this.companyType != '请选择您的单位性质') && this.messageOfCompanyType && (this.enterCompanyDate != '请选择您的入职时间');
           }
         }
       },
     },
 
-    methods : {
+    methods: {
       // 初始化
       init () {
         //在API_UESR_LIVING_INFO接口中
         this.loading = true;
-        axios.post(API_UESR_OCCOPATION_INFO,{
+        axios.post(API_UESR_OCCOPATION_INFO, {
           comm: {
             pid: this.pid,
             type: this.type,
@@ -434,43 +440,43 @@
           body: {
             requestId: this.$route.query.requestId,
           }
-        },{timeout:90000}).then(res => {
+        }, {timeout: 90000}).then(res => {
           let json = res.data;
           //操作成功
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
             this.loading = false;
-            this.pid=json.data.pid;
+            this.pid = json.data.pid;
             this.salaryFrom = json.data.salaryFrom;
-            if(this.salaryFrom==1){
+            if (this.salaryFrom == 1) {
               this.salaryShow = true;
               this.businessShow = false;
             }
-            if(this.salaryFrom==2){
+            if (this.salaryFrom == 2) {
               this.businessShow = true;
               this.salaryShow = false;
             }
 
             //判断id值
-            if(this.pid){
+            if (this.pid) {
               //更新操作之前需要回显数据
-              for(let i=0;i<this.jobTitleTypeActions.length;i++){
-                if(this.jobTitleTypeActions[i].value == json.data.jobTitleType){
+              for (let i = 0; i < this.jobTitleTypeActions.length; i++) {
+                if (this.jobTitleTypeActions[i].value == json.data.jobTitleType) {
                   this.jobTitleType = this.jobTitleTypeActions[i].name;
                 }
               }
 
-              for(let i=0;i<this.companyTypeActions.length;i++){
-                if(this.companyTypeActions[i].value == json.data.companyType){
+              for (let i = 0; i < this.companyTypeActions.length; i++) {
+                if (this.companyTypeActions[i].value == json.data.companyType) {
                   this.companyType = this.companyTypeActions[i].name;
                 }
               }
 
               this.jobTitleTypeValue = json.data.jobTitleType;
               this.companyTypeValue = json.data.companyType;
-              let officialJobTime = new Date( Number(json.data.officialJobDate) ).toLocaleString();
-              let enterCompanyTime = new Date( Number(json.data.enterCompanyDate) ).toLocaleString();
+              let officialJobTime = new Date(Number(json.data.officialJobDate)).toLocaleString();
+              let enterCompanyTime = new Date(Number(json.data.enterCompanyDate)).toLocaleString();
               this.addressId = json.data.addressId;
               this.provinceCode = json.data.provinceCode;
               this.cityCode = json.data.cityCode;
@@ -478,19 +484,19 @@
               this.housenumber = json.data.housenumber;
               this.completeaddress = json.data.completeaddress;
               this.fullAddress = this.completeaddress.split(" ");
-              this.workPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
+              this.workPlace = this.fullAddress[0] + this.fullAddress[1] + this.fullAddress[2];
               this.appCustomerId = json.data.appCustomerId;
-              this.officialJobDate = officialJobTime.split('-')[0]+'年'+officialJobTime.split('-')[1]+'月';
-              this.enterCompanyDate = enterCompanyTime.split('-')[0]+'年'+enterCompanyTime.split('-')[1]+'月';
+              this.officialJobDate = officialJobTime.split('-')[0] + '年' + officialJobTime.split('-')[1] + '月';
+              this.enterCompanyDate = enterCompanyTime.split('-')[0] + '年' + enterCompanyTime.split('-')[1] + '月';
               this.companyName = json.data.companyName;
-              this.completePhone =  json.data.completePhone;
+              this.completePhone = json.data.completePhone;
               this.areaCode = json.data.completePhone.split('-')[0];
               this.telephoneNumber = json.data.completePhone.split('-')[1];
-              this.branchNumber =  json.data.branchNumber;
-              this.department =  json.data.department;
-              this.messageOfJobTitleType =  json.data.messageOfJobTitleType;
-              this.messageOfCompanyType =  json.data.messageOfCompanyType;
-              this.payOfSocialSecurityFund =  json.data.payOfSocialSecurityFund;
+              this.branchNumber = json.data.branchNumber;
+              this.department = json.data.department;
+              this.messageOfJobTitleType = json.data.messageOfJobTitleType;
+              this.messageOfCompanyType = json.data.messageOfCompanyType;
+              this.payOfSocialSecurityFund = json.data.payOfSocialSecurityFund;
               this.workYears = json.data.workYears;
               this.workSeniority = json.data.workSeniority;
             }
@@ -500,19 +506,19 @@
             }
           }
           //后台返回不正常
-          else{
+          else {
             this.loading = false;
             this.msg = json.msg;
-            let timer=window.setTimeout(() => {
-              this.msg=false;
-            },2000);
+            let timer = window.setTimeout(() => {
+              this.msg = false;
+            }, 2000);
           }
-        },error =>{
+        }, error => {
           this.loading = false;
-          this.msg ='加载失败，请稍后重试！';
-          let timer=window.setTimeout(() => {
+          this.msg = '加载失败，请稍后重试！';
+          let timer = window.setTimeout(() => {
             this.msg = false;
-          },2000);
+          }, 2000);
         })
       },
 
@@ -522,37 +528,37 @@
           return;
         }
 
-        if(this.enterCompanyDate == '请选择您的入职时间'){
+        if (this.enterCompanyDate == '请选择您的入职时间') {
           this.enterCompanyDateYear = '0000';
           this.enterCompanyDateMonth = '00';
         }
         else {
           this.enterCompanyDateYear = this.enterCompanyDate.split('月')[0].split('年')[0];
-          this.enterCompanyDateMonth = this.enterCompanyDate.split('月')[0].split('年')[1].length==2 ? this.enterCompanyDate.split('月')[0].split('年')[1] : 0+this.enterCompanyDate.split('月')[0].split('年')[1];
+          this.enterCompanyDateMonth = this.enterCompanyDate.split('月')[0].split('年')[1].length == 2 ? this.enterCompanyDate.split('月')[0].split('年')[1] : 0 + this.enterCompanyDate.split('月')[0].split('年')[1];
         }
         this.officialJobDateYear = this.officialJobDate.split('月')[0].split('年')[0];
-        this.officialJobDateMonth = this.officialJobDate.split('月')[0].split('年')[1].length==2 ? this.officialJobDate.split('月')[0].split('年')[1] : 0+this.officialJobDate.split('月')[0].split('年')[1];
+        this.officialJobDateMonth = this.officialJobDate.split('月')[0].split('年')[1].length == 2 ? this.officialJobDate.split('月')[0].split('年')[1] : 0 + this.officialJobDate.split('月')[0].split('年')[1];
 
         //验证电话是否正确
         let areaCode = /^0\d{2,3}$/;
         let telephoneNumber = /\d{7,8}$/
-        if(!areaCode.test(this.areaCode)){
+        if (!areaCode.test(this.areaCode)) {
           this.msg = '区号格式错误';
-          let timer=window.setTimeout(() => {
+          let timer = window.setTimeout(() => {
             this.msg = false;
-          },2000);
+          }, 2000);
         }
-        else if(!telephoneNumber.test(this.telephoneNumber)){
+        else if (!telephoneNumber.test(this.telephoneNumber)) {
           this.msg = '电话号码格式错误';
-          let timer=window.setTimeout(() => {
+          let timer = window.setTimeout(() => {
             this.msg = false;
-          },2000);
+          }, 2000);
         }
-        else{
+        else {
           this.canClick = false;
           this.loading = true;
           //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
-          axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE,{
+          axios.post(API_UESR_OCCOPATION_INFO_SAVE_UPDATE, {
             comm: {
               pid: this.pid,
               type: this.type,
@@ -560,16 +566,16 @@
             },
             token: this.token,
             //提交数据
-            body:{
-              appRequestId:this.$route.query.requestId,
+            body: {
+              appRequestId: this.$route.query.requestId,
               //提交数据
               appCustomerId: this.appCustomerId,
-              officialJobDate: this.officialJobDateYear+'-'+this.officialJobDateMonth+'-01',
-              enterCompanyDate: this.enterCompanyDateYear+'-'+this.enterCompanyDateMonth+'-01',
+              officialJobDate: this.officialJobDateYear + '-' + this.officialJobDateMonth + '-01',
+              enterCompanyDate: this.enterCompanyDateYear + '-' + this.enterCompanyDateMonth + '-01',
               companyName: this.companyName,
-              addressId:this.addressId,
-              pid:this.pid,
-              completePhone: this.areaCode+'-'+this.telephoneNumber+'-'+this.branchNumber,
+              addressId: this.addressId,
+              pid: this.pid,
+              completePhone: this.areaCode + '-' + this.telephoneNumber + '-' + this.branchNumber,
               branchNumber: this.branchNumber,
               department: this.department,
               jobTitleType: this.jobTitleTypeValue,
@@ -578,54 +584,54 @@
               companyType: this.companyTypeValue,
               //companyTypeValue: this.companyTypeValue,
               messageOfCompanyType: this.messageOfCompanyType,
-              provinceCode:this.provinceCode,
-              cityCode:this.cityCode,
-              distCode:this.distCode,
-              housenumber:this.housenumber,
-              completeaddress:this.completeaddress=this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
+              provinceCode: this.provinceCode,
+              cityCode: this.cityCode,
+              distCode: this.distCode,
+              housenumber: this.housenumber,
+              completeaddress: this.completeaddress = this.fullAddress[0] + ' ' + this.fullAddress[1] + ' ' + this.fullAddress[2] + ' ' + this.housenumber,
               payOfSocialSecurityFund: this.payOfSocialSecurityFund,
               salaryFrom: this.salaryFrom,
               workSeniority: this.workSeniority,//司龄
               workYears: this.workYears,//工龄
             }
-          },{timeout:90000}).then(res => {
+          }, {timeout: 90000}).then(res => {
             let json = res.data;
             //验证通过
             if (json.code == '00000') {
               this.loading = false;
-              this.pid=json.data.pid;
+              this.pid = json.data.pid;
               this.msg = '提交成功!';
-              let timer=window.setTimeout(() => {
+              let timer = window.setTimeout(() => {
                 this.msg = false;
                 this.canClick = true;
-                let time=window.setTimeout(()=>{
+                let time = window.setTimeout(() => {
                   this.close();
-                },200);
-              },2000);
+                }, 200);
+              }, 2000);
             }
             //后台验证不通过
-            else{
+            else {
               this.loading = false;
               this.msg = json.msg;
-              let timer=window.setTimeout(() => {
-                this.msg=false;
+              let timer = window.setTimeout(() => {
+                this.msg = false;
                 this.canClick = true;
-              },2000);
+              }, 2000);
             }
-          },error =>{
+          }, error => {
             this.loading = false;
-            this.msg ='提交失败!';
-            let timer=window.setTimeout(() => {
+            this.msg = '提交失败!';
+            let timer = window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
-            },2000);
+            }, 2000);
           })
         }
       },
 
       //提交成功，关闭当前窗口
       close(){
-        //关闭界面
+        native.closeWebview();
       },
 
       getChildProvince(){
@@ -643,11 +649,11 @@
         this.cityCode = city.value;
       },
 
-      chooseDist(value,text){
+      chooseDist(value, text){
         this.dist = text;
         this.distCode = value;
-        this.workPlace = this.okProvince+this.okCity+this.dist;
-        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
+        this.workPlace = this.okProvince + this.okCity + this.dist;
+        this.completeaddress = this.okProvince + ' ' + this.okCity + ' ' + this.dist + ' ';
         this.fullAddress = this.completeaddress.split(" ");
       },
 
@@ -659,7 +665,7 @@
       timeout(){
         window.setTimeout(() => {
           this.msg = false;
-        },2000);
+        }, 2000);
       },
 
 
@@ -708,8 +714,8 @@
       //获取公司职位
       getJobTitleType(action){
         this.jobTitleType = action.name;
-        for(let i=0;i<this.jobTitleTypeActions.length;i++){
-          if(this.jobTitleTypeActions[i].name == action.name){
+        for (let i = 0; i < this.jobTitleTypeActions.length; i++) {
+          if (this.jobTitleTypeActions[i].name == action.name) {
             this.jobTitleTypeValue = this.jobTitleTypeActions[i].value;
             break;
           }
@@ -718,8 +724,8 @@
 
       getLivingStyle(action){
         this.livingType = action.name;
-        for(let i=0;i<this.actions.length;i++){
-          if(this.actions[i].name == action.name){
+        for (let i = 0; i < this.actions.length; i++) {
+          if (this.actions[i].name == action.name) {
             this.livingTypeValue = this.actions[i].value;
             break;
           }
@@ -729,8 +735,8 @@
       //获取公司性质
       getCompanyType(action){
         this.companyType = action.name;
-        for(let i=0;i<this.companyTypeActions.length;i++){
-          if(this.companyTypeActions[i].name == action.name){
+        for (let i = 0; i < this.companyTypeActions.length; i++) {
+          if (this.companyTypeActions[i].name == action.name) {
             this.companyTypeValue = this.companyTypeActions[i].value;
             break;
           }
@@ -756,9 +762,9 @@
     },
     //初始化调用设置年份数据
     created(){
-      var minYear = this.currentYear-this.before;
+      var minYear = this.currentYear - this.before;
       for (let i = 0; i <= this.before + this.after; i++) {
-        this.slots[0].values[i] = minYear+'年';
+        this.slots[0].values[i] = minYear + '年';
         minYear++;
       }
       this.init();
@@ -772,48 +778,48 @@
   $bfb: 100%;
   $zero: 0px;
   $color: #4d4d4d;
-  div.job-information{
+  div.job-information {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     background-color: #f1f1f1;
-    div.layer{
+    div.layer {
       position: absolute;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       background-color: #000;
       z-index: 40;
       opacity: 0.5;
-      width:100%;
+      width: 100%;
       height: 100%;
       display: none;
     }
-    div.active{
+    div.active {
       display: block;
     }
-    div.job-business,div.job-salary{
+    div.job-business, div.job-salary {
       display: none;
-      div.border{
+      div.border {
         width: 100%;
         height: .2rem;
         border-top: 1px solid #e5e5e5;
         background-color: #f1f1f1;
       }
-      div.ui-form{
+      div.ui-form {
         background-color: #fff;
-        form{
+        form {
           margin: 0 .32rem;
           width: 6.86rem;
-          ul{
+          ul {
             margin: 0;
             padding: 0;
-            li{
+            li {
               clear: both;
               height: .98rem;
               line-height: .98rem;
               list-style: none;
-              border-bottom:1px solid #e6e6e6;
-              div.box{
+              border-bottom: 1px solid #e6e6e6;
+              div.box {
                 display: inline-block;
                 width: 16px;
                 height: 16px;
@@ -821,31 +827,31 @@
                 position: relative;
                 background: #fff;
                 vertical-align: middle;
-                border:1px solid #1796f9;
+                border: 1px solid #1796f9;
                 border-radius: 100%;
                 float: left;
                 margin-top: .34rem;
 
-                input.circle{
+                input.circle {
                   float: left;
                   margin: .04rem 0;
                   opacity: 0;
                   position: absolute;
-                  z-index:100;
+                  z-index: 100;
                   width: 100%;
                   height: 100%;
                 }
-                input+span {
+                input + span {
                   display: block;
                   width: 6px;
                   height: 6px;
-                  border-radius:50%;
+                  border-radius: 50%;
                   position: absolute;
                   background: #1796f9;
                   top: 50%;
-                  left:50%;
-                  margin: -3px 0  0 -3px;
-                  z-index:1;
+                  left: 50%;
+                  margin: -3px 0 0 -3px;
+                  z-index: 1;
                 }
                 input[type="radio"] + span {
                   opacity: 0;
@@ -853,11 +859,11 @@
                 input[type="radio"]:checked + span {
                   opacity: 1;
                 }
-                span.opacity{
+                span.opacity {
                   opacity: 1;
                 }
               }
-              label{
+              label {
                 width: 2.3rem;
                 display: block;
                 float: left;
@@ -865,56 +871,56 @@
                 color: #333333;
                 //background-color: aqua;
               }
-              label.item{
+              label.item {
                 width: 3.83rem;
               }
-              label.yes, label.no{
+              label.yes, label.no {
                 width: .36rem;
                 height: .98rem;
               }
-              label.yes{
+              label.yes {
                 margin: 0 1.02rem 0 .06rem;
               }
-              label.no{
+              label.no {
                 margin-left: .06rem;
               }
 
-              span.paddingRight{
+              span.paddingRight {
                 padding-right: .15rem;
                 width: 4.4rem;
               }
-              span.cityVal{
-                width:3.2rem;
+              span.cityVal {
+                width: 3.2rem;
                 display: block;
                 float: left;
                 font-size: 15px;
                 border: none;
-                white-space:nowrap;
-                overflow:hidden;
-                text-overflow:ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 color: #b3b3b3;
               }
-              label.gs-wid{
+              label.gs-wid {
                 width: 2.5rem;
               }
-              span.storeval{
+              span.storeval {
                 width: 2.69rem;
               }
-              span.hint{
+              span.hint {
                 display: block;
                 float: left;
-                margin-top:0.25rem;
+                margin-top: 0.25rem;
                 width: 0.8rem;
                 height: 0.47rem;
                 background-image: url("../../../assets/app/user/apply-sj1.png");
                 background-size: $bfb $bfb;
                 border-left: 1px solid #CDCDCD;
               }
-              span.color-2{
+              span.color-2 {
                 color: $color;
               }
 
-              input,span {
+              input, span {
                 display: block;
                 float: right;
                 //padding-top:0.2rem;
@@ -924,56 +930,56 @@
                 height: 0.98rem;
                 line-height: 0.98rem;
               }
-              input{
+              input {
                 color: #333;
                 padding: 0;
                 //background-color: red;
               }
-              input.width105{
+              input.width105 {
                 width: 1.04rem;
                 float: left;
               }
-              input.width218{
+              input.width218 {
                 width: 2.17rem;
                 float: left;
                 text-align: center;
               }
-              input.width131{
+              input.width131 {
                 width: 1.30rem;
                 float: left;
                 text-align: right;
               }
-              div.border-right{
+              div.border-right {
                 width: 1px;
                 height: .3rem;
                 margin-top: .35rem;
                 background-color: #e6e6e6;
                 float: left;
               }
-              span{
+              span {
                 color: #b2b2b2;
                 background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
                 background-size: .14rem .26rem;
               }
-              input::-webkit-input-placeholder{
+              input::-webkit-input-placeholder {
                 color: #b2b2b2;
                 font-size: .3rem;
               }
-              span.blackColor{
+              span.blackColor {
                 color: #333;
               }
             }
-            li.unique{
+            li.unique {
               clear: both;
               height: .98rem;
               line-height: .98rem;
               list-style: none;
               border: none;
               span {
-                border-bottom:1px solid #e6e6e6;
+                border-bottom: 1px solid #e6e6e6;
               }
             }
-            li.noBorder{
+            li.noBorder {
               border: none;
             }
           }
@@ -1003,32 +1009,32 @@
         }
       }
     }
-    div.show{
+    div.show {
       display: block;
     }
-    div.mint-popup{
+    div.mint-popup {
       width: 100%;
-      div.button{
+      div.button {
         width: 100%;
         height: .87rem;
         line-height: .87rem;
         font-size: .3rem;
         color: #1082fe;
         background-color: #f7f7f7;
-        p.cancel{
+        p.cancel {
           float: left;
-          margin: auto  0 auto .15rem;
+          margin: auto 0 auto .15rem;
         }
-        p.confirm{
+        p.confirm {
           float: right;
-          margin: auto  .15rem auto 0;
+          margin: auto .15rem auto 0;
           display: none;
         }
-        p.show{
+        p.show {
           display: block;
         }
       }
-      div.picker{
+      div.picker {
         //background: red;
       }
     }

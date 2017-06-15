@@ -34,10 +34,10 @@
         </ul>
       </form>
     </div>
-    <div class="submit"  v-if="ok" @click="commit">
+    <div class="submit" v-if="ok" @click="commit">
       <p style="color: #fff;">确认并提交</p>
     </div>
-    <div  class="submit"  v-else>
+    <div class="submit" v-else>
       <p style="color: #9cd2ff;">确认并提交</p>
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
@@ -58,14 +58,14 @@
   import cCityOptions from 'components/provinces';
   import axios from 'axios';
   import {mapMutations, mapState} from 'vuex';
-  import { Actionsheet} from 'mint-ui';
+  import {Actionsheet} from 'mint-ui';
   const ROOTPATH = window.$rootPath;
   //添加或更新居住信息
-  const API_UESR_LIVING_INFO_SAVE_UPDATE= `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
+  const API_UESR_LIVING_INFO_SAVE_UPDATE = `${ROOTPATH}/user/requestController/saveOrUpdateLivingInfoMethod`;
   //获取居住信息
-  const API_UESR_LIVING_INFO= `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
+  const API_UESR_LIVING_INFO = `${ROOTPATH}/user/requestController/getLivingInfoMethod`;
   //获取省市区信息
-  const API_CITY= `${ROOTPATH}/dictionary/region/`;
+  const API_CITY = `${ROOTPATH}/dictionary/region/`;
 
   export default {
     data () {
@@ -83,8 +83,8 @@
         okCity: '',
         okDist: '',
         city: '',
-        dist:'',
-        name:'',
+        dist: '',
+        name: '',
         provinces: [],
         cities: [],
         dists: [],
@@ -110,12 +110,12 @@
           //自有房产、租赁、与亲属同住、公司宿舍，其他
           {name: '自有房产', method: this.getLivingStyle, "value": "SELF_HOUSE"},
           {name: '租赁', method: this.getLivingStyle, "value": "RENT_HOUSE"},
-          {name: '与亲属同住', method: this.getLivingStyle,"value": "HOME_HOUSE"},
-          {name: '公司宿舍', method: this.getLivingStyle,"value": "COMPANY_HOUSE"},
-          {name: '其他', method: this.getLivingStyle,"value": "OTHER_HOUSE"},
+          {name: '与亲属同住', method: this.getLivingStyle, "value": "HOME_HOUSE"},
+          {name: '公司宿舍', method: this.getLivingStyle, "value": "COMPANY_HOUSE"},
+          {name: '其他', method: this.getLivingStyle, "value": "OTHER_HOUSE"},
         ],
 
-        response : [
+        response: [
           {
             "text": "自有房产",
             "value": "SELF_HOUSE"
@@ -136,30 +136,30 @@
             "text": "其他",
             "value": "OTHER_HOUSE"
           }
-          ]
+        ]
       };
     },
     // 计算属性将被混入到 Vue 实例中。
     computed: {
       ...mapState(['pid', 'version', 'token', 'type']),
       ok () {
-        if(this.livingType=='其他'){
-          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
-            &&this.housenumber&&this.lifeYears&&this.livingTypeOther;
+        if (this.livingType == '其他') {
+          return (this.livingType != '请选择您的居住情况') && (this.livingPlace != '请选择您的现居住地')
+            && this.housenumber && this.lifeYears && this.livingTypeOther;
         }
         else {
-          return (this.livingType!='请选择您的居住情况')&&(this.livingPlace!='请选择您的现居住地')
-            &&this.housenumber&&this.lifeYears;
+          return (this.livingType != '请选择您的居住情况') && (this.livingPlace != '请选择您的现居住地')
+            && this.housenumber && this.lifeYears;
         }
       },
     },
 
-    methods : {
+    methods: {
       // 初始化
       init () {
         //在API_UESR_LIVING_INFO接口中
         this.loading = true;
-        axios.post(API_UESR_LIVING_INFO,{
+        axios.post(API_UESR_LIVING_INFO, {
           comm: {
             pid: this.pid,
             type: this.type,
@@ -169,19 +169,19 @@
           body: {
             requestId: this.$route.query.requestId,
           }
-        },{timeout:90000}).then(res => {
+        }, {timeout: 90000}).then(res => {
           let json = res.data;
           //操作成功
           if (json.code == '00000') {
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
             this.loading = false;
-            this.pid=json.data.pid;
+            this.pid = json.data.pid;
             //判断id值
-            if(this.pid){
+            if (this.pid) {
               //更新操作之前需要回显数据
-              for(let i=0;i<this.actions.length;i++){
-                if(this.actions[i].value == json.data.livingType){
+              for (let i = 0; i < this.actions.length; i++) {
+                if (this.actions[i].value == json.data.livingType) {
                   this.livingType = this.actions[i].name;
                 }
               }
@@ -195,7 +195,7 @@
               this.housenumber = json.data.housenumber;
               this.completeaddress = json.data.completeaddress;
               this.fullAddress = this.completeaddress.split(" ");
-              this.livingPlace = this.fullAddress[0]+this.fullAddress[1]+this.fullAddress[2];
+              this.livingPlace = this.fullAddress[0] + this.fullAddress[1] + this.fullAddress[2];
             }
             //没有id，新增操作
             else {
@@ -203,19 +203,19 @@
             }
           }
           //后台返回不正常
-          else{
+          else {
             this.loading = false;
             this.msg = json.msg;
-            let timer=window.setTimeout(() => {
-              this.msg=false;
-            },2000);
+            let timer = window.setTimeout(() => {
+              this.msg = false;
+            }, 2000);
           }
-        },error =>{
+        }, error => {
           this.loading = false;
-          this.msg ='加载失败，请稍后重试！';
-          let timer=window.setTimeout(() => {
+          this.msg = '加载失败，请稍后重试！';
+          let timer = window.setTimeout(() => {
             this.msg = false;
-          },2000);
+          }, 2000);
         })
       },
 
@@ -227,7 +227,7 @@
         this.canClick = false;
         this.loading = true;
         //在API_UESR_LIVING_INFO_SAVE_UPDATE接口中传值
-        axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE,{
+        axios.post(API_UESR_LIVING_INFO_SAVE_UPDATE, {
           comm: {
             pid: this.pid,
             type: this.type,
@@ -236,56 +236,57 @@
           token: this.token,
 
           //提交数据
-          body:{
-            appRequestId:this.$route.query.requestId,
-            addressId:this.addressId,
-            pid:this.pid,
-            livingType:this.livingTypeValue,
-            livingTypeOther:this.livingTypeOther,
-            lifeYears:this.lifeYears,
-            provinceCode:this.provinceCode,
-            cityCode:this.cityCode,
-            distCode:this.distCode,
-            housenumber:this.housenumber,
-            completeaddress:this.fullAddress[0]+' '+this.fullAddress[1]+' '+this.fullAddress[2]+' '+this.housenumber,
-        }
-      },{timeout:90000}).then(res => {
+          body: {
+            appRequestId: this.$route.query.requestId,
+            addressId: this.addressId,
+            pid: this.pid,
+            livingType: this.livingTypeValue,
+            livingTypeOther: this.livingTypeOther,
+            lifeYears: this.lifeYears,
+            provinceCode: this.provinceCode,
+            cityCode: this.cityCode,
+            distCode: this.distCode,
+            housenumber: this.housenumber,
+            completeaddress: this.fullAddress[0] + ' ' + this.fullAddress[1] + ' ' + this.fullAddress[2] + ' ' + this.housenumber,
+          }
+        }, {timeout: 90000}).then(res => {
           let json = res.data;
           //验证通过
           if (json.code == '00000') {
             this.loading = false;
-            this.pid=json.data.pid;
+            this.pid = json.data.pid;
             this.msg = '提交成功!';
-            let timer=window.setTimeout(() => {
+            let timer = window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
-              let time=window.setTimeout(()=>{
+              let time = window.setTimeout(() => {
                 this.close();
-              },200);
-            },2000);
+              }, 200);
+            }, 2000);
           }
           //后台验证不通过
-          else{
+          else {
             this.loading = false;
             this.msg = json.msg;
-            let timer=window.setTimeout(() => {
-              this.msg=false;
+            let timer = window.setTimeout(() => {
+              this.msg = false;
               this.canClick = true;
-            },2000);
+            }, 2000);
           }
-        },error =>{
+        }, error => {
           this.loading = false;
-          this.msg ='提交失败!';
-          let timer=window.setTimeout(() => {
+          this.msg = '提交失败!';
+          let timer = window.setTimeout(() => {
             this.msg = false;
             this.canClick = true;
-          },2000);
+          }, 2000);
         })
       },
 
       //提交成功，关闭当前窗口
       close(){
         //关闭界面
+        native.closeWebview();
       },
 
       getChildProvince(){
@@ -303,11 +304,11 @@
         this.cityCode = city.value;
       },
 
-      chooseDist(value,text){
+      chooseDist(value, text){
         this.dist = text;
         this.distCode = value;
-        this.livingPlace = this.okProvince+this.okCity+this.dist;
-        this.completeaddress = this.okProvince+' '+this.okCity+' '+this.dist+' ';
+        this.livingPlace = this.okProvince + this.okCity + this.dist;
+        this.completeaddress = this.okProvince + ' ' + this.okCity + ' ' + this.dist + ' ';
         this.fullAddress = this.completeaddress.split(" ");
       },
 
@@ -319,14 +320,14 @@
       timeout(){
         window.setTimeout(() => {
           this.msg = false;
-        },2000);
+        }, 2000);
       },
 
 
       getLivingStyle(action){
         this.livingType = action.name;
-        for(let i=0;i<this.actions.length;i++){
-          if(this.actions[i].name == action.name){
+        for (let i = 0; i < this.actions.length; i++) {
+          if (this.actions[i].name == action.name) {
             this.livingTypeValue = this.actions[i].value;
             break;
           }
@@ -345,7 +346,7 @@
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  div.living-information{
+  div.living-information {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
@@ -354,42 +355,41 @@
     $zero: 0px;
     $color: #4d4d4d;
 
-
-    div.layer{
+    div.layer {
       position: absolute;
-      top:0;
-      left:0;
+      top: 0;
+      left: 0;
       background-color: #000;
       z-index: 40;
       opacity: 0.5;
-      width:100%;
+      width: 100%;
       height: 100%;
       display: none;
     }
-    div.active{
+    div.active {
       display: block;
     }
-    div.border{
+    div.border {
       width: 100%;
       height: .2rem;
       border-top: 1px solid #e5e5e5;
       background-color: #f1f1f1;
     }
-    div.ui-form{
+    div.ui-form {
       background-color: #fff;
-      form{
+      form {
         margin: 0 .32rem;
         width: 6.86rem;
-        ul{
+        ul {
           margin: 0;
           padding: 0;
-          li{
+          li {
             clear: both;
             height: .98rem;
             line-height: .98rem;
             list-style: none;
-            border-bottom:1px solid #e6e6e6;
-            label{
+            border-bottom: 1px solid #e6e6e6;
+            label {
               width: 2.3rem;
               display: block;
               float: left;
@@ -397,7 +397,7 @@
               color: #333333;
               //background-color: aqua;
             }
-            input,span {
+            input, span {
               display: block;
               float: right;
               //padding-top:0.2rem;
@@ -407,59 +407,59 @@
               height: 0.98rem;
               line-height: 0.98rem;
             }
-            input{
+            input {
               color: #333;
               padding: 0;
               //background-color: red;
             }
-            span{
+            span {
               color: #b2b2b2;
               background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
               background-size: .14rem .26rem;
               //background-color: blue;
             }
-            span.paddingRight{
+            span.paddingRight {
               padding-right: .15rem;
               width: 4.4rem;
             }
-            input::-webkit-input-placeholder{
+            input::-webkit-input-placeholder {
               color: #b2b2b2;
               font-size: .3rem;
             }
-            span.blackColor{
+            span.blackColor {
               color: #333;
             }
           }
-          li.unique{
+          li.unique {
             clear: both;
             height: .98rem;
             line-height: .98rem;
             list-style: none;
             border: none;
             span {
-              border-bottom:1px solid #e6e6e6;
+              border-bottom: 1px solid #e6e6e6;
             }
           }
-          li.noBorder{
+          li.noBorder {
             border: none;
           }
         }
       }
     }
-    div.submit{
+    div.submit {
       width: 6.86rem;
-      height:.88rem;
-      margin:0.5rem .32rem 0;
-      background: -webkit-linear-gradient(left, #45bbff , #3399ff); /* Safari 5.1 - 6.0 */
-      background: -o-linear-gradient(right, #45bbff , #3399ff); /* Opera 11.1 - 12.0 */
-      background: -moz-linear-gradient(right, #45bbff , #3399ff); /* Firefox 3.6 - 15 */
-      background: linear-gradient(to right, #45bbff , #3399ff);
-      text-align:center;
+      height: .88rem;
+      margin: 0.5rem .32rem 0;
+      background: -webkit-linear-gradient(left, #45bbff, #3399ff); /* Safari 5.1 - 6.0 */
+      background: -o-linear-gradient(right, #45bbff, #3399ff); /* Opera 11.1 - 12.0 */
+      background: -moz-linear-gradient(right, #45bbff, #3399ff); /* Firefox 3.6 - 15 */
+      background: linear-gradient(to right, #45bbff, #3399ff);
+      text-align: center;
       border-radius: .49rem;
-      p{
-        font-size:0.36rem;
-        height:.88rem;
-        line-height:.88rem;
+      p {
+        font-size: 0.36rem;
+        height: .88rem;
+        line-height: .88rem;
         margin: 0;
       }
     }
