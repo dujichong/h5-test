@@ -9,6 +9,7 @@ const rootPath = window.$spaRootPath || '';
 const NotFound = r => require(['views/notfound'], r);
 const News = r => require(['views/news'], r);
 const Message = r => require(['views/message'], r);
+const Download = r => require(['views/download'], r);
 
 const AppHelpList = r => require(['views/app/help/list'], r);
 const AppHelpDetails = r => require(['views/app/help/details'], r);
@@ -34,6 +35,7 @@ const SellerCard = r => require(['views/seller/card'], r);
 const routes = [
   {path: '/news', component: News, name: 'News'},
   {path: '/message', component: Message, name: 'Message'},
+  {path: '/download', component: Download, name: 'Download'},
 
   {path: '/app/help/list', component: AppHelpList, name: 'AppHelpList'},
   {path: '/app/help/details', component: AppHelpDetails, name: 'AppHelpDetails'},
