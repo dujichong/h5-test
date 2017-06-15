@@ -31,6 +31,9 @@
         const dataDeviceInfo = JSON.parse(jsonDeviceInfo);
         ['pid', 'version', 'token', 'type'].forEach(key => this.$store.commit(key, dataDeviceInfo[key]));
       }
+      else {
+        alert('native.getDeviceInfo 方法未定义！');
+      }
     },
 
     mounted (){

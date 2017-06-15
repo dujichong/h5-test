@@ -877,9 +877,10 @@
               label.yes, label.no {
                 width: .36rem;
                 height: .98rem;
+                line-height: 1.1rem;
               }
               label.yes {
-                margin: 0 1.02rem 0 .06rem;
+                margin: 0 .5rem 0 .06rem;
               }
               label.no {
                 margin-left: .06rem;
