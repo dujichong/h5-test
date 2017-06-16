@@ -208,7 +208,7 @@
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
   .views-news {
-    width: 100%;
+    width: 100%;;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
