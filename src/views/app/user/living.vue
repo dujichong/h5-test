@@ -105,6 +105,7 @@
         completeaddress: '',
         fullAddress: '',
         livingTypeValue: '',
+        bodyPid: '',
 
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
@@ -254,7 +255,7 @@
           //验证通过
           if (json.code == '00000') {
             this.loading = false;
-            this.pid = json.data.pid;
+            this.bodyPid = json.data.pid;
             this.msg = '提交成功!';
             let timer = window.setTimeout(() => {
               this.msg = false;
