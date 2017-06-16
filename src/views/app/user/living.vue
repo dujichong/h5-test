@@ -176,9 +176,9 @@
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
             this.loading = false;
-            this.pid = json.data.pid;
+            this.bodyPid = json.data.pid;
             //判断id值
-            if (this.pid) {
+            if (json.data.pid) {
               //更新操作之前需要回显数据
               for (let i = 0; i < this.actions.length; i++) {
                 if (this.actions[i].value == json.data.livingType) {
@@ -239,7 +239,7 @@
           body: {
             appRequestId: this.$route.query.requestId,
             addressId: this.addressId,
-            pid: this.pid,
+            pid: this.bodyPid,
             livingType: this.livingTypeValue,
             livingTypeOther: this.livingTypeOther,
             lifeYears: this.lifeYears,

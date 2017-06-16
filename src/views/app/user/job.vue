@@ -287,6 +287,7 @@
         workSeniority: '',
         workYears: '',
         picked: 'yes',
+        bodyPid: '',
         slots: [
           {
             flex: 1,
@@ -447,7 +448,7 @@
             //返回id 有id为更新操作 没有为新增操作
             //拿到后台的id
             this.loading = false;
-            this.pid = json.data.pid;
+            this.bodyPid = json.data.pid;
             this.salaryFrom = json.data.salaryFrom;
             if (this.salaryFrom == 1) {
               this.salaryShow = true;
@@ -459,7 +460,7 @@
             }
 
             //判断id值
-            if (this.pid) {
+            if (json.data.pid) {
               //更新操作之前需要回显数据
               for (let i = 0; i < this.jobTitleTypeActions.length; i++) {
                 if (this.jobTitleTypeActions[i].value == json.data.jobTitleType) {
@@ -574,7 +575,7 @@
               enterCompanyDate: this.enterCompanyDateYear + '-' + this.enterCompanyDateMonth + '-01',
               companyName: this.companyName,
               addressId: this.addressId,
-              pid: this.pid,
+              pid: this.bodyPid,
               completePhone: this.areaCode + '-' + this.telephoneNumber + '-' + this.branchNumber,
               branchNumber: this.branchNumber,
               department: this.department,
