@@ -55,3 +55,5 @@ document.body.addEventListener('click', function (event) {
   win.addEventListener(resizeEvt, recalc, false);
   doc.addEventListener('DOMContentLoaded', recalc, false);
 })(document, window);
+
+console.log(process.env);
