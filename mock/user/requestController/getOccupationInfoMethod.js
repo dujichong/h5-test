@@ -14,6 +14,7 @@ module.exports = {
       "token": null,
       "data": {
         "id": 1,
+        "pid": 1,
         "appRequestId": 123,
         "appCustomerId": 1,
         "officialJobDate": 1330531200000,

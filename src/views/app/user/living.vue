@@ -9,35 +9,35 @@
     <div class="ui-form">
       <form>
         <ul>
-          <li @click="sheetVisible = true" v-bind:class="{ unique: livingType=='其他' }">
+          <li @click="showSheet" :class="{ unique: livingType=='其他' }">
             <label>居住情况</label>
-            <span v-bind:class="{ blackColor: livingType!='请选择您的居住情况'}">{{livingType}}</span>
+            <span v-bind:class="{ blackColor: livingType!='请选择您的居住情况', disabled: disabled}">{{livingType}}</span>
           </li>
           <li v-if="livingType=='其他'">
             <label>其他情况</label>
-            <input v-model="livingTypeOther" placeholder="请输入其他居住情况">
+            <input :disabled="disabled" v-model="livingTypeOther" placeholder="请输入其他居住情况">
           </li>
 
           <li @click="getChildProvince">
             <label>现居住地</label>
-            <span class="paddingRight" v-bind:class="{ blackColor: livingPlace!='请选择您的现居住地'}">{{livingPlace}}</span>
+            <span class="paddingRight" :class="{ blackColor: livingPlace!='请选择您的现居住地', disabled: disabled}">{{livingPlace}}</span>
           </li>
 
           <li>
             <label>详细地址</label>
-            <input v-model="housenumber" placeholder="地址具体到门牌号码">
+            <input :disabled="disabled" v-model="housenumber" placeholder="地址具体到门牌号码">
           </li>
           <li class="noBorder">
             <label>生活年限(年)</label>
-            <input v-model="lifeYears" placeholder="请填写您的居住年限">
+            <input :disabled="disabled" v-model="lifeYears" placeholder="请填写您的居住年限">
           </li>
         </ul>
       </form>
     </div>
-    <div class="submit" v-if="ok" @click="commit">
+    <div class="submit" v-if="ok && !disabled" @click="commit">
       <p style="color: #fff;">确认并提交</p>
     </div>
-    <div class="submit" v-else>
+    <div class="submit" v-if="!ok && !disabled">
       <p style="color: #9cd2ff;">确认并提交</p>
     </div>
     <Actionsheet :actions="actions" v-model="sheetVisible"></Actionsheet>
@@ -48,6 +48,8 @@
                    @showCity="showCity"
                    @showDist="showDist"
     ></c-cityOptions>
+
+    <img src="../../../assets/app/user/bg-bottom.png" v-if="disabled" class="bottom-prompt">
   </div>
 </template>
 
@@ -106,6 +108,7 @@
         fullAddress: '',
         livingTypeValue: '',
         bodyPid: '',
+        disabled: parseInt(this.$route.query.operate, 10) === 0,
 
         actions: [
           //自有房产、租赁、与亲属同住、公司宿舍，其他
@@ -219,6 +222,13 @@
           }, 2000);
         })
       },
+      
+      //显示居住情况弹层
+      showSheet () {
+        if (!this.disabled) {
+          this.sheetVisible = true;
+        }
+      },
 
       //点击提交按钮提交
       commit(){
@@ -260,9 +270,10 @@
             let timer = window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
-              let time = window.setTimeout(() => {
-                this.close();
-              }, 200);
+              this.isEdit = false;
+//              let time = window.setTimeout(() => {
+//                this.close();
+//              }, 200);
             }, 2000);
           }
           //后台验证不通过
@@ -291,8 +302,10 @@
       },
 
       getChildProvince(){
-        this.cityOptionsVisible = true;
-        this.$refs.childMethod.getProvince();
+        if (!this.disabled) {
+          this.cityOptionsVisible = true;
+          this.$refs.childMethod.getProvince();
+        }
       },
 
       showCity(province){
@@ -419,6 +432,9 @@
               background-size: .14rem .26rem;
               //background-color: blue;
             }
+            span.disabled {
+              background: none;
+            }
             span.paddingRight {
               padding-right: .15rem;
               width: 4.4rem;
@@ -451,9 +467,6 @@
       width: 6.86rem;
       height: .88rem;
       margin: 0.5rem .32rem 0;
-      background: -webkit-linear-gradient(left, #45bbff, #3399ff); /* Safari 5.1 - 6.0 */
-      background: -o-linear-gradient(right, #45bbff, #3399ff); /* Opera 11.1 - 12.0 */
-      background: -moz-linear-gradient(right, #45bbff, #3399ff); /* Firefox 3.6 - 15 */
       background: linear-gradient(to right, #45bbff, #3399ff);
       text-align: center;
       border-radius: .49rem;
@@ -463,6 +476,14 @@
         line-height: .88rem;
         margin: 0;
       }
+    }
+
+    .bottom-prompt {
+      width: 2.15rem;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%);
     }
   }
 </style>

@@ -14,7 +14,7 @@
           <ul>
             <li>
               <label>工作时间</label>
-              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间'}">{{officialJobDate}}</span>
+              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间', disabled: disabled}">{{officialJobDate}}</span>
             </li>
           </ul>
         </form>
@@ -25,36 +25,36 @@
           <ul>
             <li>
               <label>经营主体</label>
-              <input v-model="companyName" maxlength="11" placeholder="请填写经营主体名称">
+              <input v-model="companyName" maxlength="11" placeholder="请填写经营主体名称" :disabled="disabled">
             </li>
 
             <li>
               <label>现单位地区</label>
               <span class="paddingRight" @click="getChildProvince"
-                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区', disabled: disabled}">{{workPlace}}</span>
             </li>
 
             <li>
               <label>详细地址</label>
-              <input v-model="housenumber" placeholder="地址详细到门牌号码">
+              <input v-model="housenumber" placeholder="地址详细到门牌号码" :disabled="disabled">
             </li>
 
             <li class="noBorder">
               <label>单位电话</label>
-              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号">
+              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号" :disabled="disabled">
               <div class="border-right"></div>
-              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码">
+              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码" :disabled="disabled">
               <div class="border-right"></div>
-              <input class="width131" v-model="branchNumber" placeholder="分机号">
+              <input class="width131" v-model="branchNumber" placeholder="分机号" :disabled="disabled">
             </li>
           </ul>
         </form>
       </div>
       <div class="wrapper">
-        <div class="submit" v-if="ok" @click="commit">
+        <div class="submit" v-if="ok && !disabled" @click="commit">
           <p style="color: #fff;">确认并提交</p>
         </div>
-        <div class="submit" v-else>
+        <div class="submit" v-if="!ok && !disabled">
           <p style="color: #9cd2ff;">确认并提交</p>
         </div>
       </div>
@@ -67,23 +67,23 @@
           <ul>
             <li>
               <label>工作时间</label>
-              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间'}">{{officialJobDate}}</span>
+              <span @click="workTimePopupShow" v-bind:class="{ blackColor: officialJobDate!='请选择您的工作时间',disabled:disabled}">{{officialJobDate}}</span>
             </li>
 
             <li>
               <label>现单位名称</label>
-              <input v-model="companyName" maxlength="11" placeholder="请填写您的现单位名称">
+              <input :disabled="disabled" v-model="companyName" maxlength="11" placeholder="请填写您的现单位名称">
             </li>
 
             <li class="noBorder">
               <label class="item">是否缴纳社保/公积金</label>
               <div class="box">
-                <input class="circle" type="radio" id="yes" :checked="true" value="true"
+                <input class="circle" :disabled="disabled" type="radio" id="yes" :checked="true" value="true"
                        v-model="payOfSocialSecurityFund"><span class="opacity"></span>
               </div>
               <label class="yes" for="yes">是</label>
               <div class="box">
-                <input class="circle" type="radio" id="no" :checked="false" value="false"
+                <input class="circle" type="radio" id="no" :disabled="disabled" :checked="false" value="false"
                        v-model="payOfSocialSecurityFund"><span></span>
               </div>
               <label class="no" for="no">否</label>
@@ -98,12 +98,12 @@
             <li>
               <label>现单位地区</label>
               <span class="paddingRight" @click="getChildProvince"
-                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区'}">{{workPlace}}</span>
+                    v-bind:class="{ blackColor: workPlace!='请选择现单位所在地区', disabled:disabled}">{{workPlace}}</span>
             </li>
 
             <li class="noBorder">
               <label>详细地址</label>
-              <input v-model="housenumber" placeholder="地址详细到门牌号码">
+              <input v-model="housenumber" placeholder="地址详细到门牌号码" :disabled="disabled">
             </li>
           </ul>
         </form>
@@ -114,50 +114,50 @@
           <ul>
             <li>
               <label>单位电话</label>
-              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号">
+              <input class="width105" maxlength="4" v-model="areaCode" placeholder="区号" :disabled="disabled">
               <div class="border-right"></div>
-              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码">
+              <input class="width218" maxlength="8" v-model="telephoneNumber" placeholder="电话号码" :disabled="disabled">
               <div class="border-right"></div>
-              <input class="width131" v-model="branchNumber" placeholder="分机号">
+              <input class="width131" v-model="branchNumber" placeholder="分机号" :disabled="disabled">
             </li>
 
             <li>
               <label>现单位部门</label>
-              <input v-model="department" placeholder="请填写您的部门">
+              <input v-model="department" placeholder="请填写您的部门" :disabled="disabled">
             </li>
 
-            <li @click="unitPositionSheetVisible = true" v-bind:class="{ unique: jobTitleType=='其他' }">
+            <li @click="!disabled && (unitPositionSheetVisible = true)" v-bind:class="{ unique: jobTitleType=='其他' }">
               <label>现单位职位</label>
-              <span v-bind:class="{ blackColor: jobTitleType!='请选择您的职位'}">{{jobTitleType}}</span>
+              <span v-bind:class="{ blackColor: jobTitleType!='请选择您的职位', disabled: disabled}">{{jobTitleType}}</span>
             </li>
 
             <li v-if="jobTitleType=='其他'">
               <label>职位说明</label>
-              <input v-model="messageOfJobTitleType" placeholder="请输入其他单位职位情况">
+              <input v-model="messageOfJobTitleType" placeholder="请输入其他单位职位情况" :disabled="disabled">
             </li>
 
-            <li @click="unitNatureSheetVisible = true" v-bind:class="{ unique: companyType=='其他' }">
+            <li @click="!disabled && (unitNatureSheetVisible = true)" v-bind:class="{ unique: companyType=='其他' }">
               <label>单位性质</label>
-              <span v-bind:class="{ blackColor: companyType!='请选择您的单位性质'}">{{companyType}}</span>
+              <span v-bind:class="{ blackColor: companyType!='请选择您的单位性质', disabled: disabled}">{{companyType}}</span>
             </li>
 
             <li v-if="companyType=='其他'">
               <label>单位说明</label>
-              <input v-model="messageOfCompanyType" placeholder="请输入其他单位性质情况">
+              <input v-model="messageOfCompanyType" placeholder="请输入其他单位性质情况" :disabled="disabled">
             </li>
 
             <li class="noBorder">
               <label>入职时间</label>
-              <span @click="entryTimePopupShow" v-bind:class="{ blackColor: enterCompanyDate!='请选择您的入职时间'}">{{enterCompanyDate}}</span>
+              <span @click="entryTimePopupShow" v-bind:class="{ blackColor: enterCompanyDate!='请选择您的入职时间', disabled: disabled}">{{enterCompanyDate}}</span>
             </li>
           </ul>
         </form>
       </div>
       <div class="wrapper">
-        <div class="submit" v-if="ok" @click="commit">
+        <div class="submit" v-if="ok && !disabled" @click="commit">
           <p style="color: #fff;">确认并提交</p>
         </div>
-        <div class="submit" v-else>
+        <div class="submit" v-if="!ok && !disabled">
           <p style="color: #9cd2ff;">确认并提交</p>
         </div>
       </div>
@@ -192,6 +192,7 @@
                    @showCity="showCity"
                    @showDist="showDist"
     ></c-cityOptions>
+    <img src="../../../assets/app/user/bg-bottom.png" v-if="disabled" class="bottom-prompt">
   </div>
 </template>
 <script>
@@ -288,6 +289,8 @@
         workYears: '',
         picked: 'yes',
         bodyPid: '',
+        disabled: parseInt(this.$route.query.operate, 10) === 0,
+
         slots: [
           {
             flex: 1,
@@ -429,7 +432,7 @@
     methods: {
       // 初始化
       init () {
-        //在API_UESR_LIVING_INFO接口中
+
         this.loading = true;
         axios.post(API_UESR_OCCOPATION_INFO, {
           comm: {
@@ -636,6 +639,9 @@
       },
 
       getChildProvince(){
+        if (this.disabled) {
+          return;
+        }
         this.cityOptionsVisible = true;
         this.$refs.childMethod.getProvince();
       },
@@ -683,11 +689,17 @@
       //用到了两个picker因为有两个时间选择选项
       //商类点击工作时间的时候popup组件显示，自己定的朦层显示（此处没有使用组件自带的朦层，因为当界面中有多个组件的时候有问题）
       workTimePopupShow(){
+        if (this.disabled) {
+          return;
+        }
         this.workTimePopupVisible = true;
         this.isActive = true;
         this.workTimeConfirmShow = true;
       },
       entryTimePopupShow(){
+        if (this.disabled) {
+          return;
+        }
         this.entryTimePopupVisible = true;
         this.isActive = true;
         this.entryTimeConfirmShow = true;
@@ -963,6 +975,9 @@
                 background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
                 background-size: .14rem .26rem;
               }
+              span.disabled {
+                background: none;
+              }
               input::-webkit-input-placeholder {
                 color: #b2b2b2;
                 font-size: .3rem;
@@ -1040,6 +1055,12 @@
         //background: red;
       }
     }
-
+    .bottom-prompt {
+      width: 2.15rem;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%);
+    }
   }
 </style>

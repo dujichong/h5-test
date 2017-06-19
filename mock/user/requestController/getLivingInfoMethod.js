@@ -11,6 +11,7 @@ module.exports = {
       "token": null,
       "data": {
         "id": 1,
+        "pid": 1,
         "appRequestId": 123,
         "appLoginId": 1,
         "livingType": "OTHER_HOUSE",    //居住情况
