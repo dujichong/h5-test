@@ -16,7 +16,7 @@ module.exports = {
   rootPath: '/puhui-car-app-server',
   build: {
     env: require('./prod.env'),
-    port: 9082,
+    port: 90822,
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
