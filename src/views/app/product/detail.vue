@@ -148,7 +148,7 @@
 
       // 试试我能贷多少
       test() {
-        native.open(this.token ? 'jump_to_carvaluation' : 'jump_to_login');
+        native.open(this.token ? 'jump_to_carvaluation' : 'jump_to_login',  this.currentIndex | 0);
       },
 
       // 申请
