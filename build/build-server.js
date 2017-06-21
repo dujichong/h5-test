@@ -33,7 +33,7 @@ var mockDir = path.resolve(__dirname, '../mock');
     }
     else {
       mock = require(filePath);
-      console.log('argv.proxy: ' + argv.proxy);
+      console.log('argv.proxy: ' + argv.proxy);;
       app.use(mock.api, argv.proxy ? proxyMiddleware({target: 'http://' + argv.proxy}) : mock.response);
     }
   });
