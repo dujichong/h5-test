@@ -608,9 +608,10 @@
               let timer = window.setTimeout(() => {
                 this.msg = false;
                 this.canClick = true;
-                let time = window.setTimeout(() => {
-                  this.close();
-                }, 200);
+                this.disabled = true;
+//                let time = window.setTimeout(() => {
+//                  this.close();
+//                }, 200);
               }, 2000);
             }
             //后台验证不通过

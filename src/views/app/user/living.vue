@@ -270,7 +270,7 @@
             let timer = window.setTimeout(() => {
               this.msg = false;
               this.canClick = true;
-              this.isEdit = false;
+              this.disabled = true;
 //              let time = window.setTimeout(() => {
 //                this.close();
 //              }, 200);
