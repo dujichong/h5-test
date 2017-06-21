@@ -948,7 +948,6 @@
               input {
                 color: #333;
                 padding: 0;
-                background-color: #fff;
               }
               input:disabled {
                 background-color: #fff;
