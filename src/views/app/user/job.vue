@@ -950,7 +950,7 @@
                 padding: 0;
               }
               input:disabled {
-                background-color: #fff;
+                background: #fff;
               }
               input.width105 {
                 width: 1.04rem;

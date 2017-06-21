@@ -426,6 +426,9 @@
               padding: 0;
               //background-color: red;
             }
+            input:disabled {
+              background: #fff;
+            }
             span {
               color: #b2b2b2;
               background: url("../../../assets/app/user/angle-right.png") no-repeat right center;
