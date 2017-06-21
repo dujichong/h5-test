@@ -15,7 +15,7 @@ module.exports = {
         "appRequestId": 123,
         "appLoginId": 1,
         "livingType": "OTHER_HOUSE",    //居住情况
-        "livingTypeOther": "111xxx",    //其他说明
+        "livingTypeOther": "111xxx mock",    //其他说明
         "addressId": 2,                      //地址id
         "lifeYears": "6",                      //居住年限
         "status": "AUDIT",                 //审核状态 审核中
