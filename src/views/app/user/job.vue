@@ -950,6 +950,9 @@
                 padding: 0;
                 background-color: #fff;
               }
+              input:disabled {
+                background-color: #fff;
+              }
               input.width105 {
                 width: 1.04rem;
                 float: left;
