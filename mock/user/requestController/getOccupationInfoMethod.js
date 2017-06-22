@@ -39,7 +39,7 @@ module.exports = {
         "housenumber": "东二环银河soho a座11层",
         "completeaddress": "北京市 市辖区 东城区 东二环银河soho a座11层",
         "payOfSocialSecurityFund": true,
-        "salaryFrom": 1
+        "salaryFrom": 2
       }
     });
   }

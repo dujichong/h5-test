@@ -28,6 +28,20 @@
               <input v-model="companyName" maxlength="11" placeholder="请填写经营主体名称" :disabled="disabled">
             </li>
 
+            <li class="noBorder">
+              <label class="item">是否缴纳社保/公积金</label>
+              <div class="box">
+                <input class="circle" :disabled="disabled" type="radio" id="yes" :checked="true" value="true"
+                       v-model="payOfSocialSecurityFund"><span class="opacity"></span>
+              </div>
+              <label class="yes" for="yes">是</label>
+              <div class="box">
+                <input class="circle" type="radio" id="no" :disabled="disabled" :checked="false" value="false"
+                       v-model="payOfSocialSecurityFund"><span></span>
+              </div>
+              <label class="no" for="no">否</label>
+            </li>
+
             <li>
               <label>现单位地区</label>
               <span class="paddingRight" @click="getChildProvince"
