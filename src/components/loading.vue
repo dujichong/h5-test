@@ -1,5 +1,5 @@
 <template>
-  <div class="components-loading" :style="{display: show ? '' : ''}">
+  <div class="components-loading" :style="{display: show ? '' : none'}">
     <img src="../assets/components/loading/loading.png" alt="">
     <span>正在加载...</span>
   </div>
@@ -37,8 +37,9 @@
   }
   .components-loading {
     position: absolute;
-    left: 2.25rem;
-    top: 6.18rem;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 3rem;
     height: .98rem;
     z-index: 1024;
