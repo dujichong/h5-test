@@ -7,7 +7,7 @@
     <c-msg :msg="msg"></c-msg>
     <div class="border"></div>
     <div class="ui-form">
-      <form>
+       <form onsubmit="return false">
         <ul>
           <li @click="showSheet" :class="{ unique: livingType=='其他' }">
             <label>居住情况</label>
