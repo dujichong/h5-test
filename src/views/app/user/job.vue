@@ -10,7 +10,7 @@
     <div class="job-business" v-bind:class="{ show: businessShow }">
       <div class="border"></div>
       <div class="ui-form">
-        <form>
+        <form onsubmit="return false">
           <ul>
             <li>
               <label>工作时间</label>
@@ -21,7 +21,7 @@
       </div>
       <div class="border"></div>
       <div class="ui-form">
-        <form>
+         <form onsubmit="return false">
           <ul>
             <li>
               <label>经营主体</label>
@@ -63,7 +63,7 @@
     <div class="job-salary" v-bind:class="{ show: salaryShow }">
       <div class="border"></div>
       <div class="ui-form">
-        <form>
+         <form onsubmit="return false">
           <ul>
             <li>
               <label>工作时间</label>
@@ -93,7 +93,7 @@
       </div>
       <div class="border"></div>
       <div class="ui-form">
-        <form>
+         <form onsubmit="return false">
           <ul>
             <li>
               <label>现单位地区</label>
@@ -110,7 +110,7 @@
       </div>
       <div class="border"></div>
       <div class="ui-form">
-        <form>
+         <form onsubmit="return false">
           <ul>
             <li>
               <label>单位电话</label>
