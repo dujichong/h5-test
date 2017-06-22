@@ -1,5 +1,5 @@
 <template>
-  <div class="components-loading" :style="{display: show ? '' : none'}">
+  <div class="components-loading" :style="{display: show ? '' : 'none'}">
     <img src="../assets/components/loading/loading.png" alt="">
     <span>正在加载...</span>
   </div>
