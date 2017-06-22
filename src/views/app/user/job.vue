@@ -479,8 +479,8 @@
 
               this.jobTitleTypeValue = json.data.jobTitleType;
               this.companyTypeValue = json.data.companyType;
-              let officialJobTime = new Date(Number(json.data.officialJobDate)).toLocaleString();
-              let enterCompanyTime = new Date(Number(json.data.enterCompanyDate)).toLocaleString();
+              let officialJobTime = new Date(Number(json.data.officialJobDate));
+              let enterCompanyTime = new Date(Number(json.data.enterCompanyDate))
               this.addressId = json.data.addressId;
               this.provinceCode = json.data.provinceCode;
               this.cityCode = json.data.cityCode;
@@ -490,8 +490,8 @@
               this.fullAddress = this.completeaddress.split(" ");
               this.workPlace = this.fullAddress[0] + this.fullAddress[1] + this.fullAddress[2];
               this.appCustomerId = json.data.appCustomerId;
-              this.officialJobDate = officialJobTime.split('-')[0] + '年' + officialJobTime.split('-')[1] + '月';
-              this.enterCompanyDate = enterCompanyTime.split('-')[0] + '年' + enterCompanyTime.split('-')[1] + '月';
+              this.officialJobDate = officialJobTime.getFullYear() + '年' + (officialJobTime.getMonth() + 1) + '月';
+              this.enterCompanyDate = enterCompanyTime.getFullYear() + '年' + (enterCompanyTime.getMonth() + 1) + '月';
               this.companyName = json.data.companyName;
               this.completePhone = json.data.completePhone;
               this.areaCode = json.data.completePhone.split('-')[0];
