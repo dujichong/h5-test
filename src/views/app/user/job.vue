@@ -503,6 +503,10 @@
               this.payOfSocialSecurityFund = json.data.payOfSocialSecurityFund;
               this.workYears = json.data.workYears;
               this.workSeniority = json.data.workSeniority;
+
+              // 状态为 "已提交" 时，不可编辑
+              this.disabled = json.data.status == 'COMMIT';
+
             }
             //没有id，新增操作
             else {

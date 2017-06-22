@@ -200,6 +200,8 @@
               this.completeaddress = json.data.completeaddress;
               this.fullAddress = this.completeaddress.split(" ");
               this.livingPlace = this.fullAddress[0] + this.fullAddress[1] + this.fullAddress[2];
+              // 状态为 "已提交" 时，不可编辑
+              this.disabled = json.data.status == 'COMMIT';
             }
             //没有id，新增操作
             else {
