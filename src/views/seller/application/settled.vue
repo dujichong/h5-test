@@ -40,7 +40,7 @@
           return {
             name: item.customerName,
             fields: [
-              { label: '客户电话', value: `<a href="tel:${item.phone}">${item.phone}</a>`},
+              {label: '客户电话', value: `<a href="tel:${item.phone}">${item.phone}</a>`},
               {label: '融资金融', value: `${item.requestAmount}元`},
               {label: '还款期数', value: item.repaymentPeriod},
               {label: '账单日', value: item.billDate},
