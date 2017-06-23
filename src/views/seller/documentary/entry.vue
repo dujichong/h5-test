@@ -1,4 +1,4 @@
-<!--录件中页面-->
+<!--客户录件-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="entry">
     <c-title :text="title" skin="blue"></c-title>
@@ -81,6 +81,7 @@
               messageNumber:'1',
             },
             '3':{
+              loginId: 1111,
               name:'丁德',
               phoneNumber:'1324567813',
               status:'门店驳回',
