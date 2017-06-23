@@ -109,8 +109,8 @@
   import {mapMutations, mapState} from 'vuex';
   import {Toast} from 'mint-ui';
 
-  const API_GET_BASE_INFO = `${window.$rootPath}/sale/requestController/customer/baseInfo`;
-  const API_COMMIT_AUDIT = `${window.$rootPath}/sale/requestController/customer/baseAudit`;
+  const API_GET_DATA = `${window.$rootPath}/sale/requestController/customer/baseInfo`;
+  const API_COMMIT = `${window.$rootPath}/sale/requestController/customer/baseAudit`;
 
   export default {
     data () {
@@ -161,7 +161,7 @@
 
       commit() {
         this.loading = true;
-        axios.post(API_COMMIT_AUDIT, {
+        axios.post(API_COMMIT, {
           comm: {
             pid: this.pid,
             type: this.type,
@@ -172,7 +172,7 @@
             requestId: this.$route.query.requestId,
             customerId: this.$route.query.customerId,
             auditResult: this.pass == 'true' ? 1 : 0,
-            auditRemark: this.auditResult,
+            auditRemark: this.auditRemark,
           }
         }).then(response => {
           const json = response.data;
@@ -189,7 +189,7 @@
 
       getData () {
         this.loading = true;
-        axios.post(API_GET_BASE_INFO, {
+        axios.post(API_GET_DATA, {
           comm: {
             pid: this.pid,
             type: this.type,

@@ -7,88 +7,82 @@
         <!--v-for="(info,index) in infoObj"-->
         <ul v-if="salaryFrom==2">
           <li class="officialJobDate">
-            <p>工作时间</p><div>2011年4月</div>
+            <p>工作时间</p><div>{{workDate}}</div>
           </li>
           <li class="companyName">
-            <p>经营主体</p><div>凡普金科</div>
+            <p>经营主体</p><div>{{companyName}}</div>
           </li>
           <li class="workPlace">
-            <p>现单位地址</p><div>北京市东城区</div>
+            <p>现单位地址</p><div>{{address}}</div>
           </li>
           <li class="housenumber">
-            <p>详细地址</p><div>银河SOHO A座11层</div>
+            <p>详细地址</p><div>{{completeAddress}}</div>
           </li>
           <li class="completePhone">
-            <p>单位电话</p><div>010-88888888</div>
+            <p>单位电话</p><div>{{companyPhone}}</div>
           </li>
         </ul>
         <ul v-if="salaryFrom==1">
           <li class="officialJobDate">
-            <p>工作时间</p><div>2011年4月</div>
+            <p>工作时间</p><div>{{workDate}}</div>
           </li>
           <li class="companyName">
-            <p>现单位名称</p><div>凡普金科</div>
+            <p>现单位名称</p><div>{{companyName}}</div>
           </li>
           <li class="payOfSocialSecurityFund">
-            <p>是否缴纳社保/公积金</p><div>凡普金科</div>
+            <p>是否缴纳社保/公积金</p><div>{{securityFund}}</div>
           </li>
           <li class="workPlace">
-            <p>现单位地址</p><div>北京市东城区</div>
+            <p>现单位地址</p><div>{{address}}</div>
           </li>
           <li class="housenumber">
-            <p>详细地址</p><div>银河SOHO A座11层</div>
+            <p>详细地址</p><div>{{completeAddress}}</div>
           </li>
           <li class="completePhone">
-            <p>单位电话</p><div>010-88888888</div>
+            <p>单位电话</p><div>{{companyPhone}}</div>
           </li>
           <li class="department">
-            <p>现单位部门</p><div>凡普信贷</div>
+            <p>现单位部门</p><div>{{department}}</div>
           </li>
           <li class="jobTitleType">
-            <p>现单位职位</p><div>开发工程师</div>
+            <p>现单位职位</p><div>{{position}}</div>
           </li>
           <li class="companyType">
-            <p>企业性质</p><div>民营</div>
+            <p>企业性质</p><div>{{companyType}}</div>
           </li>
           <li class="enterCompanyDate">
-            <p>入职时间</p><div>2014年5月</div>
+            <p>入职时间</p><div>{{enterCompanyDate}}</div>
           </li>
         </ul>
       </div>
 
       <div class="component">
         <div class="radios">
-        <label class="item">审核结果</label>
-        <label v-if="jobInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+          <label class="item">审核结果</label>
+          <label v-if="auditResult" class="no">{{auditResult}}</label>
+          <div v-else>
+            <label class="no" for="no">不通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
+            </div>
+            <label class="yes" for="yes">通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+            </div>
+          </div>
+        </div>
 
-        <div v-if="jobInfoStatus=='待质检'">
-          <label  class="no" for="no">不通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
-          </div>
-          <label class="yes" for="yes">通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+        <div class="txt-box">
+          <div class="text">
+            <textarea
+              v-model="auditRemark"
+              placeholder="请填写不予通过的审核说明"
+              :disabled="auditResult || (!auditResult && pass=='true')"></textarea>
           </div>
         </div>
-      </div>
-        <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="jobInfoStatus=='待质检'">
-          <div v-if="pass=='true'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明"></textarea>
-          </div>
-        </div>
-        <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="jobInfoStatus!='待质检'">
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-        </div>
+
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="jobInfoStatus=='待质检'" class="button">
+        <div v-if="!auditResult" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -102,59 +96,119 @@
 </template>
 <script>
   import cTitle from 'components/title';
+  import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
+  import {Toast} from 'mint-ui';
+
+  const API_GET_DATA = `${window.$rootPath}/sale/requestController/customer/occupationInfo`;
+  const API_COMMIT = `${window.$rootPath}/sale/requestController/customer/occupationAudit`;
 
   export default {
     data () {
       return {
-        title: '基础信息',
-        message: '',
+        title: '职位信息',
         pass: 'true',
         passStatus: '通过',
-        salaryFrom: 1,//1位薪类，2位商类
-
-
-        jobInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        officialJobDate: '',//工作时间
+        salaryFrom: 1, //1位薪类，2位商类
+        customerName:'',
+        workDate: '',//工作时间
         enterCompanyDate: '',//入职时间
         companyName: '',//现单位名称或者经营主体
-        payOfSocialSecurityFund: true,
-        workPlace: '',//现单位地区
-        housenumber: '',//详细地址
-        completePhone: '',//单位电话
+        securityFund: true, //是否缴纳公积金
+        address: '',//现单位地区
+        completeAddress: '',//详细地址
+        companyPhone: '',//单位电话
         areaCode: '',//区号
         telephoneNumber: '',//中间电话号码
         branchNumber: '',//分机号
         department: '',//现单位部门
-        jobTitleType: '',//现单位职位
+        position: '',//现单位职位
         messageOfJobTitleType: '',//其他情况说明
         companyType: '',//现单位性质
         messageOfCompanyType: '',//其他情况说明
-        provinceCode: "110000",//省
-        cityCode: "110100",//市
-        distCode: "110101",//县区
-        completeaddress: "北京市 市辖区 东城区 东二环银河SOHO A座11层",
+        completeaddress: "",
+        auditRemark: '', //审核备注
+        auditResult: '', //审核结果
       }
     },
 
     computed: {
+
+      ...mapState(['pid', 'version', 'token', 'type']),
+
       ok () {
         if(this.pass=='true') {
-          return (true);
+          return true;
         }
         if(this.pass=='false'){
-          return (this.message);
+          return this.auditRemark;
         }
+        return false;
       },
     },
 
     //自定义的方法放在 methods
     methods : {
+
       commit() {
+        this.loading = true;
+        axios.post(API_COMMIT, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+            auditResult: this.pass == 'true' ? 1 : 0,
+            auditRemark: this.auditRemark,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data.success == 'true') {
+            Toast('操作成功');
+            this.auditResult = this.pass == 'true' ? '通过' : '不通过';
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
+
       },
+
+      getData () {
+        this.loading = true;
+        axios.post(API_GET_DATA, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data) {
+            Object.keys(this.$data).forEach(key => {
+              json.data[key] && (this[key] = json.data[key]);
+            });
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
+      },
+
     },
 
 
-    mounted(){
+    created () {
+      this.getData();
     },
 
     //titie

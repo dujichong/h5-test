@@ -10,10 +10,10 @@
             <p>居住情况</p><div>{{livingType}}</div>
           </li>
           <li class="livingPlace">
-            <p>现居住地</p><div>{{livingPlace}}</div>
+            <p>现居住地</p><div>{{address}}</div>
           </li>
           <li class="housenumber">
-            <p>详细地址</p><div>{{housenumber}}</div>
+            <p>详细地址</p><div>{{completeAddress}}</div>
           </li>
           <li class="lifeYears">
             <p>居住年限(年)</p><div>{{lifeYears}}</div>
@@ -24,10 +24,9 @@
       <div class="component">
         <div class="radios">
           <label class="item">审核结果</label>
-          <label v-if="livingInfoStatus!='待质检'" class="no">{{passStatus}}</label>
-
-          <div v-if="livingInfoStatus=='待质检'">
-            <label  class="no" for="no">不通过</label>
+          <label v-if="auditResult" class="no">{{auditResult}}</label>
+          <div v-else>
+            <label class="no" for="no">不通过</label>
             <div class="wrapper">
               <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
             </div>
@@ -37,23 +36,18 @@
             </div>
           </div>
         </div>
-        <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="livingInfoStatus=='待质检'">
-          <div v-if="pass=='true'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明"></textarea>
-          </div>
-        </div>
-        <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="livingInfoStatus!='待质检'">
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
+
+        <div class="txt-box">
+          <div class="text">
+            <textarea
+              v-model="auditRemark"
+              placeholder="请填写不予通过的审核说明"
+              :disabled="auditResult || (!auditResult && pass=='true')"></textarea>
           </div>
         </div>
+
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="livingInfoStatus=='待质检'" class="button">
+        <div v-if="!auditResult" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -67,6 +61,12 @@
 </template>
 <script>
   import cTitle from 'components/title';
+  import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
+  import {Toast} from 'mint-ui';
+
+  const API_GET_DATA = `${window.$rootPath}/sale/requestController/customer/livingInfo`;
+  const API_COMMIT = `${window.$rootPath}/sale/requestController/customer/livingAudit`;
 
   export default {
     data () {
@@ -76,39 +76,99 @@
         pass: 'true',
         passStatus: '通过',
 
-        livingInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
         livingType: '',//居住情况
-        livingPlace: '',//现居住地
-        housenumber: '',//详细地址
+        address: '',//现居住地
+        completeAddress: '',//详细地址
         lifeYears: '',//居住年限(年)
+        auditResult: '',
+        auditRemark: '',
       }
     },
 
     computed: {
+
+      ...mapState(['pid', 'version', 'token', 'type']),
+
       ok () {
         if(this.pass=='true') {
-          return (true);
+          return true;
         }
         if(this.pass=='false'){
-          return (this.message);
+          return this.auditRemark;
         }
+        return false;
       },
     },
 
     //自定义的方法放在 methods
     methods : {
+
       commit() {
+        this.loading = true;
+        axios.post(API_COMMIT, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+            auditResult: this.pass == 'true' ? 1 : 0,
+            auditRemark: this.auditRemark,
+          }
+        }).then(response => {
+          const json = response.data;
+        if (json.code == '00000' && json.data.success == 'true') {
+          Toast('操作成功');
+          this.auditResult = this.pass == 'true' ? '通过' : '不通过';
+        }
+        this.loading = false;
+      }).catch((err) => {
+          this.loading = false;
+      })
+
       },
+
+      getData () {
+        this.loading = true;
+        axios.post(API_GET_DATA, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data) {
+            Object.keys(this.$data).forEach(key => {
+              json.data[key] && (this[key] = json.data[key]);
+            });
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
+      },
+
     },
 
 
-    mounted(){
+    created () {
+      this.getData();
     },
 
     //titie
     components: {cTitle}
   }
 </script>
+
 <style lang="scss" rel="stylesheet/scss" scoped>
   .customer-information{
     width: 100%;

@@ -1,26 +1,24 @@
 <!--拍照资料项-->
 <template xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="customer-information">
-    <c-title :text="title" skin="blue"></c-title>
-    <div class="box">
+    <c-title :text="itemName" skin="blue"></c-title>
+    <div class="box" v-if="itemName">
       <div class="base-information">
         <!--v-for="(info,index) in infoObj"-->
-        <h3>身份证明</h3>
+        <h3>{{itemName}}</h3>
         <ul>
-          <li @click="showBgPic(0)"><img src="../../../assets/seller/documentary/pic1.png"></li>
-          <li @click="showBgPic(1)"><img src="../../../assets/seller/documentary/pic2.png"></li>
-          <li><img src="../../../assets/seller/documentary/pic3.png"></li>
-          <li><img src="../../../assets/seller/documentary/pic4.png"></li>
-          <li><img src="../../../assets/seller/documentary/pic5.png"></li>
+          <li v-for="pic of list" @click="show(pic)">
+            <p v-if="itemName == '车产信息'">{{pic.fileName}}</p>
+            <img :src="pic.filePath">
+          </li>
         </ul>
       </div>
       <div class="component">
         <div class="radios">
           <label class="item">审核结果</label>
-          <label v-if="picInfoStatus!='待质检'" class="no">{{passStatus}}</label>
-
-          <div v-if="picInfoStatus=='待质检'">
-            <label  class="no" for="no">不通过</label>
+          <label v-if="auditResult" class="no">{{auditResult}}</label>
+          <div v-else>
+            <label class="no" for="no">不通过</label>
             <div class="wrapper">
               <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
             </div>
@@ -30,23 +28,17 @@
             </div>
           </div>
         </div>
-        <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="picInfoStatus=='待质检'">
-          <div v-if="pass=='true'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明"></textarea>
-          </div>
-        </div>
-        <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="picInfoStatus!='待质检'">
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
+
+        <div class="txt-box">
+          <div class="text">
+            <textarea
+              v-model="auditRemark"
+              placeholder="请填写不予通过的审核说明"
+              :disabled="auditResult || (!auditResult && pass=='true')"></textarea>
           </div>
         </div>
-        <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="picInfoStatus=='待质检'" class="button">
+
+        <div v-if="!auditResult" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -56,60 +48,116 @@
         </div>
       </div>
     </div>
-    <div class="backgroundPic" @click="hideBgPic(0)">
-      <img src="../../../assets/seller/documentary/pic1.png"/>
-    </div>
-
-    <div class="backgroundPic" @click="hideBgPic(1)">
-      <img src="../../../assets/seller/documentary/bc2.jpeg"/>
+    <div class="background-pic" @click="hide" v-if="active">
+      <img :src="active.filePath"/>
     </div>
   </div>
 </template>
 <script>
   import cTitle from 'components/title';
+  import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
+  import {Toast} from 'mint-ui';
+
+  const API_GET_DATA = `${window.$rootPath}/sale/requestController/customer/photo/{itemType}`;
+  const API_COMMIT = `${window.$rootPath}/sale/requestController/customer/photo/{itemType}Audit`;
 
   export default {
     data () {
       return {
-        title: '基础信息',
-        message: '',
+        active: null,
+        itemType: this.$route.query.itemType,
+        itemName: this.$route.query.itemName,
         pass: 'true',
-        passStatus: '通过',
         bgPicShow: false,
-        picInfoStatus: '待质检',//居住信息的审核状态;待质检,质检不通过,质检通过
-        
+        auditResult: "",
+        auditRemark: "",
+        list: []
       }
     },
 
     computed: {
+
+      ...mapState(['pid', 'version', 'token', 'type']),
+
       ok () {
         if(this.pass=='true') {
-          return (true);
+          return true;
         }
         if(this.pass=='false'){
-          return (this.message);
+          return this.auditRemark;
         }
+        return false;
       },
     },
 
     //自定义的方法放在 methods
-    methods : {
+    methods: {
       commit() {
+        this.loading = true;
+        axios.post(API_COMMIT.replace('{itemType}', this.itemType), {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+            auditResult: this.pass == 'true' ? 1 : 0,
+            auditRemark: this.auditRemark,
+          }
+        }).then(response => {
+          const json = response.data;
+        if (json.code == '00000' && json.data.success == 'true') {
+          Toast('操作成功');
+          this.auditResult = this.pass == 'true' ? '通过' : '不通过';
+        }
+        this.loading = false;
+      }).catch((err) => {
+          this.loading = false;
+      })
+
       },
 
-      showBgPic(index){
-        let element = this.$el.getElementsByClassName('backgroundPic');
-        element[index].className = "backgroundPic show";
+      getData () {
+        this.loading = true;
+        axios.post(API_GET_DATA.replace('{itemType}', this.itemType), {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data) {
+            Object.keys(this.$data).forEach(key => {
+              json.data[key] && (this[key] = json.data[key]);
+            });
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
       },
 
-      hideBgPic(index){
-        let element = this.$el.getElementsByClassName('backgroundPic');
-        element[index].className = "backgroundPic";
+      show (active) {
+        this.active = active;
+      },
+
+      hide (index){
+        this.active = null;
       },
     },
 
-
-    mounted(){
+    created () {
+      this.getData();
     },
 
     //titie
@@ -117,27 +165,27 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .customer-information{
+  .customer-information {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
     background-color: #f1f1f1;
-    .border{
+    .border {
       width: 100%;
       height: .21rem;
       background-color: #f2f4f4;
       border-top: 1px solid #e3e3e5;
     }
-    .box{
+    .box {
       width: 100%;
       background-color: #f1f1f1;
-      .base-information{
+      .base-information {
         font-size: .3rem;
         padding: 0 .32rem;
         border-bottom: 1px solid #d4d4d4;
         background-color: #fff;
-        h3{
+        h3 {
           font-weight: normal;
           font-size: .3rem;
           color: #333;
@@ -145,17 +193,17 @@
           height: .87rem;
           line-height: .87rem;
         }
-        ul{
+        ul {
           padding: 0;
           margin: 0;
-          li{
+          li {
             list-style-type: none;
             width: 2rem;
-            height:2rem;
+            height: 2rem;
             display: inline-block;
             margin-right: .22rem;
             margin-bottom: .32rem;
-            img{
+            img {
               width: 100%;
               height: 100%;
             }
@@ -290,23 +338,22 @@
         }
       }
     }
-    .backgroundPic{
+    .background-pic {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
       z-index: 100000;
-      display: none;
       background-color: #000;
-      img{
+      img {
         width: 100%;
         max-height: 100%;
         display: block;
         margin: auto;
       }
     }
-    .show{
+    .show {
       display: block;
     }
   }
