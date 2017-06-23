@@ -7,83 +7,91 @@
         <!--v-for="(info,index) in infoObj"-->
         <ul>
           <li class="name">
-            <p>客户姓名</p><div>张三丰</div>
+            <p>客户姓名</p>
+            <div>{{customerName}}</div>
           </li>
           <li class="mobile">
-            <p>手机号码1</p><div class="phone"><a href="tel:18666666666">18666666666</a></div>
+            <p>手机号码1</p>
+            <div class="phone"><a :href="'tel:' + phone1">{{phone1}}</a></div>
           </li>
           <li class="mobile2">
-            <p>手机号码2</p><div class="phone"><a href="tel:18888888888">18888888888</a></div>
+            <p>手机号码2</p>
+            <div class="phone"><a :href="'tel:' + phone2">{{phone2}}</a></div>
           </li>
           <li class="cardNo">
-            <p>身份证号</p><div>610425199901010217</div>
+            <p>身份证号</p>
+            <div>{{cardNo}}</div>
           </li>
           <li class="nation">
-            <p>民族</p><div>汉</div>
+            <p>民族</p>
+            <div>{{nation}}</div>
           </li>
           <li class="education">
-            <p>学历</p><div>本科</div>
+            <p>学历</p>
+            <div>{{education}}</div>
           </li>
           <li class="marriage">
-            <p>婚姻状况</p><div>已婚</div>
+            <p>婚姻状况</p>
+            <div>{{marriage}}</div>
           </li>
           <li class="childrenNumber">
-            <p>子女数量</p><div>2</div>
+            <p>子女数量</p>
+            <div>{{childrenNumber}}</div>
           </li>
           <li class="supportNumber">
-            <p>供养人数</p><div>2</div>
+            <p>供养人数</p>
+            <div>{{supportNumber}}</div>
           </li>
           <li class="salaryFrom">
-            <p>主要收入来源</p><div>打卡发薪</div>
+            <p>主要收入来源</p>
+            <div>{{salaryFrom}}</div>
           </li>
           <li class="annual_income">
-            <p>年收入(元)</p><div>800.00</div>
+            <p>年收入(元)</p>
+            <div>{{annualIncome}}</div>
           </li>
           <li class="localHouseProperty">
-            <p>本市房产情况</p><div>有房无贷款</div>
+            <p>本市房产情况</p>
+            <div>{{localHouseProperty}}</div>
           </li>
           <li class="understandWay">
-            <p>了解渠道</p><div>网络</div>
+            <p>了解渠道</p>
+            <div>{{understandWay}}</div>
           </li>
           <li class="qq">
-            <p>QQ</p><div>824999824</div>
+            <p>QQ</p>
+            <div>{{qq}}</div>
           </li>
         </ul>
       </div>
 
       <div class="component">
         <div class="radios">
-        <label class="item">审核结果</label>
-        <label v-if="baseInfoStatus!='待质检'" class="no">{{passStatus}}</label>
+          <label class="item">审核结果</label>
+          <label v-if="auditResult" class="no">{{auditResult}}</label>
+          <div v-else>
+            <label class="no" for="no">不通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
+            </div>
+            <label class="yes" for="yes">通过</label>
+            <div class="wrapper">
+              <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+            </div>
+          </div>
+        </div>
 
-        <div v-if="baseInfoStatus=='待质检'">
-          <label  class="no" for="no">不通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="no" value="false" v-model="pass"><span></span>
-          </div>
-          <label class="yes" for="yes">通过</label>
-          <div class="wrapper">
-            <input class="circle" type="radio" id="yes" value="true" v-model="pass"><span></span>
+        <div class="txt-box">
+          <div class="text">
+            <textarea
+              v-model="auditRemark"
+              placeholder="请填写不予通过的审核说明"
+              :disabled="auditResult || (!auditResult && pass=='true')"></textarea>
           </div>
         </div>
-      </div>
-        <!--此处文本只有在livingInfoStatus=='待质检'的时候会显示,用于让销售人员填写不通过的审核说明-->
-        <div class="txt-box" v-if="baseInfoStatus=='待质检'">
-          <div v-if="pass=='true'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明"></textarea>
-          </div>
-        </div>
-        <!--此处文本用于展示，不通过的时候展示，通过的话不展示。只有在livingInfoStatus！='待质检'的时候会显示-->
-        <div class="txt-box" v-if="baseInfoStatus!='待质检'">
-          <div v-if="pass=='false'" class="text">
-            <textarea v-model="message" placeholder="请填写不予通过的审核说明" readonly></textarea>
-          </div>
-        </div>
+
         <!--提交按钮只有在livingInfoStatus=='待质检'的时候会显示-->
-        <div v-if="baseInfoStatus=='待质检'" class="button">
+        <div v-if="!auditResult" class="button">
           <div class="submit" v-if="ok" @click="commit">
             <p style="color: #fff;">确认并提交</p>
           </div>
@@ -97,22 +105,25 @@
 </template>
 <script>
   import cTitle from 'components/title';
+  import axios from 'axios';
+  import {mapMutations, mapState} from 'vuex';
+  import {Toast} from 'mint-ui';
+
+  const API_GET_BASE_INFO = `${window.$rootPath}/sale/requestController/customer/baseInfo`;
+  const API_COMMIT_AUDIT = `${window.$rootPath}/sale/requestController/customer/baseAudit`;
 
   export default {
     data () {
       return {
         title: '基础信息',
-        message: '',
 
         //自己定义的，需要跟后台确认
         pass: 'true',//销售点击通过或者不通过，值为true或false
-        passStatus: '通过',//true为通过，false为不通过，用于在非待质检状态下的展示。
-        baseInfoStatus: '质检通过',//居住信息的审核状态;待质检,质检不通过,质检通过
 
         //后台定义好的
-        name: '',//姓名
-        mobile: '',//手机号
-        mobile2: '',//备用手机号
+        customerName: '',//姓名
+        phone1: '',//手机号
+        phone2: '',//备用手机号
         cardNo: '',//身份证号
         nation: '',//民族
         education: '',//学历
@@ -120,34 +131,93 @@
         childrenNumber: '',//子女数量
         supportNumber: '',//供养人数
         salaryFrom: '',//主要收入来源
-        annual_income: '',//年收入
+        annualIncome: '',//年收入
         localHouseProperty: '',//本地房产情况
         understandWay: '',//了解渠道
         understandWayOthers: '',//了解渠道_其他说明
         qq: '',//qq号码
+        auditRemark: '', //审核备注
+        auditResult: '', //审核结果
 
       }
     },
 
     computed: {
+
+      ...mapState(['pid', 'version', 'token', 'type']),
+
       ok () {
-        if(this.pass=='true') {
-          return (true);
+        if (this.pass == 'true') {
+          return true;
         }
-        if(this.pass=='false'){
-          return (this.message);
+        if (this.pass == 'false') {
+          return this.auditRemark;
         }
+        return false;
       },
     },
 
-    //自定义的方法放在 methods
-    methods : {
+    methods: {
+
       commit() {
+        this.loading = true;
+        axios.post(API_COMMIT_AUDIT, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+            auditResult: this.pass == 'true' ? 1 : 0,
+            auditRemark: this.auditResult,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data.success == 'true') {
+            Toast('操作成功');
+            this.auditResult = this.pass == 'true' ? '通过' : '不通过';
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
+
       },
+
+      getData () {
+        this.loading = true;
+        axios.post(API_GET_BASE_INFO, {
+          comm: {
+            pid: this.pid,
+            type: this.type,
+            version: this.version
+          },
+          token: this.token,
+          body: {
+            requestId: this.$route.query.requestId,
+            customerId: this.$route.query.customerId,
+          }
+        }).then(response => {
+          const json = response.data;
+          if (json.code == '00000' && json.data) {
+            Object.keys(this.$data).forEach(key => {
+              json.data[key] && (this[key] = json.data[key]);
+            });
+          }
+          this.loading = false;
+        }).catch((err) => {
+          this.loading = false;
+        })
+      },
+
     },
 
 
-    mounted(){
+    created () {
+      this.getData();
     },
 
     //titie
@@ -155,48 +225,48 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-  .customer-information{
+  .customer-information {
     width: 100%;
     height: 100%;
     font-family: YouYuan, Tahoma, STXihei;
     position: relative;
     background-color: #f1f1f1;
-    .border{
+    .border {
       width: 100%;
       height: .21rem;
       background-color: #f2f4f4;
       border-top: 1px solid #e3e3e5;
     }
-    .box{
+    .box {
       width: 100%;
       background-color: #f1f1f1;
-      .base-information{
+      .base-information {
         font-size: .3rem;
         padding: 0 .32rem .4rem;
         border-bottom: 1px solid #d4d4d4;
         background-color: #fff;
-        ul{
+        ul {
           height: 100%;
           padding: 0;
           margin: 0;
           color: #666;
-          li{
+          li {
             list-style-type: none;
             height: .57rem;
-            p,div{
+            p, div {
               height: .28rem;
               margin: .29rem 0 0 0;
               line-height: .28rem;
             }
-            p{
+            p {
               float: left;
               color: #666;
             }
-            div{
+            div {
               float: right;
               color: #333;
             }
-            .phone{
+            .phone {
               color: #3295f9;
             }
           }
